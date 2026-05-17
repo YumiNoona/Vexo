@@ -52,8 +52,20 @@ function addTaskInCat(cat){
   const lastNotesEl=lastId?document.getElementById('notes-'+lastId):null;
   const lastRow=lastId?document.getElementById('row-'+lastId):null;
   const insertAfter=lastNotesEl||lastRow;
-  if(insertAfter)insertAfter.insertAdjacentElement('afterend',row);
-  else document.getElementById('v-today').appendChild(row);
+  if(insertAfter){
+    insertAfter.insertAdjacentElement('afterend',row);
+  } else {
+    // Empty category — insert after the placeholder, inside the category block
+    const placeholder=document.getElementById('cat-empty-'+cat);
+    if(placeholder){ placeholder.replaceWith(row); }
+    else {
+      // Last resort: find the cat-header for this cat and insert after it
+      const headers=[...document.querySelectorAll('.cat-header')];
+      const hdr=headers.find(h=>h.querySelector('.cat-label-txt')?.textContent===cat);
+      if(hdr) hdr.insertAdjacentElement('afterend',row);
+      else document.getElementById('v-today').appendChild(row);
+    }
+  }
   setTimeout(()=>{const i=document.getElementById('newTaskInp');if(i)i.focus();},10);
   document.getElementById('newTaskInp').onkeydown=e=>{if(e.key==='Enter')confirmAddTask(cat);if(e.key==='Escape')row.remove();};
 }

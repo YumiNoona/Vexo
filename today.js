@@ -31,7 +31,7 @@ function renderToday(){
     </div>`;
     const catTasks=tasks.filter(t=>t.cat===cat);
     if(!catTasks.length){
-      h+=`<div class="cat-empty" onclick="addTaskInCat('${escHtml(cat)}')">＋ Add a task</div>`;
+      h+=`<div class="cat-empty" id="cat-empty-${escHtml(cat)}" onclick="addTaskInCat('${escHtml(cat)}')">＋ Add a task</div>`;
     }
     catTasks.forEach(t=>{
       const d=!!done[t.id];
