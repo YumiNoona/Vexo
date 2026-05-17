@@ -3,7 +3,7 @@
 ═══════════════════════════════════════════════ */
 function dkey(offset=0){const d=new Date();d.setDate(d.getDate()+offset);return`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;}
 function viewKey(){return dkey(viewOffset);}
-function doneCount(){return Object.values(done).filter(Boolean).length;}
+function doneCount(){return tasks.filter(t=>done[t.id]).length;}
 function uid(){return'task-'+Math.random().toString(36).slice(2,8);}
 function cats(){const fromTasks=[...new Set(tasks.map(t=>t.cat))];const base=DEFAULT_CATS||['Morning','Afternoon','Evening'];const merged=[...base];fromTasks.forEach(c=>{if(!merged.includes(c))merged.push(c);});return merged;}
 function fmtTime(mins){if(!mins)return'0m';if(mins<60)return mins+'m';const h=Math.floor(mins/60),m=mins%60;return m?h+'h '+m+'m':h+'h';}

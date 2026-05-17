@@ -180,5 +180,52 @@ function toggleSound(){settings.soundEnabled=document.getElementById('sndToggle'
 function changeSoundProfile(v){settings.soundProfile=v;saveSettings();}
 function saveJobGoal(){settings.jobGoalDate=document.getElementById('jobGoalInp')?.value||'';saveSettings();updateHeader();}
 function savePlanStart(){settings.planStartDate=document.getElementById('planStartInp')?.value||'';saveSettings();}
-function resetTasks(){if(!confirm('Reset tasks to defaults?'))return;tasks=JSON.parse(JSON.stringify(DEFAULT_TASKS));saveGlobal();renderToday();}
-function clearAll(){if(!confirm('Delete ALL data? Cannot be undone.'))return;localStorage.clear();location.reload();}
+function resetTasks(){
+  showModal(`
+    <p class="modal-title">⚠️ Reset Tasks</p>
+    <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px;">
+      This will permanently delete all your tasks and restore the defaults.<br>
+      <strong style="color:var(--text)">This cannot be undone.</strong>
+    </p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Want to save a backup first?</p>
+    <div class="modal-btns" style="flex-wrap:wrap;gap:8px;">
+      <button class="modal-btn" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn" onclick="exportJSON();closeModal()">Export backup first</button>
+      <button class="modal-btn del" onclick="_doResetTasks()">Delete everything &amp; reset</button>
+    </div>
+  `);
+}
+function _doResetTasks(){
+  closeModal();
+  tasks=JSON.parse(JSON.stringify(DEFAULT_TASKS));
+  saveGlobal();
+  renderToday();
+}
+function clearAll(){
+  showModal(`
+    <p class="modal-title">🗑️ Clear User Data</p>
+    <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px;">
+      This will delete all your <strong style="color:var(--text)">tasks, journal entries, kanban cards,
+      flashcards, resources, weekly goals</strong> and daily history.<br><br>
+      Your <strong style="color:var(--text)">streak, settings, and accent colour</strong> will be kept.
+    </p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Want to save a backup first?</p>
+    <div class="modal-btns" style="flex-wrap:wrap;gap:8px;">
+      <button class="modal-btn" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn" onclick="exportJSON();closeModal()">Export backup first</button>
+      <button class="modal-btn del" onclick="_doClearData()">Clear my data</button>
+    </div>
+  `);
+}
+function _doClearData(){
+  closeModal();
+  // Keep streak + settings — remove everything else
+  const keep=['sp-streak','sp-settings'];
+  const saved={};
+  keep.forEach(k=>{const v=localStorage.getItem(k);if(v)saved[k]=v;});
+  // Remove all sp-* and wg-* keys
+  Object.keys(localStorage).filter(k=>k.startsWith('sp-')||k.startsWith('wg-')).forEach(k=>localStorage.removeItem(k));
+  // Restore preserved keys
+  Object.entries(saved).forEach(([k,v])=>localStorage.setItem(k,v));
+  location.reload();
+}
