@@ -1,13 +1,14 @@
 /* ═══════════════════════════════════════════════
    SUPABASE — Auth + Real-time Cloud Sync
    ───────────────────────────────────────────────
-   Fill in your project URL + anon key below.
-   Get them from: supabase.com → your project
-   → Settings → API
+   Keys are injected at build time via build.js
+   from Vercel Environment Variables — never
+   commit real keys to Git.
 ═══════════════════════════════════════════════ */
 
-const SUPABASE_URL  = 'https://YOUR_PROJECT_ID.supabase.co';
-const SUPABASE_ANON = 'YOUR_ANON_PUBLIC_KEY';
+// Injected by build.js from Vercel env vars:
+//   SUPABASE_URL      → window.SUPABASE_URL
+//   SUPABASE_ANON_KEY → window.SUPABASE_ANON
 
 /* ── Init client ─────────────────────────────── */
 const { createClient } = window.supabase;
