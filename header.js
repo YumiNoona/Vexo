@@ -28,7 +28,7 @@ function editTitle(){
 }
 function finishTitle(){
   const inp=document.getElementById('appTitle');if(!inp)return;
-  const val=inp.value.trim()||'Study Planner';
+  const val=inp.value.trim()||'Vexo';
   settings.plannerName=val;saveSettings();
   inp.outerHTML=`<h1 id="appTitle" onclick="editTitle()" title="Click to rename">${escHtml(val)}</h1>`;
 }

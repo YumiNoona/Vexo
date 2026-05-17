@@ -19,7 +19,7 @@ function buildSettingsHTML(){
     <div class="setting-row">
       <div class="setting-info"><p class="setting-label">Planner name</p><p class="setting-desc">The heading title</p></div>
       <div class="setting-ctrl" style="display:flex;gap:6px;">
-        <input class="profile-inp" id="plannerNameInp" value="${escHtml(s.plannerName||'Study Planner')}">
+        <input class="profile-inp" id="plannerNameInp" value="${escHtml(s.plannerName||'Vexo')}">
         <button class="save-btn" onclick="savePlannerName()">Save</button>
       </div>
     </div>
@@ -115,7 +115,7 @@ function buildSettingsHTML(){
     </div>
     <div class="setting-row">
       <div class="setting-info"><p class="setting-label">Account</p><p class="setting-desc">${window._sbUserEmail||'Logged in'}</p></div>
-      <div class="setting-ctrl"><button class="save-btn" onclick="typeof sbSignOut==='function'&&sbSignOut()" style="color:#d4960a;border-color:rgba(212,150,10,0.3)">Sign Out</button></div>
+      <div class="setting-ctrl"><button class="sign-out-btn" onclick="typeof sbSignOut==='function'&&sbSignOut()">Sign Out</button></div>
     </div>
   </div>`;
 }
@@ -127,7 +127,7 @@ function renderSettings(){
 }
 function saveProfile(){const v=document.getElementById('profileInp')?.value.trim();if(v){settings.profile=v;saveSettings();}}
 function savePlannerName(){
-  const v=document.getElementById('plannerNameInp')?.value.trim()||'Study Planner';
+  const v=document.getElementById('plannerNameInp')?.value.trim()||'Vexo';
   settings.plannerName=v;saveSettings();
   const ti=document.getElementById('appTitle');if(ti)ti.textContent=v;
 }

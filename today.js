@@ -29,7 +29,11 @@ function renderToday(){
       <span class="cat-label-txt" ondblclick="editCatName('${escHtml(cat)}')" title="Double-click to rename">${escHtml(cat)}</span>
       <button class="cat-add" onclick="addTaskInCat('${escHtml(cat)}')" title="Add task">+</button>
     </div>`;
-    const catTasks=tasks.filter(t=>t.cat===cat);if(!catTasks.length){h+=\`<div class="cat-empty" onclick="addTaskInCat('"+escHtml(cat)+"')">＋ Add a task</div>\`;}catTasks.forEach(t=>{
+    const catTasks=tasks.filter(t=>t.cat===cat);
+    if(!catTasks.length){
+      h+=`<div class="cat-empty" onclick="addTaskInCat('${escHtml(cat)}')">＋ Add a task</div>`;
+    }
+    catTasks.forEach(t=>{
       const d=!!done[t.id];
       const logMin=timeLogs[t.id]||0;
       const dispMin=logMin>0?logMin:(t.mins||0);
