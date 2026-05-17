@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>UI/UX Study Planner</title>
+
+<!-- PWA / iPhone "Add to Home Screen" -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Planner">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0c0c0e">
+<link rel="manifest" href="manifest.json">
+<!-- Apple touch icon (inline SVG fallback) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='34' fill='%230c0c0e'/><text y='130' x='90' font-size='100' text-anchor='middle'>📖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="date-nav">
+        <button class="date-btn" onclick="shiftDay(-1)">&#8249;</button>
+        <span class="date-label" id="dateLabel"></span>
+        <button class="date-btn" id="nextBtn" onclick="shiftDay(1)" style="visibility:hidden">&#8250;</button>
+        <button class="date-btn" id="todayBtn" onclick="goToday()" style="display:none">Today</button>
+      </div>
+      <div class="h1-wrap">
+        <h1 id="appTitle" onclick="editTitle()" title="Click to rename">Study Planner</h1>
+        <span id="countdownBadge" class="countdown-badge" style="display:none"></span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="stat-box">
+        <p class="s-label">Streak</p>
+        <p class="s-num streak-num" id="streakEl">0</p>
+        <p class="s-sub">days</p>
+      </div>
+      <div class="stat-box">
+        <p class="s-label">Today</p>
+        <p class="s-num time-num" id="timeEl">0h</p>
+        <p class="s-sub">studied</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 MAIN TABS -->
+  <div class="tabs">
+    <button class="tab on" onclick="switchTab('today')"     id="t-today">Today</button>
+    <button class="tab"    onclick="switchTab('goals')"     id="t-goals">Goals</button>
+    <button class="tab"    onclick="switchTab('learn')"     id="t-learn">Learn</button>
+    <button class="tab"    onclick="switchTab('portfolio')" id="t-portfolio">Portfolio</button>
+    <button class="tab"    onclick="switchTab('plan')"      id="t-plan">Plan</button>
+    <button class="tab"    onclick="switchTab('hub')"       id="t-hub">Profile</button>
+  </div>
+
+  <!-- TAB VIEWS -->
+  <div id="v-today"></div>
+  <div id="v-goals"     style="display:none"></div>
+  <div id="v-learn"     style="display:none"></div>
+  <div id="v-portfolio" style="display:none"></div>
+  <div id="v-plan"      style="display:none"></div>
+  <div id="v-hub"       style="display:none"></div>
+</div>
+
+<!-- SHARED MODAL -->
+<div class="overlay" id="modalOverlay" style="display:none" onclick="overlayClick(event)">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+
+<!-- MOBILE BOTTOM NAV (iPhone) -->
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mnav-btn active" id="mn-today"    onclick="switchTab('today')"     aria-label="Today">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/></svg>
+    <span>Today</span>
+  </button>
+  <button class="mnav-btn" id="mn-goals"    onclick="switchTab('goals')"     aria-label="Goals">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+    <span>Goals</span>
+  </button>
+  <button class="mnav-btn" id="mn-learn"    onclick="switchTab('learn')"     aria-label="Learn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    <span>Learn</span>
+  </button>
+  <button class="mnav-btn" id="mn-portfolio" onclick="switchTab('portfolio')" aria-label="Portfolio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+    <span>Work</span>
+  </button>
+  <button class="mnav-btn" id="mn-plan"     onclick="switchTab('plan')"      aria-label="Plan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <span>Plan</span>
+  </button>
+  <button class="mnav-btn" id="mn-hub"      onclick="switchTab('hub')"       aria-label="Profile">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profile</span>
+  </button>
+</nav>
+
+<script src="config.js"></script>
+<script src="audio.js"></script>
+<script src="storage.js"></script>
+<script src="helpers.js"></script>
+<script src="header.js"></script>
+<script src="today.js"></script>
+<script src="tasks.js"></script>
+<script src="timer.js"></script>
+<script src="schedule.js"></script>
+<script src="stats.js"></script>
+<script src="kanban.js"></script>
+<script src="journal.js"></script>
+<script src="resources.js"></script>
+<script src="weekly-goals.js"></script>
+<script src="flashcards.js"></script>
+<script src="eod-summary.js"></script>
+<script src="settings.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
