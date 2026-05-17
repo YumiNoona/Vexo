@@ -113,6 +113,10 @@ function buildSettingsHTML(){
       <div class="setting-info"><p class="setting-label">Clear all data</p><p class="setting-desc">Wipes everything including history</p></div>
       <div class="setting-ctrl"><button class="danger-btn" onclick="clearAll()">Clear all</button></div>
     </div>
+    <div class="setting-row">
+      <div class="setting-info"><p class="setting-label">Account</p><p class="setting-desc">${window._sbUserEmail||'Logged in'}</p></div>
+      <div class="setting-ctrl"><button class="save-btn" onclick="typeof sbSignOut==='function'&&sbSignOut()" style="color:#d4960a;border-color:rgba(212,150,10,0.3)">Sign Out</button></div>
+    </div>
   </div>`;
 }
 function bindSettingsEvents(){

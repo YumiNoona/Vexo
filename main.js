@@ -693,7 +693,17 @@ function renderHub(sub){
 /* ═══════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════ */
-loadGlobal();
-loadDay();
-updateHeader();
-renderToday();
+/* ── Supabase-compatible init wrapper ──────────────
+   supabase.js calls window.__startApp() after pulling
+   fresh cloud data. If Supabase isn't in use, the
+   script below runs immediately as a fallback.
+──────────────────────────────────────────────── */
+window.__startApp = function () {
+  loadGlobal();
+  loadDay();
+  updateHeader();
+  renderToday();
+};
+
+// Fallback: start immediately if Supabase isn't loaded
+if (!window.SUPABASE_ENABLED) window.__startApp();

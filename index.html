@@ -17,8 +17,47 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<style>
+/* Supabase loading screen */
+#sb-loading {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #0c0c0e;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 16px;
+}
+#sb-loading .load-icon {
+  font-size: 36px;
+  animation: loadPulse 1.4s ease-in-out infinite;
+}
+#sb-loading .load-bar {
+  width: 120px; height: 2px;
+  background: rgba(212,150,10,0.15);
+  border-radius: 2px; overflow: hidden;
+}
+#sb-loading .load-bar::after {
+  content: '';
+  display: block; height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, #d4960a, transparent);
+  animation: loadSlide 1.2s ease-in-out infinite;
+}
+@keyframes loadPulse {
+  0%,100% { opacity: 0.4; transform: scale(0.95); }
+  50%      { opacity: 1;   transform: scale(1.05); }
+}
+@keyframes loadSlide {
+  0%   { transform: translateX(-200%); }
+  100% { transform: translateX(350%); }
+}
+</style>
 </head>
 <body>
+<!-- Supabase loading screen (removed by supabase.js after auth check) -->
+<div id="sb-loading">
+  <div class="load-icon">📖</div>
+  <div class="load-bar"></div>
+</div>
+
 <div class="app">
 
   <!-- HEADER -->
@@ -102,6 +141,7 @@
   </button>
 </nav>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
 <script src="audio.js"></script>
 <script src="storage.js"></script>
@@ -120,5 +160,6 @@
 <script src="eod-summary.js"></script>
 <script src="settings.js"></script>
 <script src="main.js"></script>
+<script src="supabase.js"></script>
 </body>
 </html>

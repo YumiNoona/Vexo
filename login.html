@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Study Planner — Sign In</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0c0c0e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Fraunces:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold:    #d4960a;
+    --gold2:   #f0b429;
+    --dark:    #0c0c0e;
+    --dark2:   #111115;
+    --card:    rgba(18,18,24,0.85);
+    --border:  rgba(212,150,10,0.18);
+    --border2: rgba(255,255,255,0.07);
+    --text:    #e8e8f0;
+    --muted:   rgba(232,232,240,0.5);
+    --error:   #ff5c5c;
+    --success: #2ecf8c;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Canvas background ── */
+  #bg-canvas {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── Floating orbs ── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+    animation: orbFloat linear infinite alternate;
+  }
+  .orb-1 {
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, rgba(212,150,10,0.18) 0%, transparent 70%);
+    top: -15%; left: -10%;
+    animation-duration: 14s;
+    animation-delay: 0s;
+  }
+  .orb-2 {
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(138,43,226,0.14) 0%, transparent 70%);
+    top: 30%; right: -8%;
+    animation-duration: 18s;
+    animation-delay: -5s;
+  }
+  .orb-3 {
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(46,207,140,0.09) 0%, transparent 70%);
+    bottom: -8%; left: 25%;
+    animation-duration: 22s;
+    animation-delay: -9s;
+  }
+  .orb-4 {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(212,150,10,0.10) 0%, transparent 70%);
+    top: 55%; left: -5%;
+    animation-duration: 16s;
+    animation-delay: -3s;
+  }
+  .orb-5 {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(232,93,153,0.10) 0%, transparent 70%);
+    top: 10%; right: 20%;
+    animation-duration: 12s;
+    animation-delay: -7s;
+  }
+
+  @keyframes orbFloat {
+    0%   { transform: translate(0px, 0px) scale(1); }
+    25%  { transform: translate(30px, -20px) scale(1.04); }
+    50%  { transform: translate(15px, 30px) scale(0.97); }
+    75%  { transform: translate(-20px, 10px) scale(1.02); }
+    100% { transform: translate(10px, -15px) scale(1.05); }
+  }
+
+  /* ── Star particles ── */
+  .stars {
+    position: fixed; inset: 0;
+    z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 32% 7%, rgba(255,255,255,0.35) 0%, transparent 100%),
+      radial-gradient(1px 1px at 56% 24%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 74% 11%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 91% 34%, rgba(255,255,255,0.45) 0%, transparent 100%),
+      radial-gradient(1px 1px at 8%  62%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 44% 78%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 68% 88%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 72%, rgba(255,255,255,0.35) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 22% 90%, rgba(212,150,10,0.6) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 78% 55%, rgba(212,150,10,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.2) 0%, transparent 100%);
+    animation: starTwinkle 6s ease-in-out infinite alternate;
+  }
+  @keyframes starTwinkle {
+    0%   { opacity: 0.6; }
+    50%  { opacity: 1; }
+    100% { opacity: 0.7; }
+  }
+
+  /* ── Main layout ── */
+  .page {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    padding-bottom: env(safe-area-inset-bottom, 24px);
+  }
+
+  /* ── Card ── */
+  .card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 44px 40px 40px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04) inset,
+      0 24px 60px rgba(0,0,0,0.5),
+      0 0 80px rgba(212,150,10,0.05);
+    animation: cardIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+  }
+  @keyframes cardIn {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ── Logo ── */
+  .logo-wrap {
+    text-align: center;
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s 0.15s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .logo-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, rgba(212,150,10,0.18) 0%, rgba(212,150,10,0.06) 100%);
+    border: 1px solid rgba(212,150,10,0.3);
+    border-radius: 18px;
+    font-size: 26px;
+    margin-bottom: 18px;
+    box-shadow: 0 0 24px rgba(212,150,10,0.15), 0 4px 16px rgba(0,0,0,0.3);
+    animation: iconGlow 3s ease-in-out infinite alternate;
+  }
+  @keyframes iconGlow {
+    from { box-shadow: 0 0 16px rgba(212,150,10,0.15), 0 4px 16px rgba(0,0,0,0.3); }
+    to   { box-shadow: 0 0 32px rgba(212,150,10,0.30), 0 4px 16px rgba(0,0,0,0.3); }
+  }
+  .logo-title {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold2) 0%, var(--gold) 60%, #a06b00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  .logo-sub {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--muted);
+    letter-spacing: 0.2px;
+  }
+
+  /* ── Mode toggle ── */
+  .mode-toggle {
+    display: flex;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 3px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s 0.25s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .mode-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.2s;
+    outline: none;
+  }
+  .mode-btn.active {
+    background: linear-gradient(135deg, rgba(212,150,10,0.22), rgba(212,150,10,0.12));
+    color: var(--gold2);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+  }
+
+  /* ── Form ── */
+  .form { display: flex; flex-direction: column; gap: 14px; }
+
+  .field-wrap {
+    position: relative;
+    animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .field-wrap:nth-child(1) { animation-delay: 0.30s; }
+  .field-wrap:nth-child(2) { animation-delay: 0.38s; }
+  .field-wrap:nth-child(3) { animation-delay: 0.46s; }
+
+  .field-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+    transition: color 0.2s;
+  }
+  .field-wrap:focus-within .field-label { color: var(--gold2); }
+
+  .field-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14.5px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+  .field-input::placeholder { color: rgba(232,232,240,0.25); }
+  .field-input:focus {
+    border-color: rgba(212,150,10,0.5);
+    background: rgba(212,150,10,0.04);
+    box-shadow: 0 0 0 3px rgba(212,150,10,0.10);
+  }
+  .field-input:-webkit-autofill,
+  .field-input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 100px #14141a inset;
+    -webkit-text-fill-color: var(--text);
+  }
+
+  /* ── Submit btn ── */
+  .submit-btn {
+    position: relative;
+    width: 100%;
+    padding: 13px;
+    margin-top: 6px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #c47f00 0%, #d4960a 50%, #e8a800 100%);
+    background-size: 200% 200%;
+    color: #0c0c0e;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    outline: none;
+    overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+    box-shadow: 0 4px 20px rgba(212,150,10,0.35), 0 1px 4px rgba(0,0,0,0.3);
+    animation: fadeUp 0.5s 0.52s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transform: skewX(-20deg);
+    transition: none;
+  }
+  .submit-btn:hover::before {
+    animation: shimmer 0.7s ease forwards;
+  }
+  @keyframes shimmer {
+    to { left: 150%; }
+  }
+  .submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(212,150,10,0.45), 0 2px 6px rgba(0,0,0,0.3);
+  }
+  .submit-btn:active {
+    transform: translateY(0px) scale(0.99);
+    box-shadow: 0 2px 12px rgba(212,150,10,0.3);
+  }
+  .submit-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .submit-btn .btn-spinner {
+    display: none;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(12,12,14,0.3);
+    border-top-color: #0c0c0e;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .submit-btn.loading .btn-text { display: none; }
+  .submit-btn.loading .btn-spinner { display: block; }
+
+  /* ── Feedback message ── */
+  .msg {
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 14px;
+    border-radius: 10px;
+    min-height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    opacity: 0;
+  }
+  .msg.show { opacity: 1; }
+  .msg.error  { background: rgba(255,92,92,0.10);  color: var(--error);   border: 1px solid rgba(255,92,92,0.2); }
+  .msg.success{ background: rgba(46,207,140,0.10); color: var(--success); border: 1px solid rgba(46,207,140,0.2); }
+
+  /* ── Switch mode link ── */
+  .switch-wrap {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 18px;
+    animation: fadeUp 0.5s 0.58s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .switch-link {
+    color: var(--gold2);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 500;
+  }
+  .switch-link:hover { color: #fff; }
+
+  /* ── Footer ── */
+  .login-footer {
+    margin-top: 24px;
+    font-size: 12px;
+    color: rgba(232,232,240,0.25);
+    letter-spacing: 0.3px;
+    text-align: center;
+    animation: fadeUp 0.5s 0.65s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .login-footer span { color: rgba(212,150,10,0.5); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Success overlay (after login) ── */
+  .success-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s;
+  }
+  .success-overlay.show { opacity: 1; pointer-events: all; }
+  .success-overlay .big-icon {
+    font-size: 48px;
+    animation: popIn 0.5s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .success-overlay p {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+    animation: fadeUp 0.4s 0.15s both;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 440px) {
+    .card { padding: 36px 24px 32px; border-radius: 20px; }
+    .logo-title { font-size: 23px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="stars"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="orb orb-4"></div>
+<div class="orb orb-5"></div>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="big-icon">✦</div>
+  <p id="successMsg">Welcome back ✦</p>
+</div>
+
+<!-- Main page -->
+<div class="page">
+  <div class="card">
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <div class="logo-icon">📖</div>
+      <p class="logo-title">Study Planner</p>
+      <p class="logo-sub">Your personal learning journey ✦</p>
+    </div>
+
+    <!-- Sign In / Sign Up toggle -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-signin" onclick="setMode('signin')">Sign In</button>
+      <button class="mode-btn"        id="btn-signup" onclick="setMode('signup')">Create Account</button>
+    </div>
+
+    <!-- Form -->
+    <form class="form" id="authForm" onsubmit="handleSubmit(event)">
+      <div class="field-wrap">
+        <label class="field-label" for="email">Email</label>
+        <input class="field-input" type="email" id="email"
+               placeholder="you@example.com" autocomplete="email" required>
+      </div>
+      <div class="field-wrap">
+        <label class="field-label" for="password">Password</label>
+        <input class="field-input" type="password" id="password"
+               placeholder="••••••••" autocomplete="current-password" required minlength="6">
+      </div>
+      <!-- Confirm password (signup only) -->
+      <div class="field-wrap" id="confirmWrap" style="display:none;">
+        <label class="field-label" for="confirm">Confirm Password</label>
+        <input class="field-input" type="password" id="confirm"
+               placeholder="••••••••" autocomplete="new-password">
+      </div>
+
+      <!-- Message -->
+      <div class="msg" id="authMsg"></div>
+
+      <!-- Submit -->
+      <button class="submit-btn" type="submit" id="submitBtn">
+        <span class="btn-text" id="btnLabel">Sign In</span>
+        <div class="btn-spinner"></div>
+      </button>
+    </form>
+
+    <!-- Switch mode -->
+    <div class="switch-wrap" id="switchWrap">
+      Don't have an account?
+      <span class="switch-link" onclick="setMode('signup')">Create one</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <p class="login-footer">Made with <span>♥</span> for you</p>
+</div>
+
+<script>
+/* ── Supabase setup ── */
+const SUPABASE_URL  = 'https://YOUR_PROJECT_ID.supabase.co';
+const SUPABASE_ANON = 'YOUR_ANON_PUBLIC_KEY';
+const { createClient } = window.supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: { persistSession: true, autoRefreshToken: true }
+});
+
+/* ── Mode state ── */
+let currentMode = 'signin';
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('btn-signin').classList.toggle('active', mode === 'signin');
+  document.getElementById('btn-signup').classList.toggle('active', mode === 'signup');
+  document.getElementById('confirmWrap').style.display = mode === 'signup' ? 'block' : 'none';
+  document.getElementById('btnLabel').textContent = mode === 'signin' ? 'Sign In' : 'Create Account';
+  document.getElementById('switchWrap').innerHTML = mode === 'signin'
+    ? `Don't have an account? <span class="switch-link" onclick="setMode('signup')">Create one</span>`
+    : `Already have an account? <span class="switch-link" onclick="setMode('signin')">Sign in</span>`;
+  document.getElementById('password').setAttribute('autocomplete', mode === 'signup' ? 'new-password' : 'current-password');
+  clearMsg();
+}
+
+/* ── Message helpers ── */
+function showMsg(text, type) {
+  const el = document.getElementById('authMsg');
+  el.textContent = text;
+  el.className = `msg show ${type}`;
+}
+function clearMsg() {
+  const el = document.getElementById('authMsg');
+  el.className = 'msg';
+  el.textContent = '';
+}
+
+/* ── Loading state ── */
+function setLoading(on) {
+  const btn = document.getElementById('submitBtn');
+  btn.classList.toggle('loading', on);
+  btn.disabled = on;
+}
+
+/* ── Show success and redirect ── */
+function showSuccess(name) {
+  const overlay  = document.getElementById('successOverlay');
+  const msgEl    = document.getElementById('successMsg');
+  msgEl.textContent = `Welcome${name ? ', ' + name.split('@')[0] : ''} ✦`;
+  overlay.classList.add('show');
+  setTimeout(() => { location.href = 'index.html'; }, 1200);
+}
+
+/* ── Handle form submit ── */
+async function handleSubmit(e) {
+  e.preventDefault();
+  clearMsg();
+
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const confirm  = document.getElementById('confirm').value;
+
+  if (currentMode === 'signup') {
+    if (password !== confirm) { showMsg('Passwords don\'t match.', 'error'); return; }
+    if (password.length < 6)  { showMsg('Password must be at least 6 characters.', 'error'); return; }
+  }
+
+  setLoading(true);
+
+  try {
+    if (currentMode === 'signin') {
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      showSuccess(email);
+
+    } else {
+      const { data, error } = await sb.auth.signUp({ email, password });
+      if (error) throw error;
+
+      if (data.session) {
+        // Email confirmation disabled → signed in immediately
+        // Push any existing local data to cloud
+        await pushLocalToCloud(data.session.user.id);
+        showSuccess(email);
+      } else {
+        // Email confirmation required
+        setLoading(false);
+        showMsg('Account created! Check your email to confirm, then sign in.', 'success');
+        setTimeout(() => setMode('signin'), 3000);
+      }
+    }
+  } catch (err) {
+    setLoading(false);
+    const msgs = {
+      'Invalid login credentials': 'Incorrect email or password.',
+      'Email not confirmed': 'Please confirm your email first.',
+      'User already registered': 'That email already has an account.',
+    };
+    showMsg(msgs[err.message] || err.message, 'error');
+  }
+}
+
+/* ── Push existing localStorage data on first sign-up ── */
+async function pushLocalToCloud(userId) {
+  const rows = [];
+  const ts = new Date().toISOString();
+  const staticKeys = ['sp-phases','sp-sched','sp-tasks','sp-streak','sp-settings',
+                       'sp-kanban','sp-resources','sp-flashcards-v2'];
+  staticKeys.forEach(k => {
+    const v = localStorage.getItem(k);
+    if (v) try { rows.push({ user_id: userId, key: k, value: JSON.parse(v), updated_at: ts }); } catch(e){}
+  });
+  for (let i = 0; i < 90; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const dk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    ['sp-d-','sp-j-','sp-start-times-'].forEach(p => {
+      const v = localStorage.getItem(p+dk);
+      if (v) try { rows.push({ user_id: userId, key: p+dk, value: JSON.parse(v), updated_at: ts }); } catch(e){}
+    });
+  }
+  if (rows.length > 0) {
+    await sb.from('planner_data').upsert(rows, { onConflict: 'user_id,key' });
+  }
+}
+
+/* ── Auto-redirect if already logged in ── */
+(async function() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    location.href = 'index.html';
+  }
+})();
+</script>
+</body>
+</html>
