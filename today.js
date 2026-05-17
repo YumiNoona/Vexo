@@ -38,14 +38,17 @@ function renderToday(){
       const logMin=timeLogs[t.id]||0;
       const dispMin=logMin>0?logMin:(t.mins||0);
       const hasNote=!!(getTaskNote(t.id));
-      const startT=taskStartTimes&&taskStartTimes[t.id]?taskStartTimes[t.id]:'';
-      const timeBtnLabel=startT?`⏱ ${startT} · ${fmtTime(dispMin)}`:`⏱ ${fmtTime(dispMin)}`;
+      const _st=taskStartTimes&&taskStartTimes[t.id]?taskStartTimes[t.id]:null;
+      const startT=_st?(typeof _st==='object'?_st.start||'':_st):'';
+      const endT=_st&&typeof _st==='object'?_st.end||'':'';
+      const startLabel=startT&&endT?`${formatTimeTo12(startT)} → ${formatTimeTo12(endT)}`:startT?formatTimeTo12(startT):'';
+      const timeBtnLabel=startT?`⏱ ${startLabel} · ${fmtTime(dispMin)}`:`⏱ ${fmtTime(dispMin)}`;
       h+=`<div id="row-${t.id}" class="task-row${d?' done':''}" draggable="true"
           ondragstart="dragStart(event,'${t.id}')" ondragover="dragOver(event,'${t.id}')" ondrop="dragDrop(event,'${t.id}')" ondragleave="dragLeave(event,'${t.id}')">
         <span class="drag-handle" title="Drag to reorder">⠿</span>
         <div id="ck-${t.id}" class="checkbox${d?' checked':''}" onclick="event.stopPropagation();toggle('${t.id}')">${d?CHK:''}</div>
         <span id="lbl-${t.id}" class="task-text" ondblclick="event.stopPropagation();editTask('${t.id}')" onclick="event.stopPropagation();toggle('${t.id}')" title="Double-click to rename">${escHtml(t.label)}</span>
-        <button class="task-start-btn${startT?' has-start':''}" onclick="event.stopPropagation();setTaskStartTime('${t.id}')" title="Set start time">${startT?'🕐 '+startT:'🕐'}</button>
+        <button class="task-start-btn${startT?' has-start':''}" onclick="event.stopPropagation();setTaskStartTime('${t.id}')" title="Set time">${startLabel?'🕐 '+startLabel:'🕐'}</button>
         <button class="task-note-btn${hasNote?' has-note':''}" onclick="event.stopPropagation();toggleNotesDrawer('${t.id}')" title="Notes">📝</button>
         <button class="task-time-btn" onclick="event.stopPropagation();openTaskModal('${t.id}')" title="Timer">⏱ ${fmtTime(dispMin)}</button>
         <div class="task-actions">
@@ -105,32 +108,50 @@ function toggleNotesDrawer(id){
 ═══════════════════════════════════════════════ */
 function setTaskStartTime(id) {
   if(typeof loadTaskStartTimes==='function') loadTaskStartTimes();
-  const current = taskStartTimes[id] || '';
-  // Build a tiny inline time-picker popover via modal
-  const t = tasks.find(t=>t.id===id);
+  const raw = taskStartTimes[id]||null;
+  const curStart = raw?(typeof raw==='object'?raw.start||'':raw):'';
+  const curEnd   = raw&&typeof raw==='object'?raw.end||'':'';
+  const task = tasks.find(t=>t.id===id);
   const now = new Date();
   const hh = String(now.getHours()).padStart(2,'0');
   const mm = String(now.getMinutes()).padStart(2,'0');
-  const defaultVal = current || hh+':'+mm;
-  showModal(`<p class="modal-title">Set Start Time</p>
-    <p class="modal-task">${escHtml(t?t.label:'Task')}</p>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">What time will you start (or did you start) this activity?</p>
-    <div style="display:flex;justify-content:center;margin-bottom:18px;">
-      <input class="modal-input" id="startTimeInp" type="time" value="${escHtml(defaultVal)}" style="font-size:22px;font-weight:700;text-align:center;width:160px;padding:10px;letter-spacing:.05em;">
+  const nowVal = hh+':'+mm;
+  const quickTimes = ['6:00','7:00','8:00','9:00','9:30','10:00','10:30','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+  const quickBtns = (targetId) => quickTimes.map(q=>{
+    const [qh,qm]=q.split(':');
+    const val=String(qh).padStart(2,'0')+':'+(qm||'00');
+    return `<button class="modal-btn" style="font-size:11px;padding:4px 9px;" onclick="document.getElementById('${targetId}').value='${val}'">${formatTimeTo12(val)}</button>`;
+  }).join('');
+
+  showModal(`
+    <p class="modal-title">Set Time</p>
+    <p class="modal-task">${escHtml(task?task.label:'Task')}</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+      <div>
+        <p style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;">Start Time</p>
+        <input class="modal-input" id="startTimeInp" type="time" value="${curStart||nowVal}"
+          style="width:100%;font-size:18px;font-weight:700;text-align:center;padding:10px 8px;letter-spacing:.04em;">
+      </div>
+      <div>
+        <p style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;">End Time <span style="font-weight:400;opacity:.5">(optional)</span></p>
+        <input class="modal-input" id="endTimeInp" type="time" value="${curEnd}"
+          style="width:100%;font-size:18px;font-weight:700;text-align:center;padding:10px 8px;letter-spacing:.04em;">
+      </div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;">
-      ${['6:00','7:00','8:00','9:00','9:30','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'].map(q=>{
-        const [qh,qm]=q.split(':');
-        const val=String(qh).padStart(2,'0')+':'+qm;
-        const label=formatTimeTo12(val);
-        return `<button class="modal-btn" style="font-size:11px;padding:5px 10px;" onclick="document.getElementById('startTimeInp').value='${val}'">${label}</button>`;
-      }).join('')}
-    </div>
+
+    <p style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;">Quick pick — Start</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">${quickBtns('startTimeInp')}</div>
+
+    <p style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;">Quick pick — End</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;">${quickBtns('endTimeInp')}</div>
+
     <div class="modal-btns">
       <button class="modal-btn" onclick="closeModal()">Cancel</button>
-      ${current?`<button class="modal-btn del" onclick="clearTaskStartTime('${id}')">Clear</button>`:''}
+      ${(curStart||curEnd)?`<button class="modal-btn del" onclick="clearTaskStartTime('${id}')">Clear</button>`:''}
       <button class="modal-btn primary" onclick="confirmTaskStartTime('${id}')">Save</button>
-    </div>`);
+    </div>
+  `);
   setTimeout(()=>{ const i=document.getElementById('startTimeInp'); if(i)i.focus(); },50);
 }
 
@@ -144,10 +165,13 @@ function formatTimeTo12(val) {
 }
 
 function confirmTaskStartTime(id) {
-  const inp = document.getElementById('startTimeInp');
-  if(!inp) return;
+  const sInp = document.getElementById('startTimeInp');
+  const eInp = document.getElementById('endTimeInp');
+  if(!sInp) return;
   if(typeof loadTaskStartTimes==='function') loadTaskStartTimes();
-  taskStartTimes[id] = inp.value;
+  const sv = sInp.value||'';
+  const ev = eInp?eInp.value||'':'';
+  taskStartTimes[id] = ev ? { start: sv, end: ev } : sv;
   try { localStorage.setItem('sp-start-times-'+dkey(0), JSON.stringify(taskStartTimes)); } catch(e) {}
   closeModal();
   renderToday();

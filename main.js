@@ -248,11 +248,11 @@ function renderEOD(){
         <svg class="eod-ring" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <!-- Track -->
           <circle cx="50" cy="50" r="${r}" fill="none" stroke="var(--surface3)" stroke-width="8"/>
-          <!-- Progress fill — rotate to start from 12 o'clock -->
-          <circle cx="50" cy="50" r="${r}" fill="none" stroke="${ringColor}" stroke-width="8"
+          <!-- Progress fill — hidden at 0% to avoid dot artefact -->
+          ${pct>0?`<circle cx="50" cy="50" r="${r}" fill="none" stroke="${ringColor}" stroke-width="8"
             stroke-dasharray="${dash} ${gap}"
             transform="${ringTransform}"
-            stroke-linecap="round"/>
+            stroke-linecap="round"/>`:''}
         </svg>
         <div class="eod-ring-inner">
           <span class="eod-ring-pct">${pct}<span style="font-size:13px;font-family:var(--font);font-weight:400">%</span></span>
