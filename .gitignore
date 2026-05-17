@@ -1,0 +1,10 @@
+# Generated at build time by build.js from Vercel env vars
+# NEVER commit this — it contains your Supabase keys
+env-config.js
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
+node_modules/

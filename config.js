@@ -1,20 +1,8 @@
 /* ═══════════════════════════════════════════════
    CONSTANTS & DEFAULTS
 ═══════════════════════════════════════════════ */
-const DEFAULT_TASKS=[
-  {id:'shower',cat:'Morning',label:'Shower & morning routine',mins:30},
-  {id:'exercise',cat:'Morning',label:'Exercise – 1 hour',mins:60},
-  {id:'breakfast',cat:'Morning',label:'Breakfast',mins:30},
-  {id:'class',cat:'Study',label:'IRL class prep / review notes',mins:60},
-  {id:'udemy1',cat:'Study',label:'Udemy – lesson 1',mins:45},
-  {id:'udemy2',cat:'Study',label:'Udemy – lesson 2',mins:45},
-  {id:'practice',cat:'Study',label:'Design practice (recreate a real UI)',mins:90},
-  {id:'portfolio',cat:'Study',label:'Portfolio work session',mins:60},
-  {id:'explore',cat:'Study',label:'Exploration / Dribbble / Behance',mins:30},
-  {id:'cook',cat:'Evening',label:'Cook & eat dinner',mins:60},
-  {id:'review',cat:'Evening',label:'Review today\'s learnings',mins:20},
-  {id:'plan',cat:'Evening',label:'Plan tomorrow\'s tasks',mins:10},
-];
+const DEFAULT_TASKS = [];
+const DEFAULT_CATS  = ['Morning', 'Afternoon', 'Evening'];
 const DEFAULT_SCHED=[
   {id:'s1',t:'7:00 AM',l:'Wake up & shower',type:'r'},
   {id:'s2',t:'8:00 AM',l:'Breakfast',type:'r'},

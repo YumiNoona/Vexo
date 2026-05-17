@@ -79,6 +79,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .cat-label-txt:hover{color:var(--text);}
 .cat-add{background:none;border:none;color:var(--subtle);cursor:pointer;font-size:18px;padding:0 2px;line-height:1;font-family:var(--font);}
 .cat-add:hover{color:var(--accent);}
+.cat-empty{display:flex;align-items:center;justify-content:center;padding:14px 0 12px;color:var(--subtle);font-size:13px;letter-spacing:.02em;border:1.5px dashed rgba(255,255,255,0.07);border-radius:10px;margin-bottom:4px;cursor:pointer;transition:border-color .2s,color .2s;}
+.cat-empty:hover{border-color:var(--accent-dim);color:var(--accent);}
 .task-row{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:4px;background:var(--surface);transition:background .1s,border-color .15s;position:relative;}
 .task-row:hover{background:var(--surface2);border-color:var(--border2);}
 .task-row.done{opacity:.5;}
