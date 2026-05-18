@@ -28,7 +28,7 @@ function buildRoadmapHTML(){
             <p class="week-label">${escHtml(w.w)}</p>
             <p class="week-text">${escHtml(w.t)}</p>
           </div>
-          <div style="display:flex;gap:4px;flex-shrink:0;">
+          <div class="roadmap-week-actions" style="display:flex;gap:4px;flex-shrink:0;">
             <button class="act-btn" onclick="editWeek(${pi},${wi})">Edit</button>
             <button class="act-btn del" onclick="deleteWeek(${pi},${wi})">✕</button>
           </div>
