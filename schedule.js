@@ -57,12 +57,8 @@ function buildSchedHTML(){
   return h;
 }
 function renderSched(){
-  // Refresh Plan tab if visible, and Today sidebar if on desktop
   const planEl=document.getElementById('v-plan');
-  if(planEl&&planEl.style.display!=='none')renderPlan('schedule');
-  // Update today sidebar schedule if it exists (desktop two-col)
-  const sidebarSched=document.getElementById('today-sched-sidebar');
-  if(sidebarSched)sidebarSched.innerHTML=buildSchedHTML();
+  if(planEl&&planEl.style.display!=='none')renderPlan('roadmap');
 }
 function schedModal(idx){
   const SCHED=getSched();

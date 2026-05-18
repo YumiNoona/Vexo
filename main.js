@@ -631,7 +631,7 @@ function showToast(msg){
 const MAIN_TABS=['today','goals','learn','portfolio','plan','hub'];
 let learnSub='journal', planSub='schedule', hubSub='stats';
 
-const TAB_TITLES={today:'Today',goals:'Goals',learn:'Learn',portfolio:'Portfolio',plan:'Plan',hub:'Hub'};
+const TAB_TITLES={today:'Today',goals:'Goals',learn:'Learn',portfolio:'Portfolio',plan:'Roadmap',hub:'Hub'};
 let activeTab='today';
 function switchTab(name){
   activeTab=name;
@@ -666,16 +666,8 @@ function renderLearn(sub){
 }
 
 function renderPlan(sub){
-  planSub=sub;
-  const tabs=['schedule','roadmap'];
-  const labels={schedule:'Schedule',roadmap:'Roadmap'};
-  let h=`<div class="sub-tabs">`;
-  tabs.forEach(t=>{h+=`<button class="sub-tab${sub===t?' on':''}" onclick="renderPlan('${t}')">${labels[t]}</button>`;});
-  h+=`</div><div id="plan-content">`;
-  if(sub==='schedule'){h+=buildSchedHTML();}
-  else if(sub==='roadmap'){h+=buildRoadmapHTML();}
-  h+=`</div>`;
-  document.getElementById('v-plan').innerHTML=h;
+  planSub='roadmap';
+  document.getElementById('v-plan').innerHTML=buildRoadmapHTML();
 }
 
 function renderHub(sub){

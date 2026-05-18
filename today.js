@@ -92,20 +92,8 @@ function renderToday(){
     <span style="color:var(--muted)">→</span>
   </div>`;
 
-  // ── Build right sidebar (schedule) — desktop only via CSS grid ──
-  const sidebar=`<div class="today-sidebar">
-    <div class="today-sidebar-card">
-      <div class="today-sidebar-title">
-        <span>📅 Today's Schedule</span>
-        <button class="act-btn" onclick="switchTab('plan')" style="font-size:11px">Full view</button>
-      </div>
-      <div id="today-sched-sidebar">${buildSchedHTML()}</div>
-    </div>
-  </div>`;
-
-  // Wrap in two-column layout div
-  const layout=`<div class="today-layout"><div class="today-main">${h}</div>${sidebar}</div>`;
-  document.getElementById('v-today').innerHTML=layout;
+  // Single-column layout — no schedule sidebar
+  document.getElementById('v-today').innerHTML=`<div class="today-layout"><div class="today-main">${h}</div></div>`;
   if(activeNotesId){
     const el=document.getElementById('notes-'+activeNotesId);
     if(el)el.style.display='block';
