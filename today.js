@@ -6,8 +6,24 @@ function renderToday(){
   const isPast=viewOffset<0;
   const tot=tasks.length,n=doneCount(),pct=tot?Math.round(n/tot*100):0;
   const sm=totalStudyMins();
+
+  // ── left column (main tasks area) ──
   let h='';
   if(isPast)h+=`<div class="past-banner">Viewing a past day — you can still edit completions.</div>`;
+
+  // Mood check-in
+  const todayMoodKey='sp-mood-'+dkey(0);
+  const savedMood=localStorage.getItem(todayMoodKey);
+  const moods=[{e:'😫',l:'Rough'},{e:'😕',l:'Low'},{e:'😐',l:'Okay'},{e:'😊',l:'Good'},{e:'🚀',l:'Pumped'}];
+  h+=`<div class="mood-bar">
+    <span class="mood-label">Energy today</span>
+    <div class="mood-opts">`;
+  moods.forEach(m=>{
+    h+=`<button class="mood-btn${savedMood===m.e?' selected':''}" title="${m.l}" onclick="setMood('${m.e}',this)">${m.e}</button>`;
+  });
+  h+=`</div>`;
+  if(savedMood)h+=`<span class="mood-set" style="margin-left:auto;font-size:12px;color:var(--muted)">${savedMood} saved</span>`;
+  h+=`</div>`;
 
   const weekGoals=getWeekGoals();
   if(weekGoals.length){
@@ -26,8 +42,11 @@ function renderToday(){
 
   cats().forEach(cat=>{
     h+=`<div class="cat-header">
-      <span class="cat-label-txt" ondblclick="editCatName('${escHtml(cat)}')" title="Double-click to rename">${escHtml(cat)}</span>
-      <button class="cat-add" onclick="addTaskInCat('${escHtml(cat)}')" title="Add task">+</button>
+      <span class="cat-label-txt" ondblclick="editCatName('${escHtml(cat)}')" title="Click to rename">${escHtml(cat)}</span>
+      <div style="display:flex;gap:4px;">
+        <button class="act-btn" style="font-size:11px" onclick="editCatName('${escHtml(cat)}')">Rename</button>
+        <button class="cat-add" onclick="addTaskInCat('${escHtml(cat)}')" title="Add task">+</button>
+      </div>
     </div>`;
     const catTasks=tasks.filter(t=>t.cat===cat);
     if(!catTasks.length){
@@ -44,11 +63,12 @@ function renderToday(){
       const startLabel=startT&&endT?`${formatTimeTo12(startT)} → ${formatTimeTo12(endT)}`:startT?formatTimeTo12(startT):'';
       const timeBtnLabel=startT?`⏱ ${startLabel} · ${fmtTime(dispMin)}`:`⏱ ${fmtTime(dispMin)}`;
       h+=`<div id="row-${t.id}" class="task-row${d?' done':''}" draggable="true"
-          ondragstart="dragStart(event,'${t.id}')" ondragover="dragOver(event,'${t.id}')" ondrop="dragDrop(event,'${t.id}')" ondragleave="dragLeave(event,'${t.id}')">
+          ondragstart="dragStart(event,'${t.id}')" ondragover="dragOver(event,'${t.id}')" ondrop="dragDrop(event,'${t.id}')" ondragleave="dragLeave(event,'${t.id}')"
+          oncontextmenu="showTaskCtxMenu(event,'${t.id}')">
         <span class="drag-handle" title="Drag to reorder">⠿</span>
         <div id="ck-${t.id}" class="checkbox${d?' checked':''}" onclick="event.stopPropagation();toggle('${t.id}')">${d?CHK:''}</div>
-        <span id="lbl-${t.id}" class="task-text" ondblclick="event.stopPropagation();editTask('${t.id}')" onclick="event.stopPropagation();toggle('${t.id}')" title="Double-click to rename">${escHtml(t.label)}</span>
-        <button class="task-start-btn${startT?' has-start':''}" onclick="event.stopPropagation();setTaskStartTime('${t.id}')" title="Set time">${startLabel?'🕐 '+startLabel:'🕐'}</button>
+        <span id="lbl-${t.id}" class="task-text" ondblclick="event.stopPropagation();editTask('${t.id}')" onclick="event.stopPropagation();toggle('${t.id}')" title="Double-click to edit">${escHtml(t.label)}</span>
+        <button class="task-start-btn${startT?' has-start':''}" onclick="event.stopPropagation();setTaskStartTime('${t.id}')" title="Set time">${startT?'🕐 '+startT:'🕐'}</button>
         <button class="task-note-btn${hasNote?' has-note':''}" onclick="event.stopPropagation();toggleNotesDrawer('${t.id}')" title="Notes">📝</button>
         <button class="task-time-btn" onclick="event.stopPropagation();openTaskModal('${t.id}')" title="Timer">⏱ ${fmtTime(dispMin)}</button>
         <div class="task-actions">
@@ -66,18 +86,39 @@ function renderToday(){
   h+=`<div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;">
     <button class="act-btn" onclick="addCategory()" style="font-size:12px;padding:6px 14px;">+ Add category</button>
   </div>`;
-
   h+=`<div class="divider"></div>
   <div class="eod-trigger" onclick="renderEOD()">
     <div><p class="eod-trigger-text">🌙 End-of-Day Summary</p><p class="eod-trigger-hint">Generate your daily wrap-up card</p></div>
     <span style="color:var(--muted)">→</span>
   </div>`;
 
-  document.getElementById('v-today').innerHTML=h;
+  // ── Build right sidebar (schedule) — desktop only via CSS grid ──
+  const sidebar=`<div class="today-sidebar">
+    <div class="today-sidebar-card">
+      <div class="today-sidebar-title">
+        <span>📅 Today's Schedule</span>
+        <button class="act-btn" onclick="switchTab('plan')" style="font-size:11px">Full view</button>
+      </div>
+      <div id="today-sched-sidebar">${buildSchedHTML()}</div>
+    </div>
+  </div>`;
+
+  // Wrap in two-column layout div
+  const layout=`<div class="today-layout"><div class="today-main">${h}</div>${sidebar}</div>`;
+  document.getElementById('v-today').innerHTML=layout;
   if(activeNotesId){
     const el=document.getElementById('notes-'+activeNotesId);
     if(el)el.style.display='block';
   }
+}
+
+function setMood(emoji,btn){
+  localStorage.setItem("sp-mood-"+dkey(0),emoji);
+  document.querySelectorAll(".mood-btn").forEach(b=>b.classList.remove("selected"));
+  if(btn)btn.classList.add("selected");
+  const saved=btn?btn.closest(".mood-bar").querySelector(".mood-set"):null;
+  if(saved){saved.style.display="flex";saved.textContent=emoji+" saved";}
+  if(navigator.vibrate)navigator.vibrate(30);
 }
 
 function updateProg(){

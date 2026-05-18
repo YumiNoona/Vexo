@@ -35,10 +35,23 @@ function renderPortfolio(){
   document.getElementById('v-portfolio').innerHTML=h;
 }
 function addKanbanCard(col){
-  const title=prompt('Project name:');if(!title||!title.trim())return;
+  showModal(`<p class="modal-title">New project</p>
+    <div class="modal-row"><span class="modal-label">Title</span>
+      <input class="modal-input" id="kb-title-inp" placeholder="Project name…"
+        onkeydown="if(event.key==='Enter')confirmAddKanban('${col}');if(event.key==='Escape')closeModal();">
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="confirmAddKanban('${col}')">Add project</button>
+    </div>`);
+  setTimeout(()=>{const i=document.getElementById('kb-title-inp');if(i)i.focus();},60);
+}
+function confirmAddKanban(col){
+  const inp=document.getElementById('kb-title-inp');
+  const title=inp?inp.value.trim():'';if(!title)return;
   const kb=getKanban();
-  kb[col].push({title:title.trim(),ready:false,polish:false,notes:''});
-  saveKanban(kb);renderPortfolio();
+  kb[col].push({title,ready:false,polish:false,notes:''});
+  saveKanban(kb);closeModal();renderPortfolio();
 }
 function openKanbanCard(col,idx){
   const kb=getKanban();const card=kb[col][idx];
@@ -79,6 +92,10 @@ function moveKanbanCard(fromCol,idx,toCol){
   kb[toCol].push(card);saveKanban(kb);closeModal();renderPortfolio();
 }
 function deleteKanbanCard(col,idx){
-  if(!confirm('Delete this project?'))return;
-  const kb=getKanban();kb[col].splice(idx,1);saveKanban(kb);closeModal();renderPortfolio();
+  const kb=getKanban();const snap={col,card:{...kb[col][idx]},idx};
+  kb[col].splice(idx,1);saveKanban(kb);closeModal();renderPortfolio();
+  showUndoToast('Project deleted',()=>{
+    const kb2=getKanban();kb2[snap.col].splice(snap.idx,0,snap.card);
+    saveKanban(kb2);renderPortfolio();
+  });
 }

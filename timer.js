@@ -56,12 +56,17 @@ function toggleTimer(id){
   if(timerRunning){
     clearInterval(timerInterval);timerRunning=false;
     const btn=document.getElementById('timerStartBtn');if(btn)btn.textContent='Resume';
+    const tb=document.getElementById('tb-pause');if(tb)tb.textContent='Resume';
   }else{
     timerRunning=true;
     const btn=document.getElementById('timerStartBtn');if(btn)btn.textContent='Pause';
+    const tb=document.getElementById('tb-pause');if(tb)tb.textContent='Pause';
+    const taskLabel=tasks.find(t=>t.id===id)?.label||'Task';
     timerInterval=setInterval(()=>{
       timerSeconds--;
       const d=document.getElementById('timerDisp');if(d)d.textContent=fmtTimer(timerSeconds);
+      // Update persistent timer bar
+      if(typeof updateTimerBar==='function')updateTimerBar(taskLabel,timerSeconds);
       if(timerSeconds<=0){
         clearInterval(timerInterval);timerRunning=false;
         const btn=document.getElementById('timerStartBtn');if(btn)btn.textContent='Done!';
@@ -69,9 +74,11 @@ function toggleTimer(id){
         const t=tasks.find(t=>t.id===id);
         if(t){timeLogs[id]=(timeLogs[id]||0)+(t.mins||25);saveDay();updateProg();}
         const sub=document.getElementById('timerSub');if(sub)sub.textContent='Session complete!';
+        if(typeof hideTimerBar==='function')hideTimerBar();
       }
       if(timerSeconds>0&&timerSeconds%60===0)playSoundProfile('tick');
     },1000);
+    if(typeof updateTimerBar==='function')updateTimerBar(taskLabel,timerSeconds);
   }
 }
 function resetTimer(id){

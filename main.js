@@ -631,16 +631,24 @@ function showToast(msg){
 const MAIN_TABS=['today','goals','learn','portfolio','plan','hub'];
 let learnSub='journal', planSub='schedule', hubSub='stats';
 
+const TAB_TITLES={today:'Today',goals:'Goals',learn:'Learn',portfolio:'Portfolio',plan:'Plan',hub:'Hub'};
+let activeTab='today';
 function switchTab(name){
+  activeTab=name;
+  document.title='Vexo — '+TAB_TITLES[name];
   MAIN_TABS.forEach(n=>{
     document.getElementById('v-'+n).style.display=n===name?'block':'none';
     const tb=document.getElementById('t-'+n);if(tb)tb.className='tab'+(n===name?' on':'');
-    // Sync mobile bottom nav
     const mb=document.getElementById('mn-'+n);if(mb)mb.className='mnav-btn'+(n===name?' active':'');
   });
-  // Scroll to top when switching tabs on mobile
   const appEl=document.querySelector('.app');if(appEl)appEl.scrollTop=0;
   if(name==='today'){}
+  if(name==='goals')renderGoals();
+  if(name==='portfolio')renderPortfolio();
+  if(name==='learn')renderLearn(learnSub);
+  if(name==='plan')renderPlan(planSub);
+  if(name==='hub')renderHub(hubSub);
+}
   if(name==='goals')renderGoals();
   if(name==='portfolio')renderPortfolio();
   if(name==='learn')renderLearn(learnSub);
@@ -703,7 +711,237 @@ window.__startApp = function () {
   loadDay();
   updateHeader();
   renderToday();
+  document.title='Vexo — Today';
+  initKeyboardShortcuts();
+  initMultiTabSync();
+  initTimerBar();
 };
+
+/* ═══════════════════════════════════════════════
+   UNDO TOAST SYSTEM
+═══════════════════════════════════════════════ */
+let _undoTimer=null;
+function showUndoToast(msg,undoFn){
+  let t=document.getElementById('sp-undo-toast');
+  if(t)t.remove();
+  t=document.createElement('div');t.id='sp-undo-toast';t.className='sp-undo-toast';
+  t.innerHTML=`<span>${msg}</span><button class="undo-btn" onclick="doUndo()">Undo</button>`;
+  document.body.appendChild(t);
+  window._pendingUndo=undoFn;
+  clearTimeout(_undoTimer);
+  _undoTimer=setTimeout(()=>{const el=document.getElementById('sp-undo-toast');if(el)el.remove();window._pendingUndo=null;},5000);
+}
+function doUndo(){
+  if(window._pendingUndo){window._pendingUndo();window._pendingUndo=null;}
+  clearTimeout(_undoTimer);
+  const el=document.getElementById('sp-undo-toast');if(el)el.remove();
+}
+// Override existing showToast to use same bottom position
+function showToast(msg){
+  let t=document.getElementById('sp-toast');
+  if(!t){t=document.createElement('div');t.id='sp-toast';
+    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:8px 18px;font-size:13px;color:var(--text);z-index:999;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity='0';},2200);
+}
+
+/* ═══════════════════════════════════════════════
+   MULTI-TAB SYNC
+═══════════════════════════════════════════════ */
+function initMultiTabSync(){
+  window.addEventListener('storage',e=>{
+    if(!e.key||!e.key.startsWith('sp-'))return;
+    loadGlobal();loadDay();
+    if(activeTab==='today')renderToday();
+    else if(activeTab==='goals')renderGoals();
+    else if(activeTab==='hub')renderHub(hubSub);
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   PERSISTENT TIMER BAR
+═══════════════════════════════════════════════ */
+function initTimerBar(){
+  // Inject timer bar before app content
+  const app=document.querySelector('.app');
+  if(!app||document.getElementById('timer-bar'))return;
+  const bar=document.createElement('div');
+  bar.id='timer-bar';bar.className='timer-bar';
+  bar.innerHTML=`<span class="timer-bar-label">⏱ <span id="tb-task">Task</span></span>
+    <span class="timer-bar-time" id="tb-time">00:00</span>
+    <button class="timer-bar-btn" id="tb-pause" onclick="timerBarPause()">Pause</button>
+    <button class="timer-bar-btn stop" onclick="timerBarStop()">Stop</button>`;
+  app.prepend(bar);
+}
+function updateTimerBar(taskLabel,seconds){
+  const bar=document.getElementById('timer-bar');if(!bar)return;
+  const taskEl=document.getElementById('tb-task');
+  const timeEl=document.getElementById('tb-time');
+  if(taskEl)taskEl.textContent=taskLabel||'Task';
+  if(timeEl)timeEl.textContent=fmtTimer(seconds);
+  bar.classList.add('running');
+}
+function hideTimerBar(){
+  const bar=document.getElementById('timer-bar');if(bar)bar.classList.remove('running');
+}
+function timerBarPause(){
+  // Delegate to existing timer pause logic
+  const pauseBtn=document.querySelector('.pomo-pause,.timer-pause');
+  if(pauseBtn)pauseBtn.click();
+  else{clearInterval(timerInterval);timerRunning=false;
+    const tb=document.getElementById('tb-pause');if(tb)tb.textContent='Resume';}
+}
+function timerBarStop(){closeModal();}
+
+/* ═══════════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+═══════════════════════════════════════════════ */
+function initKeyboardShortcuts(){
+  document.addEventListener('keydown',e=>{
+    const tag=document.activeElement?.tagName;
+    const inInput=tag==='INPUT'||tag==='TEXTAREA'||document.activeElement?.contentEditable==='true';
+    // Always-on shortcuts
+    if(e.key==='Escape'){
+      if(document.getElementById('cmd-palette'))closePalette();
+      else closeModal();
+      hideCtxMenu();
+      return;
+    }
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openPalette();return;}
+    if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();doUndo();return;}
+    // Skip if typing
+    if(inInput)return;
+    // Tab switching — number keys
+    const tabMap={'1':'today','2':'goals','3':'learn','4':'portfolio','5':'plan','6':'hub'};
+    if(tabMap[e.key]){switchTab(tabMap[e.key]);return;}
+    // Letter shortcuts
+    switch(e.key.toLowerCase()){
+      case 't':switchTab('today');break;
+      case 'g':switchTab('goals');break;
+      case 'l':switchTab('learn');break;
+      case 'p':switchTab('portfolio');break;
+      case 'r':switchTab('plan');break;
+      case 'h':switchTab('hub');break;
+      case 'n':
+        if(activeTab==='today'){
+          const firstCat=cats()[0];if(firstCat)addTaskInCat(firstCat);
+        }break;
+      case '?':showKbHelp();break;
+      // Flashcard shortcuts
+      case ' ':
+        if(activeTab==='learn'&&learnSub==='flashcards'){
+          e.preventDefault();
+          const flipBtn=document.getElementById('fc-flip');if(flipBtn)flipBtn.click();
+        }break;
+      case 'arrowright':
+        if(activeTab==='learn'&&learnSub==='flashcards'){
+          const nextBtn=document.getElementById('fc-next');if(nextBtn)nextBtn.click();
+        }break;
+      case 'arrowleft':
+        if(activeTab==='learn'&&learnSub==='flashcards'){
+          const prevBtn=document.getElementById('fc-prev');if(prevBtn)prevBtn.click();
+        }break;
+    }
+  });
+}
+function showKbHelp(){
+  showModal(`<p class="modal-title">Keyboard shortcuts</p>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px;margin-bottom:16px;">
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">1–6</kbd><span style="color:var(--muted)">Switch tabs</span>
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">N</kbd><span style="color:var(--muted)">New task (Today tab)</span>
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">Space</kbd><span style="color:var(--muted)">Flip flashcard</span>
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">← →</kbd><span style="color:var(--muted)">Prev / next flashcard</span>
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">Ctrl+K</kbd><span style="color:var(--muted)">Open search palette</span>
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">Ctrl+Z</kbd><span style="color:var(--muted)">Undo last delete</span>
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">Esc</kbd><span style="color:var(--muted)">Close modal / palette</span>
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">?</kbd><span style="color:var(--muted)">Show this help</span>
+    </div>
+    <div class="modal-btns"><button class="modal-btn primary" onclick="closeModal()">Got it</button></div>`);
+}
+
+/* ═══════════════════════════════════════════════
+   COMMAND PALETTE (Ctrl+K)
+═══════════════════════════════════════════════ */
+let paletteIdx=0;
+function openPalette(){
+  if(document.getElementById('cmd-palette'))return;
+  const overlay=document.createElement('div');
+  overlay.className='palette-overlay';overlay.id='cmd-palette';
+  overlay.onclick=e=>{if(e.target===overlay)closePalette();};
+  overlay.innerHTML=`<div class="palette-box">
+    <div class="palette-input-wrap">
+      <span class="palette-icon">🔍</span>
+      <input class="palette-input" id="palette-q" placeholder="Search tasks, journal, resources…" oninput="searchPalette()" onkeydown="palKbd(event)" autocomplete="off">
+      <span class="palette-kbd">Esc</span>
+    </div>
+    <div class="palette-results" id="palette-results"></div>
+    <div class="palette-shortcuts">
+      <span class="palette-hint"><kbd>↑↓</kbd> navigate</span>
+      <span class="palette-hint"><kbd>Enter</kbd> select</span>
+      <span class="palette-hint"><kbd>Esc</kbd> close</span>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(()=>{const i=document.getElementById('palette-q');if(i)i.focus();},30);
+  searchPalette();
+}
+function closePalette(){const el=document.getElementById('cmd-palette');if(el)el.remove();}
+function searchPalette(){
+  const q=(document.getElementById('palette-q')?.value||'').toLowerCase().trim();
+  const res=[];
+  // Tasks
+  tasks.forEach(t=>{
+    if(!q||t.label.toLowerCase().includes(q)||t.cat.toLowerCase().includes(q)){
+      res.push({icon:'✓',text:t.label,sub:t.cat+(done[t.id]?' · done':''),action:()=>{closePalette();switchTab('today');setTimeout(()=>{const el=document.getElementById('row-'+t.id);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},200);}});
+    }
+  });
+  // Journal (last 30 days)
+  if(!q||'journal'.includes(q)||q.length>=3){
+    for(let i=0;i<30;i++){
+      const k='sp-j-'+dkey(-i);const r=localStorage.getItem(k);if(!r)continue;
+      try{const e=JSON.parse(r);
+        const text=e.learned||e.confused||e.differently||'';
+        if(!q||text.toLowerCase().includes(q)||'journal'.includes(q)){
+          const pts=dkey(-i).split('-');const d=new Date(+pts[0],+pts[1]-1,+pts[2]);
+          const label=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+          res.push({icon:'📓',text:'Journal — '+label,sub:(e.learned||'').slice(0,60),action:()=>{closePalette();switchTab('learn');setTimeout(()=>renderLearn('journal'),100);}});
+          if(res.length>=12)break;
+        }
+      }catch(ex){}
+    }
+  }
+  // Tab shortcuts
+  const tabs2=[{n:'Today',t:'today',i:'📋'},{n:'Goals',t:'goals',i:'🎯'},{n:'Flashcards',t:'learn',i:'🧠'},{n:'Portfolio',t:'portfolio',i:'🗂'},{n:'Schedule',t:'plan',i:'📅'},{n:'Stats',t:'hub',i:'📊'},{n:'Settings',t:'hub',i:'⚙️'}];
+  tabs2.forEach(tb=>{
+    if(!q||tb.n.toLowerCase().includes(q)){
+      res.push({icon:tb.i,text:'Go to '+tb.n,sub:'Navigation',action:()=>{closePalette();switchTab(tb.t);if(tb.n==='Flashcards')setTimeout(()=>renderLearn('flashcards'),100);if(tb.n==='Settings')setTimeout(()=>renderHub('settings'),100);}});
+    }
+  });
+  paletteIdx=0;
+  renderPaletteResults(res.slice(0,10));
+}
+function renderPaletteResults(items){
+  const el=document.getElementById('palette-results');if(!el)return;
+  window._paletteItems=items;
+  if(!items.length){el.innerHTML=`<div class="palette-empty">No results</div>`;return;}
+  el.innerHTML=items.map((it,i)=>`
+    <div class="palette-item${i===paletteIdx?' active':''}" onclick="paletteSelect(${i})">
+      <span class="palette-item-icon">${it.icon}</span>
+      <div style="flex:1;min-width:0">
+        <div class="palette-item-text">${escHtml(it.text)}</div>
+        ${it.sub?`<div class="palette-item-sub">${escHtml(it.sub)}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+function palKbd(e){
+  const items=window._paletteItems||[];
+  if(e.key==='ArrowDown'){e.preventDefault();paletteIdx=Math.min(paletteIdx+1,items.length-1);renderPaletteResults(items);}
+  else if(e.key==='ArrowUp'){e.preventDefault();paletteIdx=Math.max(paletteIdx-1,0);renderPaletteResults(items);}
+  else if(e.key==='Enter'){e.preventDefault();paletteSelect(paletteIdx);}
+}
+function paletteSelect(i){const items=window._paletteItems||[];if(items[i])items[i].action();}
+
 
 // Fallback: start immediately if Supabase isn't loaded
 if (!window.SUPABASE_ENABLED) window.__startApp();

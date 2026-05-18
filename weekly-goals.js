@@ -51,11 +51,35 @@ function renderGoals(){
   }
   document.getElementById('v-goals').innerHTML=h;
 }
+
+/* ── Add goal via modal (replaces prompt) ── */
 function addWeekGoal(){
-  const goals=getWeekGoals();if(goals.length>=3){alert('Max 3 weekly goals!');return;}
-  const text=prompt('Weekly goal:');if(!text||!text.trim())return;
-  goals.push({text:text.trim(),done:false});saveWeekGoals(goals);renderGoals();renderToday();
+  const goals=getWeekGoals();
+  if(goals.length>=3){showToast('Max 3 weekly goals!');return;}
+  showModal(`<p class="modal-title">Add weekly goal</p>
+    <div class="modal-row"><span class="modal-label">Goal</span>
+      <input class="modal-input" id="goal-inp" placeholder="What do you want to achieve this week?"
+        onkeydown="if(event.key==='Enter')confirmAddGoal();if(event.key==='Escape')closeModal();">
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:4px;">Goal ${goals.length+1} of 3</p>
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="confirmAddGoal()">Add goal</button>
+    </div>`);
+  setTimeout(()=>{const i=document.getElementById('goal-inp');if(i)i.focus();},60);
+}
+function confirmAddGoal(){
+  const inp=document.getElementById('goal-inp');
+  const text=inp?inp.value.trim():'';if(!text)return;
+  const goals=getWeekGoals();
+  goals.push({text,done:false});saveWeekGoals(goals);
+  closeModal();renderGoals();renderToday();
 }
 function deleteGoal(idx){
-  const goals=getWeekGoals();goals.splice(idx,1);saveWeekGoals(goals);renderGoals();renderToday();
+  const goals=getWeekGoals();const snap={goal:{...goals[idx]},idx};
+  goals.splice(idx,1);saveWeekGoals(goals);renderGoals();renderToday();
+  showUndoToast('Goal deleted',()=>{
+    const g2=getWeekGoals();g2.splice(snap.idx,0,snap.goal);
+    saveWeekGoals(g2);renderGoals();renderToday();
+  });
 }

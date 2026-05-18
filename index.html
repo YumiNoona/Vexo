@@ -89,13 +89,14 @@
   </div>
 
   <!-- 6 MAIN TABS -->
-  <div class="tabs">
+  <div class="tabs" style="display:flex;align-items:center;">
     <button class="tab on" onclick="switchTab('today')"     id="t-today">Today</button>
     <button class="tab"    onclick="switchTab('goals')"     id="t-goals">Goals</button>
     <button class="tab"    onclick="switchTab('learn')"     id="t-learn">Learn</button>
     <button class="tab"    onclick="switchTab('portfolio')" id="t-portfolio">Portfolio</button>
     <button class="tab"    onclick="switchTab('plan')"      id="t-plan">Plan</button>
     <button class="tab"    onclick="switchTab('hub')"       id="t-hub">Profile</button>
+    <button onclick="showKbHelp()" title="Keyboard shortcuts (?)" style="margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:4px 8px;border-radius:6px;font-family:var(--font)">⌨ shortcuts</button>
   </div>
 
   <!-- TAB VIEWS -->

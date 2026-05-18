@@ -556,8 +556,8 @@ function buildFCCardHTML() {
 
     ${s.revealed
       ? `<div class="fc-actions">
-           <button class="fc-btn wrong" onclick="fcAnswer(false)">&#10007; Wrong</button>
-           <button class="fc-btn right"  onclick="fcAnswer(true)">&#10003; Right</button>
+           <button class="fc-btn wrong" id="fc-prev" onclick="fcAnswer(false)">&#10007; Wrong</button>
+           <button class="fc-btn right"  id="fc-next" onclick="fcAnswer(true)">&#10003; Right</button>
          </div>`
       : `<div class="fc-actions" style="visibility:hidden;pointer-events:none">
            <button class="fc-btn wrong">&#10007; Wrong</button>

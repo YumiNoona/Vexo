@@ -7,13 +7,13 @@ function toggle(id){
   if(done[id]){row.classList.add('done');ck.classList.add('checked');ck.innerHTML=CHK;playSoundProfile('complete');}
   else{row.classList.remove('done');ck.classList.remove('checked');ck.innerHTML='';}
   updateProg();saveDay();
+  if(navigator.vibrate)navigator.vibrate(40);
 }
 function editTask(id){
   const lbl=document.getElementById('lbl-'+id);const row=document.getElementById('row-'+id);
   if(!lbl||row.classList.contains('editing'))return;
   row.classList.add('editing');const cur=lbl.textContent;
-  lbl.outerHTML=`<input id="lbl-${id}" class="task-edit-input" value="${cur.replace(/"/g,'&quot;')}"
-    onblur="finishEdit('${id}')" onkeydown="if(event.key==='Enter'){event.preventDefault();finishEdit('${id}');}if(event.key==='Escape'){cancelEdit('${id}','${cur.replace(/'/g,"\\'")}');}">`;
+  lbl.outerHTML=`<input id="lbl-${id}" class="task-edit-input" value="${cur.replace(/"/g,'&quot;')}" onblur="finishEdit('${id}')" onkeydown="if(event.key==='Enter'){event.preventDefault();finishEdit('${id}');}if(event.key==='Escape')cancelEdit('${id}','${cur.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">`;
   setTimeout(()=>{const i=document.getElementById('lbl-'+id);if(i){i.focus();i.select();}},10);
 }
 function finishEdit(id){
@@ -31,38 +31,56 @@ function cancelEdit(id,orig){
   inp.outerHTML=`<span id="lbl-${id}" class="task-text" ondblclick="event.stopPropagation();editTask('${id}')" onclick="event.stopPropagation();toggle('${id}')">${escHtml(orig)}</span>`;
 }
 function editCatName(oldName){
-  const newName=prompt('Rename category:',oldName);
-  if(!newName||!newName.trim()||newName.trim()===oldName)return;
-  tasks.forEach(t=>{if(t.cat===oldName)t.cat=newName.trim();});
-  saveGlobal();renderToday();
+  showModal(`<p class="modal-title">Rename category</p>
+    <div class="modal-row"><span class="modal-label">Name</span>
+      <input class="modal-input" id="cat-name-inp" value="${escHtml(oldName)}" placeholder="Category name"
+        onkeydown="if(event.key==='Enter')saveCatName('${escHtml(oldName)}');if(event.key==='Escape')closeModal();">
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="saveCatName('${escHtml(oldName)}')">Rename</button>
+    </div>`);
+  setTimeout(()=>{const i=document.getElementById('cat-name-inp');if(i){i.focus();i.select();}},60);
+}
+function saveCatName(oldName){
+  const inp=document.getElementById('cat-name-inp');
+  const newName=inp?inp.value.trim():'';
+  if(!newName||newName===oldName){closeModal();return;}
+  tasks.forEach(t=>{if(t.cat===oldName)t.cat=newName;});
+  saveGlobal();closeModal();renderToday();
 }
 function deleteTask(id){
-  if(!window.confirm('Delete this task?'))return;
-  tasks=tasks.filter(t=>t.id!==id);delete done[id];delete timeLogs[id];
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  const snap={task:{...t},wasDone:done[id],timeLog:timeLogs[id],idx:tasks.findIndex(x=>x.id===id)};
+  tasks=tasks.filter(t=>t.id!==id);
+  delete done[id];delete timeLogs[id];
   saveGlobal();saveDay();renderToday();
+  showUndoToast('Task deleted',()=>{
+    tasks.splice(snap.idx,0,snap.task);
+    if(snap.wasDone!==undefined)done[snap.task.id]=snap.wasDone;
+    if(snap.timeLog!==undefined)timeLogs[snap.task.id]=snap.timeLog;
+    saveGlobal();saveDay();renderToday();
+  });
 }
 function addTaskInCat(cat){
   const existing=document.getElementById('addTaskRow');if(existing)existing.remove();
   const row=document.createElement('div');row.id='addTaskRow';row.className='add-task-row';
   row.innerHTML=`<span style="color:var(--subtle);font-size:14px">+</span>
     <input class="add-task-input" id="newTaskInp" placeholder="Task name…">
-    <button class="add-task-btn" onclick="confirmAddTask('${cat}')">Add</button>`;
+    <button class="add-task-btn" onclick="confirmAddTask('${escHtml(cat)}')">Add</button>`;
   const catTasks=tasks.filter(t=>t.cat===cat);
   const lastId=catTasks.length?catTasks[catTasks.length-1].id:null;
   const lastNotesEl=lastId?document.getElementById('notes-'+lastId):null;
   const lastRow=lastId?document.getElementById('row-'+lastId):null;
   const insertAfter=lastNotesEl||lastRow;
-  if(insertAfter){
-    insertAfter.insertAdjacentElement('afterend',row);
-  } else {
-    // Empty category — insert after the placeholder, inside the category block
+  if(insertAfter){insertAfter.insertAdjacentElement('afterend',row);}
+  else{
     const placeholder=document.getElementById('cat-empty-'+cat);
-    if(placeholder){ placeholder.replaceWith(row); }
-    else {
-      // Last resort: find the cat-header for this cat and insert after it
+    if(placeholder){placeholder.replaceWith(row);}
+    else{
       const headers=[...document.querySelectorAll('.cat-header')];
       const hdr=headers.find(h=>h.querySelector('.cat-label-txt')?.textContent===cat);
-      if(hdr) hdr.insertAdjacentElement('afterend',row);
+      if(hdr)hdr.insertAdjacentElement('afterend',row);
       else document.getElementById('v-today').appendChild(row);
     }
   }
@@ -78,11 +96,48 @@ function confirmAddTask(cat){
   tasks.splice(lastIdx+1,0,t);saveGlobal();saveDay();renderToday();
 }
 function addCategory(){
-  const name=prompt('Category name:');if(!name||!name.trim())return;
-  const t={id:uid(),cat:name.trim(),label:'New task',mins:30};
-  tasks.push(t);saveGlobal();saveDay();renderToday();
-  setTimeout(()=>editTask(t.id),60);
+  showModal(`<p class="modal-title">New category</p>
+    <div class="modal-row"><span class="modal-label">Name</span>
+      <input class="modal-input" id="new-cat-inp" placeholder="e.g. Evening Review"
+        onkeydown="if(event.key==='Enter')confirmAddCategory();if(event.key==='Escape')closeModal();">
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="confirmAddCategory()">Create</button>
+    </div>`);
+  setTimeout(()=>{const i=document.getElementById('new-cat-inp');if(i)i.focus();},60);
 }
+function confirmAddCategory(){
+  const inp=document.getElementById('new-cat-inp');
+  const name=inp?inp.value.trim():'';
+  if(!name){closeModal();return;}
+  const t={id:uid(),cat:name,label:'New task',mins:30};
+  tasks.push(t);saveGlobal();saveDay();closeModal();renderToday();
+  setTimeout(()=>editTask(t.id),80);
+}
+
+/* ── Right-click context menu ── */
+function showTaskCtxMenu(e,id){
+  e.preventDefault();
+  hideCtxMenu();
+  const t=tasks.find(t=>t.id===id);if(!t)return;
+  const isDone=!!done[id];
+  const menu=document.createElement('div');
+  menu.className='ctx-menu';menu.id='ctx-menu';
+  menu.innerHTML=`
+    <button class="ctx-item" onclick="hideCtxMenu();toggle('${id}')">${isDone?'↩ Mark incomplete':'✓ Mark complete'}</button>
+    <button class="ctx-item" onclick="hideCtxMenu();editTask('${id}')">✏ Edit name</button>
+    <button class="ctx-item" onclick="hideCtxMenu();openTaskModal('${id}')">⏱ Open timer</button>
+    <button class="ctx-item" onclick="hideCtxMenu();toggleNotesDrawer('${id}')">📝 Notes</button>
+    <div class="ctx-sep"></div>
+    <button class="ctx-item danger" onclick="hideCtxMenu();deleteTask('${id}')">✕ Delete</button>`;
+  const x=Math.min(e.clientX,window.innerWidth-175);
+  const y=Math.min(e.clientY,window.innerHeight-210);
+  menu.style.cssText=`left:${x}px;top:${y}px;`;
+  document.body.appendChild(menu);
+  setTimeout(()=>document.addEventListener('click',hideCtxMenu,{once:true}),0);
+}
+function hideCtxMenu(){const m=document.getElementById('ctx-menu');if(m)m.remove();}
 
 /* ═══════════════════════════════════════════════
    DRAG & DROP
