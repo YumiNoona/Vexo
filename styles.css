@@ -1119,12 +1119,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* ═══════════════════════════════════════════════
    DESKTOP TWO-COLUMN TODAY LAYOUT
 ═══════════════════════════════════════════════ */
-.today-layout{display:block;}
-@media(min-width:1024px){
-  .today-layout{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start;}
-  .today-sidebar{position:sticky;top:20px;}
-  .today-sidebar .sched-header-bar{margin-bottom:14px;}
-}
+.today-layout{display:block;width:100%;}
+.today-main{width:100%;}
 .today-sidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;}
 .today-sidebar-title{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
 
