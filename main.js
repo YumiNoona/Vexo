@@ -649,12 +649,6 @@ function switchTab(name){
   if(name==='plan')renderPlan(planSub);
   if(name==='hub')renderHub(hubSub);
 }
-  if(name==='goals')renderGoals();
-  if(name==='portfolio')renderPortfolio();
-  if(name==='learn')renderLearn(learnSub);
-  if(name==='plan')renderPlan(planSub);
-  if(name==='hub')renderHub(hubSub);
-}
 
 function renderLearn(sub){
   learnSub=sub;
@@ -735,15 +729,6 @@ function doUndo(){
   if(window._pendingUndo){window._pendingUndo();window._pendingUndo=null;}
   clearTimeout(_undoTimer);
   const el=document.getElementById('sp-undo-toast');if(el)el.remove();
-}
-// Override existing showToast to use same bottom position
-function showToast(msg){
-  let t=document.getElementById('sp-toast');
-  if(!t){t=document.createElement('div');t.id='sp-toast';
-    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:8px 18px;font-size:13px;color:var(--text);z-index:999;transition:opacity .3s;pointer-events:none;';
-    document.body.appendChild(t);}
-  t.textContent=msg;t.style.opacity='1';
-  clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity='0';},2200);
 }
 
 /* ═══════════════════════════════════════════════
