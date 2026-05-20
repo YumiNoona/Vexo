@@ -92,9 +92,12 @@ function resetTimer(id){
   const pm=document.getElementById('pomo-mode');if(pm)pm.style.display='none';
   const sub=document.getElementById('timerSub');if(sub)sub.textContent='';
 }
+// Track how many pomo-mins have already been committed so closeModal won't double-count
+let pomoLoggedMins = 0;
+
 function startPomodoro(id){
   clearInterval(timerInterval);clearInterval(pomoInterval);timerRunning=false;
-  pomodoroMode=true;pomoPhase='work';pomoCount=0;
+  pomodoroMode=true;pomoPhase='work';pomoCount=0;pomoLoggedMins=0;
   timerSeconds=25*60;timerTotal=25*60;
   const pd=document.getElementById('pomo-dots');if(pd)pd.style.display='flex';
   const pm=document.getElementById('pomo-mode');if(pm){pm.style.display='block';pm.textContent='WORK SESSION';pm.className='pomo-mode-badge work';}
@@ -102,30 +105,45 @@ function startPomodoro(id){
   const d=document.getElementById('timerDisp');if(d)d.textContent=fmtTimer(timerSeconds);
   const btn=document.getElementById('timerStartBtn');if(btn)btn.textContent='Pause';
   timerRunning=true;
-  timerInterval=setInterval(()=>{
+
+  // Named tick function — fixes the deprecated arguments.callee crash in arrow functions
+  function pomoTick(){
     timerSeconds--;
     const d=document.getElementById('timerDisp');if(d)d.textContent=fmtTimer(timerSeconds);
     if(timerSeconds<=0){
       clearInterval(timerInterval);timerRunning=false;
       if(pomoPhase==='work'){
-        pomoCount++;timeLogs[id]=(timeLogs[id]||0)+25;saveDay();updateProg();
+        // Log this completed work session immediately
+        pomoCount++;
+        const workMins=Math.round(timerTotal/60); // always 25 for work phase
+        timeLogs[id]=(timeLogs[id]||0)+workMins;
+        pomoLoggedMins+=workMins; // track what's already committed
+        saveDay();updateProg();
         updatePomoDots();
-        if(pomoCount>=4){const sub=document.getElementById('timerSub');if(sub)sub.textContent='4 pomodoros done! Take a long break.';playSoundProfile('timer');return;}
+        if(pomoCount>=4){
+          const sub=document.getElementById('timerSub');
+          if(sub)sub.textContent='4 pomodoros done! Take a long break.';
+          playSoundProfile('timer');
+          pomodoroMode=false; // mark done so closeModal won't double-log
+          return;
+        }
         playSoundProfile('break');
         const pm=document.getElementById('pomo-mode');if(pm){pm.textContent='BREAK TIME';pm.className='pomo-mode-badge brk';}
         const sub=document.getElementById('timerSub');if(sub)sub.textContent='Break! Pomodoro '+(pomoCount)+'/4 done.';
-        pomoPhase='break';timerSeconds=5*60;
+        pomoPhase='break';timerSeconds=5*60;timerTotal=5*60;
       }else{
-        pomoPhase='work';timerSeconds=25*60;
+        pomoPhase='work';timerSeconds=25*60;timerTotal=25*60;
         const pm=document.getElementById('pomo-mode');if(pm){pm.textContent='WORK SESSION';pm.className='pomo-mode-badge work';}
         playSoundProfile('complete');
       }
       const dd=document.getElementById('timerDisp');if(dd)dd.textContent=fmtTimer(timerSeconds);
       timerRunning=true;
-      timerInterval=setInterval(arguments.callee,1000);
+      timerInterval=setInterval(pomoTick,1000); // named reference — no arguments.callee needed
     }
     if(timerSeconds>0&&timerSeconds%60===0&&pomoPhase==='work')playSoundProfile('tick');
-  },1000);
+  }
+
+  timerInterval=setInterval(pomoTick,1000);
   const sub=document.getElementById('timerSub');if(sub)sub.textContent='Pomodoro running — 25 min work, 5 min break';
 }
 function updatePomoDots(){

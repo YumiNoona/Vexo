@@ -51,14 +51,20 @@ function saveCatName(oldName){
 }
 function deleteTask(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
-  const snap={task:{...t},wasDone:done[id],timeLog:timeLogs[id],idx:tasks.findIndex(x=>x.id===id)};
+  // Snapshot everything needed for undo — including the note
+  const snapNote=localStorage.getItem('sp-note-'+id)||'';
+  const snap={task:{...t},wasDone:done[id],timeLog:timeLogs[id],note:snapNote,idx:tasks.findIndex(x=>x.id===id)};
   tasks=tasks.filter(t=>t.id!==id);
   delete done[id];delete timeLogs[id];
+  // Clean up all per-task localStorage keys so nothing orphans
+  try{localStorage.removeItem('sp-note-'+id);}catch(e){}
   saveGlobal();saveDay();renderToday();
   showUndoToast('Task deleted',()=>{
     tasks.splice(snap.idx,0,snap.task);
     if(snap.wasDone!==undefined)done[snap.task.id]=snap.wasDone;
     if(snap.timeLog!==undefined)timeLogs[snap.task.id]=snap.timeLog;
+    // Restore note on undo
+    if(snap.note)try{localStorage.setItem('sp-note-'+snap.task.id,snap.note);}catch(e){}
     saveGlobal();saveDay();renderToday();
   });
 }

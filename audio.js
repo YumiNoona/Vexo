@@ -1,7 +1,12 @@
 /* ═══════════════════════════════════════════════
    AUDIO
 ═══════════════════════════════════════════════ */
-function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function getAudioCtx(){
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  // Resume if suspended (browser suspends AudioContext after inactivity or before first gesture)
+  if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+  return audioCtx;
+}
 function playTone(freq,dur,type='sine',vol=0.3){
   try{const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();
     o.connect(g);g.connect(ctx.destination);o.type=type;o.frequency.value=freq;
