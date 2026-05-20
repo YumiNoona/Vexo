@@ -8,7 +8,19 @@ function uid(){return'task-'+Math.random().toString(36).slice(2,8);}
 function cats(){const fromTasks=[...new Set(tasks.map(t=>t.cat))];const base=DEFAULT_CATS||['Morning','Afternoon','Evening'];const merged=[...base];fromTasks.forEach(c=>{if(!merged.includes(c))merged.push(c);});return merged;}
 function fmtTime(mins){if(!mins)return'0m';if(mins<60)return mins+'m';const h=Math.floor(mins/60),m=mins%60;return m?h+'h '+m+'m':h+'h';}
 function fmtTimer(s){const m=Math.floor(Math.abs(s)/60),sec=Math.abs(s)%60;return`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;}
-function totalStudyMins(){let m=0;tasks.forEach(t=>{if(STUDY_CATS.includes(t.cat)&&done[t.id])m+=(t.mins||0);});Object.values(timeLogs).forEach(v=>m+=v);return m;}
+function totalStudyMins(){
+  // Fix: avoid double-counting — if a task has a timeLog use that (actual),
+  // else fall back to estimated mins for done STUDY_CAT tasks only.
+  let m=0;
+  tasks.forEach(t=>{
+    if(timeLogs[t.id]){
+      m+=timeLogs[t.id]; // actual timer time wins
+    } else if(STUDY_CATS.includes(t.cat)&&done[t.id]){
+      m+=(t.mins||0); // no timer used — use estimate
+    }
+  });
+  return m;
+}
 function toMin(ts){const[tp,ap]=ts.split(' ');const[h,m]=tp.split(':').map(Number);return(ap==='PM'&&h!==12?h+12:(ap==='AM'&&h===12?0:h))*60+m;}
 function applyAccent(color){
   document.documentElement.style.setProperty('--accent',color);

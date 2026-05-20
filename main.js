@@ -477,8 +477,7 @@ function doExcelExport(){
     let dd={},tl={};
     try{const p=JSON.parse(r);dd=p.done||{};tl=p.timeLogs||{};}catch(e){}
     const n=Object.values(dd).filter(Boolean).length,tot=tasks.length;
-    let sm=0;tasks.forEach(t=>{if(STUDY_CATS.includes(t.cat)&&dd[t.id])sm+=(t.mins||0);});
-    Object.values(tl).forEach(v=>sm+=v);
+    let sm=0;tasks.forEach(t=>{if(tl[t.id]){sm+=tl[t.id];}else if(STUDY_CATS.includes(t.cat)&&dd[t.id]){sm+=(t.mins||0);}});
     const pct=tot?Math.round(n/tot*100):0;
     const pts=k.split('-');const d=new Date(+pts[0],+pts[1]-1,+pts[2]);
     logRows.push([
@@ -499,8 +498,7 @@ function doExcelExport(){
     const k=dkey(-i);const r=localStorage.getItem('sp-d-'+k);if(!r)continue;
     let dd={},tl={};
     try{const p=JSON.parse(r);dd=p.done||{};tl=p.timeLogs||{};}catch(e){}
-    let sm=0;tasks.forEach(t=>{if(STUDY_CATS.includes(t.cat)&&dd[t.id])sm+=(t.mins||0);});
-    Object.values(tl).forEach(v=>sm+=v);
+    let sm=0;tasks.forEach(t=>{if(tl[t.id]){sm+=tl[t.id];}else if(STUDY_CATS.includes(t.cat)&&dd[t.id]){sm+=(t.mins||0);}});
     const pts=k.split('-');const d=new Date(+pts[0],+pts[1]-1,+pts[2]);
     const day=d.getDay()||7;
     const mon=new Date(d);mon.setDate(d.getDate()-(day-1));
@@ -545,8 +543,7 @@ function doExcelExport(){
     const k=dkey(-i);const r=localStorage.getItem('sp-d-'+k);if(!r)continue;
     let dd={},tl={};
     try{const p=JSON.parse(r);dd=p.done||{};tl=p.timeLogs||{};}catch(e){}
-    let sm=0;tasks.forEach(t=>{if(STUDY_CATS.includes(t.cat)&&dd[t.id])sm+=(t.mins||0);});
-    Object.values(tl).forEach(v=>sm+=v);
+    let sm=0;tasks.forEach(t=>{if(tl[t.id]){sm+=tl[t.id];}else if(STUDY_CATS.includes(t.cat)&&dd[t.id]){sm+=(t.mins||0);}});
     if(Object.values(dd).filter(Boolean).length>0)totalActiveDays++;
     totalStudyAll+=sm;
   }

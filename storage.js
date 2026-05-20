@@ -16,9 +16,26 @@ function saveSched(s){try{localStorage.setItem('sp-sched',JSON.stringify(s));}ca
 function loadGlobal(){
   try{const t=localStorage.getItem('sp-tasks');tasks=t?JSON.parse(t):JSON.parse(JSON.stringify(DEFAULT_TASKS));}
   catch(e){tasks=JSON.parse(JSON.stringify(DEFAULT_TASKS));}
-  try{const s=localStorage.getItem('sp-streak');
-    if(s){const sd=JSON.parse(s);const yk=dkey(-1);
-      if(sd.lastDay===dkey(0)||sd.lastDay===yk)streak=sd.streak||0;else streak=0;}}catch(e){}
+
+  // ── Streak load (Duolingo/Snapchat rules) ──────────────────────────────
+  // Streak is valid if lastDay is today OR yesterday.
+  // Any gap beyond yesterday = streak is broken (expired at midnight).
+  try{
+    const s=localStorage.getItem('sp-streak');
+    if(s){
+      const sd=JSON.parse(s);
+      const today=dkey(0), yesterday=dkey(-1);
+      if(sd.lastDay===today||sd.lastDay===yesterday){
+        streak=sd.streak||0;
+      } else {
+        // Missed a day — streak is lost. Save the reset so it persists.
+        streak=0;
+        localStorage.setItem('sp-streak',JSON.stringify({streak:0,lastDay:''}));
+      }
+    }
+  }catch(e){streak=0;}
+  // ──────────────────────────────────────────────────────────────────────
+
   try{const s=localStorage.getItem('sp-settings');
     settings=s?JSON.parse(s):{profile:'UI/UX Student',accentColor:'#d4960a',soundEnabled:true,soundProfile:'soft',jobGoalDate:''};}
   catch(e){settings={profile:'UI/UX Student',accentColor:'#d4960a',soundEnabled:true,soundProfile:'soft',jobGoalDate:''};}
@@ -37,14 +54,33 @@ function loadDay(){
 }
 function saveDay(){
   try{localStorage.setItem('sp-d-'+viewKey(),JSON.stringify({done,timeLogs}));}catch(e){}
+
+  // ── Streak update (only for today, not past/future views) ─────────────
+  // Rules (Duolingo / Snapchat style):
+  //   • Complete at least 1 task today → streak is alive for today
+  //   • First task of the day extends the streak (once per day only)
+  //   • If lastDay was yesterday  → streak continues (+1)
+  //   • If lastDay was not yesterday → fresh start (=1)
+  //   • Unchecking tasks never reduces the streak once earned for the day
   if(viewOffset===0){
-    const tot=tasks.length,n=doneCount();
-    if(n===tot&&tot>0){
-      try{const s=localStorage.getItem('sp-streak');let sd=s?JSON.parse(s):{streak:0,lastDay:''};
-        if(sd.lastDay!==dkey(0)){sd.streak=sd.lastDay===dkey(-1)?sd.streak+1:1;
-          sd.lastDay=dkey(0);streak=sd.streak;
+    const n=doneCount();
+    if(n>0){
+      try{
+        const s=localStorage.getItem('sp-streak');
+        let sd=s?JSON.parse(s):{streak:0,lastDay:''};
+        const today=dkey(0), yesterday=dkey(-1);
+        if(sd.lastDay!==today){
+          // First completion of this day — extend or restart streak
+          sd.streak = sd.lastDay===yesterday ? sd.streak+1 : 1;
+          sd.lastDay = today;
+          streak = sd.streak;
           localStorage.setItem('sp-streak',JSON.stringify(sd));
-          document.getElementById('streakEl').textContent=streak;}}catch(e){}
+          const el=document.getElementById('streakEl');
+          if(el)el.textContent=streak;
+        }
+        // If lastDay===today the streak was already counted for today — do nothing
+      }catch(e){}
     }
   }
+  // ──────────────────────────────────────────────────────────────────────
 }

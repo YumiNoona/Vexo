@@ -7,8 +7,7 @@ function buildStatsHTML(){
     const k=dkey(-i);let dd={},tl={};
     try{const r=localStorage.getItem('sp-d-'+k);if(r){const p=JSON.parse(r);dd=p.done||{};tl=p.timeLogs||{};}}catch(e){}
     const n=Object.values(dd).filter(Boolean).length,tot=tasks.length;
-    let sm=0;tasks.forEach(t=>{if(STUDY_CATS.includes(t.cat)&&dd[t.id])sm+=(t.mins||0);});
-    Object.values(tl).forEach(v=>sm+=v);
+    let sm=0;tasks.forEach(t=>{if(tl[t.id]){sm+=tl[t.id];}else if(STUDY_CATS.includes(t.cat)&&dd[t.id]){sm+=(t.mins||0);}});
     const d=new Date();d.setDate(d.getDate()-i);
     days.push({k,n,tot,sm,label:d.toLocaleDateString('en-US',{weekday:'short'})});
   }
@@ -33,8 +32,7 @@ function buildStatsHTML(){
   for(let i=0;i<30;i++){
     const k=dkey(-i);let dd={},tl={};
     try{const r=localStorage.getItem('sp-d-'+k);if(r){const p=JSON.parse(r);dd=p.done||{};tl=p.timeLogs||{};}}catch(e){}
-    let sm=0;tasks.forEach(t=>{if(STUDY_CATS.includes(t.cat)&&dd[t.id])sm+=(t.mins||0);});
-    Object.values(tl).forEach(v=>sm+=v);
+    let sm=0;tasks.forEach(t=>{if(tl[t.id]){sm+=tl[t.id];}else if(STUDY_CATS.includes(t.cat)&&dd[t.id]){sm+=(t.mins||0);}});
     const n=Object.values(dd).filter(Boolean).length;
     totalStudy30+=sm;totalTasks30+=n;if(n>0)activeDays30++;
   }
@@ -68,8 +66,7 @@ function buildStatsHTML(){
     allKeys.forEach(k=>{
       let dd={},tl={};try{const r=localStorage.getItem('sp-d-'+k);if(r){const p=JSON.parse(r);dd=p.done||{};tl=p.timeLogs||{};}}catch(e){}
       const n=Object.values(dd).filter(Boolean).length,tot=tasks.length;
-      let sm=0;tasks.forEach(t=>{if(STUDY_CATS.includes(t.cat)&&dd[t.id])sm+=(t.mins||0);});
-      Object.values(tl).forEach(v=>sm+=v);
+      let sm=0;tasks.forEach(t=>{if(tl[t.id]){sm+=tl[t.id];}else if(STUDY_CATS.includes(t.cat)&&dd[t.id]){sm+=(t.mins||0);}});
       const pct=tot?Math.round(n/tot*100):0;
       const pts=k.split('-');const d=new Date(+pts[0],+pts[1]-1,+pts[2]);
       // Mood indicator
