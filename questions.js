@@ -3145,7 +3145,15 @@ function setupDailyCards() {
   if (available.length < 5) available = [...UX_QUESTIONS]; // refresh pool if low
 
   const shuffled = [...available].sort(() => Math.random() - 0.5);
-  const todayCards = shuffled.slice(0, 5);
+  const todayCards = shuffled.slice(0, 5).map(q => {
+    const opts = q.options.map((text, idx) => ({ text, isCorrect: idx === q.answerIndex }));
+    opts.sort(() => Math.random() - 0.5);
+    return {
+      ...q,
+      options: opts.map(o => o.text),
+      answerIndex: opts.findIndex(o => o.isCorrect)
+    };
+  });
   const newHistory = [...history, ...todayCards.map(c => c.id)].slice(-180);
 
   flashcardState = {
