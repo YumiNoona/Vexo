@@ -1,4 +1,4 @@
-// Combined UX_QUESTIONS from all categories
+// Combined UX_QUESTIONS from all categories (PDF syllabus only)
 const UX_QUESTIONS = [
   ...UX_UX_RESEARCH,
   ...UX_VISUAL_DESIGN,
@@ -15,8 +15,6 @@ const UX_QUESTIONS = [
   ...UX_ETHICS___PATTERNS,
   ...UX_TYPOGRAPHY,
   ...UX_COLOR_THEORY,
-  ...UX_GENERAL_THEORY,
-  ...VISUAL_QUESTIONS,
 ];
 
 const INTERVIEW_QUESTIONS = [
