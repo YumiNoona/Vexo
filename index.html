@@ -217,12 +217,12 @@
 <script src="js/questions/ux-research-medium.js"></script>
 <script src="js/questions/ux-research-hard.js"></script>
 <script src="js/questions/ux-research-combined.js"></script>
-<!-- Flashcard -->
+<!-- Combiner (defines UX_QUESTIONS + LESSON_MAP - must load before flashcard) -->
+<script src="js/questions/questions-data.js"></script>
+<!-- Flashcard (depends on LESSON_MAP from questions-data.js) -->
 <script src="js/questions/flashcard-state.js"></script>
 <script src="js/questions/flashcard-ui.js"></script>
 <script src="js/questions/flashcard-actions.js"></script>
-<!-- Combiner (must be last - depends on all above) -->
-<script src="js/questions/questions-data.js"></script>
 <script src="js/settings.js"></script>
 
 <!-- Main app (split from main.js) -->
