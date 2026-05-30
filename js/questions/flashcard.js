@@ -285,7 +285,7 @@ function buildModeSelectorHTML() {
           </select>
         </div>
         
-        <button class="fc-btn reveal" style="margin-top:auto; align-self:center; padding:12px 32px; width:auto;" onclick="fcStartMode('lesson')">Start Lesson Practice</button>
+        <button class="fc-btn reveal" style="margin-top:auto; align-self:center; padding:12px 32px; width:auto; flex:none;" onclick="fcStartMode('lesson')">Start Lesson Practice</button>
       </div>
 
       <!-- Normal -->
@@ -293,7 +293,7 @@ function buildModeSelectorHTML() {
         <div style="font-size:32px;">🔀</div>
         <div style="font-size:18px;font-weight:700;">Normal</div>
         <p style="font-size:13px;color:var(--muted);flex:1;">A random shuffle of all 300+ questions from across the entire curriculum.</p>
-        <button class="fc-btn reveal" style="margin-top:auto; align-self:center; padding:12px 32px; width:auto;" onclick="fcStartMode('normal')">Start Normal Practice</button>
+        <button class="fc-btn reveal" style="margin-top:auto; align-self:center; padding:12px 32px; width:auto; flex:none;" onclick="fcStartMode('normal')">Start Normal Practice</button>
       </div>
 
       <!-- Interview Prep -->
@@ -302,7 +302,7 @@ function buildModeSelectorHTML() {
         <div style="font-size:32px;">💼</div>
         <div style="font-size:18px;font-weight:700;">Interview Prep</div>
         <p style="font-size:13px;color:var(--muted);flex:1;">Focus on general UI/UX theory, principles, and visual diagram identification to prep for job interviews.</p>
-        <button class="fc-btn reveal" style="margin-top:auto; align-self:center; padding:12px 32px; width:auto;" onclick="fcStartMode('interview')">Start Interview Prep</button>
+        <button class="fc-btn reveal" style="margin-top:auto; align-self:center; padding:12px 32px; width:auto; flex:none;" onclick="fcStartMode('interview')">Start Interview Prep</button>
       </div>
 
     </div>
