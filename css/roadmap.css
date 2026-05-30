@@ -1,0 +1,32 @@
+/* ═══════════════════════════════════════════════
+   ROADMAP
+═══════════════════════════════════════════════ */
+.phase{margin-bottom:22px;}
+.phase-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.phase-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.phase-meta{font-size:11px;color:var(--muted);}
+.phase-title{font-size:16px;font-weight:600;color:var(--text);}
+.week-block{margin-left:18px;padding:10px 13px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);border-left:3px solid;margin-bottom:5px;}
+.week-label{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:3px;}
+.week-text{font-size:13px;color:var(--text);}
+.tips-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-top:8px;}
+.tips-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;}
+.tip-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;}
+.tip-arrow{color:var(--accent);font-size:13px;flex-shrink:0;margin-top:1px;}
+.tip-text{font-size:13px;color:var(--muted);line-height:1.55;}
+
+/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
+   ROADMAP — hover-only actions on desktop
+═══════════════════════════════════════════════ */
+@media(min-width:769px){
+  .phase .sched-actions,
+  .week-block .roadmap-week-actions{
+    opacity:0;
+    transition:opacity .15s;
+  }
+  .phase:hover .sched-actions,
+  .week-block:hover .roadmap-week-actions{
+    opacity:1;
+  }
+}

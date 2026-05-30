@@ -1,0 +1,10 @@
+/* ═══════════════════════════════════════════════
+   GOALS BANNER
+═══════════════════════════════════════════════ */
+.goals-banner{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;}
+.goals-banner-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.goal-pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:4px 10px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;}
+.goal-pill.done{color:var(--green);border-color:var(--green-dim);background:var(--green-dim);text-decoration:line-through;}
+.goal-pill:hover{border-color:var(--accent);}
+
+/* ═══════════════════════════════════════════════

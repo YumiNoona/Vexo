@@ -16,7 +16,24 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='34' fill='%230c0c0e'/><text y='130' x='90' font-size='100' text-anchor='middle'>📖</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/tabs.css">
+<link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/goals.css">
+<link rel="stylesheet" href="css/today.css">
+<link rel="stylesheet" href="css/modal.css">
+<link rel="stylesheet" href="css/schedule.css">
+<link rel="stylesheet" href="css/roadmap.css">
+<link rel="stylesheet" href="css/stats.css">
+<link rel="stylesheet" href="css/kanban.css">
+<link rel="stylesheet" href="css/journal.css">
+<link rel="stylesheet" href="css/resources.css">
+<link rel="stylesheet" href="css/weekly-goals.css">
+<link rel="stylesheet" href="css/flashcards.css">
+<link rel="stylesheet" href="css/eod.css">
+<link rel="stylesheet" href="css/settings.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/mobile.css">
 <style>
 /* Supabase loading screen */
 #sb-loading {
@@ -144,24 +161,56 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="env-config.js"></script>
-<script src="config.js"></script>
-<script src="audio.js"></script>
-<script src="storage.js"></script>
-<script src="helpers.js"></script>
-<script src="header.js"></script>
-<script src="today.js"></script>
-<script src="tasks.js"></script>
-<script src="timer.js"></script>
-<script src="schedule.js"></script>
-<script src="stats.js"></script>
-<script src="kanban.js"></script>
-<script src="journal.js"></script>
-<script src="resources.js"></script>
-<script src="weekly-goals.js"></script>
-<script src="questions.js"></script>
-<script src="eod-summary.js"></script>
-<script src="settings.js"></script>
-<script src="main.js"></script>
-<script src="supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/helpers.js"></script>
+<script src="js/header.js"></script>
+<script src="js/today.js"></script>
+<script src="js/tasks.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/schedule.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/kanban.js"></script>
+<script src="js/journal.js"></script>
+<script src="js/resources.js"></script>
+<script src="js/weekly-goals.js"></script>
+<!-- Questions data (split by category) -->
+<script src="js/questions/ux-research.js"></script>
+<script src="js/questions/visual-design.js"></script>
+<script src="js/questions/emotional-design.js"></script>
+<script src="js/questions/ux-laws.js"></script>
+<script src="js/questions/interaction-design.js"></script>
+<script src="js/questions/information-architecture.js"></script>
+<script src="js/questions/accessibility.js"></script>
+<script src="js/questions/gestalt.js"></script>
+<script src="js/questions/heuristics.js"></script>
+<script src="js/questions/prototyping.js"></script>
+<script src="js/questions/design-systems.js"></script>
+<script src="js/questions/psychology.js"></script>
+<script src="js/questions/ethics-patterns.js"></script>
+<script src="js/questions/typography.js"></script>
+<script src="js/questions/color-theory.js"></script>
+<script src="js/questions/questions-data.js"></script>
+<script src="js/questions/flashcard.js"></script>
+<script src="js/settings.js"></script>
+
+<!-- Main app (split from main.js) -->
+<script src="js/main/roadmap.js"></script>
+<script src="js/main/eod-summary.js"></script>
+<script src="js/main/share-card.js"></script>
+<script src="js/main/export.js"></script>
+<script src="js/main/toasts.js"></script>
+<script src="js/main/tabs.js"></script>
+<script src="js/main/timer-bar.js"></script>
+<script src="js/main/keyboard.js"></script>
+<script src="js/main/palette.js"></script>
+<script src="js/main/app.js"></script>
+
+<!-- Supabase cloud sync (split) -->
+<script src="js/supabase/client.js"></script>
+<script src="js/supabase/sync.js"></script>
+<script src="js/supabase/realtime.js"></script>
+<script src="js/supabase/data.js"></script>
 </body>
 </html>

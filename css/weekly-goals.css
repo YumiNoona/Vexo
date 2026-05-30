@@ -1,0 +1,13 @@
+/* ═══════════════════════════════════════════════
+   WEEKLY GOALS TAB
+═══════════════════════════════════════════════ */
+.weekly-goals-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.week-label-big{font-size:13px;color:var(--muted);}
+.goal-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:6px;transition:all .15s;}
+.goal-row:hover{border-color:var(--border2);}
+.goal-row.done-goal{opacity:.6;}
+.goal-row.done-goal .goal-row-text{text-decoration:line-through;color:var(--muted);}
+.goal-row-text{flex:1;font-size:14px;color:var(--text);}
+.goal-row-num{font-size:11px;color:var(--subtle);font-family:var(--mono);flex-shrink:0;}
+
+/* ═══════════════════════════════════════════════

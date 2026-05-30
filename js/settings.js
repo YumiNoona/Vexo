@@ -217,8 +217,14 @@ function clearAll(){
     </div>
   `);
 }
-function _doClearData(){
+async function _doClearData(){
   closeModal();
+  
+  // If connected to Supabase, clear the cloud data first
+  if (typeof sbClearUserData === 'function') {
+    await sbClearUserData();
+  }
+
   // Keep streak + settings — remove everything else
   const keep=['sp-streak','sp-settings'];
   const saved={};

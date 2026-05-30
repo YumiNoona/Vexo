@@ -1,0 +1,304 @@
+/* ═══════════════════════════════════════════════
+   MOBILE NAV BAR (iPhone / Safari PWA)
+═══════════════════════════════════════════════ */
+.mobile-nav {
+  display: none; /* hidden on desktop */
+}
+
+@media (max-width: 768px) {
+  /* ── iOS safe area + base fixes ─────────── */
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --nav-h: 62px;
+  }
+
+  html, body {
+    /* Prevent bounce/overscroll ruining the layout */
+    overflow: hidden;
+    height: 100%;
+    /* Fix iOS 100vh bug */
+    height: -webkit-fill-available;
+  }
+
+  body {
+    /* Use dvh when supported for dynamic viewport (keyboard-aware) */
+    height: 100dvh;
+  }
+
+  /* Scrollable app area above the bottom nav */
+  .app {
+    height: calc(100dvh - var(--nav-h) - var(--safe-bottom));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    /* Extra top padding for status bar in standalone mode */
+    padding-top: max(16px, var(--safe-top));
+    padding-bottom: 24px;
+  }
+
+  /* ── Hide top tabs on mobile ─────────── */
+  .tabs {
+    display: none !important;
+  }
+
+  /* ── Bottom nav bar ─────────────────── */
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    /* Blur for glassmorphism effect */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding-bottom: var(--safe-bottom);
+    height: calc(var(--nav-h) + var(--safe-bottom));
+  }
+
+  .mnav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-family: var(--font);
+    padding: 8px 4px;
+    /* 44px minimum touch target */
+    min-height: 44px;
+    transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .mnav-btn svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .mnav-btn span {
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    font-weight: 500;
+  }
+
+  .mnav-btn.active {
+    color: var(--accent);
+  }
+
+  .mnav-btn.active svg {
+    transform: translateY(-1px);
+  }
+
+  /* Tap press effect */
+  .mnav-btn:active svg {
+    transform: scale(0.88);
+  }
+
+  /* ── Touch target sizing ─────────────── */
+  .checkbox {
+    width: 24px;
+    height: 24px;
+    /* Invisible tap expansion */
+    position: relative;
+  }
+  .checkbox::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+  }
+
+  .date-btn,
+  .cat-add,
+  .act-btn,
+  .modal-btn,
+  .fc-btn,
+  .tab,
+  .res-tag {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Always show action buttons on touch ─ */
+  /* On desktop these only appear on :hover */
+  .task-actions,
+  .sched-actions,
+  .resource-actions {
+    opacity: 1 !important;
+  }
+
+  /* ── Header adjustments ──────────────── */
+  .header {
+    margin-bottom: 16px;
+  }
+
+  .header-left h1, .edit-h1 {
+    font-size: 22px;
+  }
+
+  .stat-box {
+    padding: 8px 10px;
+    min-width: 56px;
+  }
+
+  .stat-box .s-num {
+    font-size: 18px;
+  }
+
+  /* ── Modals: full-width sheet on mobile ─ */
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 20px 20px calc(20px + var(--safe-bottom));
+    max-height: 85dvh;
+  }
+
+  /* Drag handle visual hint for bottom sheets */
+  .modal::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border2);
+    margin: 0 auto 18px;
+  }
+
+  /* ── Timer display ───────────────────── */
+  .timer-display {
+    font-size: 48px;
+  }
+
+  /* ── Stats grid: 2-col on small phones ── */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ── Kanban: horizontal scroll ────────── */
+  .kanban-board {
+    grid-template-columns: repeat(3, 280px);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+  }
+
+  .kanban-col {
+    scroll-snap-align: start;
+  }
+
+  /* ── Question card bigger on mobile ─────── */
+  .flashcard {
+    min-height: 200px;
+  }
+
+  .card-question {
+    font-size: 18px;
+  }
+
+  /* ── Resource URL: allow wrap ─────────── */
+  .resource-title,
+  .resource-url {
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  /* ── EOD card: full height ───────────── */
+  .eod-card {
+    max-height: 80dvh;
+  }
+
+  /* ── Input zoom prevention ───────────── */
+  /* iOS Safari zooms in on inputs < 16px font */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
+  /* But keep smaller visual size for specific overrides */
+  .add-task-input,
+  .task-edit-input,
+  .notes-textarea,
+  .journal-search,
+  .prompt-textarea {
+    font-size: 16px !important;
+  }
+
+  /* ── Smooth scrolling inside app ─────── */
+  .app, .modal, .eod-card {
+    scroll-behavior: smooth;
+  }
+
+  /* ── Progress stats wrap better ──────── */
+  .prog-stats {
+    gap: 10px;
+  }
+
+  /* ── Goal pills wrap ─────────────────── */
+  .goals-banner {
+    gap: 8px;
+  }
+
+  /* ── Larger tap zone for task rows ───── */
+  .task-row {
+    padding: 12px 12px;
+    min-height: 52px;
+  }
+
+  /* ── Section headers ─────────────────── */
+  .sched-row {
+    gap: 8px;
+  }
+
+  .sched-time {
+    width: 56px;
+  }
+
+  /* ── Weekly goal rows ────────────────── */
+  .goal-row {
+    padding: 14px;
+    min-height: 52px;
+  }
+
+  /* ── Question card controls ─────────────── */
+  .flashcard-controls {
+    gap: 12px;
+  }
+
+  .fc-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+}
+
+/* ── Standalone PWA mode (full screen) ── */
+@media (display-mode: standalone) {
+  /* Status bar gap at top when running as PWA */
+  .app {
+    padding-top: max(20px, env(safe-area-inset-top, 20px));
+  }
+}
+
+
+/* ═══════════════════════════════════════════════
+
+

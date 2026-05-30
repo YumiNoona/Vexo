@@ -29,6 +29,84 @@
 - **State & Cloud Sync** — Robust local storage strategy that intelligently syncs up with a Supabase PostgreSQL backend when authenticated.
 - **Interactive Modals & Palettes** — Keyboard-first navigation, command palettes (`Ctrl+K`), and drag-and-drop mechanics embedded at its core.
 
+### 📁 Project Structure
+
+```
+Vexo/
+├── index.html              # App shell (SPA)
+├── login.html              # Auth page
+├── favicon.ico
+├── manifest.json           # PWA manifest
+├── vercel.json             # Vercel deploy config
+├── build.js                # Injects env vars at deploy
+├── env-config.js           # Auto-generated (gitignored)
+│
+├── css/
+│   ├── base.css            # Tokens, reset, body
+│   ├── tabs.css
+│   ├── header.css
+│   ├── goals.css
+│   ├── today.css           # Progress bar, tasks, categories
+│   ├── modal.css
+│   ├── schedule.css
+│   ├── roadmap.css
+│   ├── stats.css
+│   ├── kanban.css
+│   ├── journal.css
+│   ├── resources.css
+│   ├── weekly-goals.css
+│   ├── flashcards.css
+│   ├── eod.css
+│   ├── settings.css
+│   ├── components.css      # Palette, context menu, undo toast, etc.
+│   ├── mobile.css          # Mobile nav, responsive breakpoints
+│   └── login.css           # Auth page styles
+│
+└── js/
+    ├── audio.js            # Sound system
+    ├── config.js           # Constants, state
+    ├── helpers.js          # Utility functions
+    ├── storage.js          # localStorage CRUD
+    ├── header.js           # Date nav, header updates
+    ├── today.js            # Today view rendering
+    ├── tasks.js            # Task CRUD, drag-and-drop
+    ├── timer.js            # Pomodoro timer
+    ├── schedule.js         # Schedule blocks
+    ├── stats.js            # Stats page
+    ├── kanban.js           # Portfolio kanban
+    ├── journal.js          # Reflection journal
+    ├── resources.js        # Resource library
+    ├── weekly-goals.js     # Weekly goals
+    ├── settings.js         # Settings page
+    │
+    ├── questions/
+    │   ├── ux-research.js … (15 category data files)
+    │   ├── questions-data.js  # Combines all categories
+    │   └── flashcard.js       # Flashcard state/rendering
+    │
+    ├── main/
+    │   ├── roadmap.js      # Phase/week CRUD
+    │   ├── eod-summary.js  # End-of-day summary rendering
+    │   ├── share-card.js   # Canvas PNG download
+    │   ├── export.js       # Excel/JSON export/import
+    │   ├── toasts.js       # Toast + undo-toast system
+    │   ├── tabs.js         # Tab switching, sub-tab rendering
+    │   ├── timer-bar.js    # Persistent timer bar
+    │   ├── keyboard.js     # Keyboard shortcuts
+    │   ├── palette.js      # Command palette (Ctrl+K)
+    │   └── app.js          # Init, multi-tab sync, pruning
+    │
+    ├── supabase/
+    │   ├── client.js       # Init, auth helpers
+    │   ├── sync.js         # Debounced batch sync
+    │   ├── realtime.js     # Cross-device sync
+    │   └── data.js         # Push/pull all, app init
+    │
+    └── login/
+        ├── scene.js        # Three.js 3D scene
+        └── auth.js         # Sign-in/sign-up logic
+```
+
 ---
 
 ## ✨ Features

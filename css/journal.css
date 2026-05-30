@@ -1,0 +1,19 @@
+/* ═══════════════════════════════════════════════
+   REFLECTION JOURNAL
+═══════════════════════════════════════════════ */
+.journal-prompts{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.journal-prompt{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;}
+.prompt-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.prompt-icon{font-size:14px;}
+.prompt-textarea{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:13px;padding:8px 10px;resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.prompt-textarea:focus{border-color:var(--accent);}
+.journal-save-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.journal-history{margin-top:20px;}
+.journal-entry{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px;}
+.journal-entry-date{font-size:11px;color:var(--muted);margin-bottom:10px;font-family:var(--mono);}
+.journal-q{font-size:10px;color:var(--subtle);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;}
+.journal-a{font-size:13px;color:var(--text);line-height:1.55;margin-bottom:8px;}
+.journal-search{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:13px;padding:8px 12px;outline:none;margin-bottom:14px;}
+.journal-search:focus{border-color:var(--accent);}
+
+/* ═══════════════════════════════════════════════
