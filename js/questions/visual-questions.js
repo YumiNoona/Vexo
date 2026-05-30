@@ -162,9 +162,7 @@ const VISUAL_QUESTIONS = [
     answerIndex: 0,
     explanation: "While solid lines usually show direct user progression, dashed lines often represent alternative flows, optional steps, system-level background processes, or returning data.",
     example: "A solid line shows a user submitting a form, and a dashed line shows the server returning a success message."
-  }
-];
-,
+  },
 {
     id: 411,
     category: "UI Components",

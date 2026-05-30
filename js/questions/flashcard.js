@@ -79,9 +79,39 @@ function setupDailyCards() {
     return array;
   };
 
+  // Pad shorter wrong options so all 4 options are similar length
+  const fillers = [
+    " in standard practice", " within modern design", " across all platforms",
+    " for optimal results", " in typical workflows", " during active use",
+    " in common scenarios", " for standard projects", " in most situations",
+    " based on guidelines", " per design standards", " within the system",
+    " as commonly applied", " in practical usage", " for general purposes",
+    " according to experts", " in real-world cases", " for best outcomes"
+  ];
+
+  const balanceOptionLengths = (options, correctIdx) => {
+    const correctLen = options[correctIdx].length;
+    return options.map((opt, idx) => {
+      if (idx === correctIdx) return opt;
+      let padded = opt;
+      let fillerIdx = Math.floor(Math.random() * fillers.length);
+      let attempts = 0;
+      while (padded.length < correctLen - 10 && attempts < 3) {
+        const filler = fillers[(fillerIdx + attempts) % fillers.length];
+        // Don't pad if it would make the wrong option longer than the correct one
+        if (padded.length + filler.length > correctLen + 10) break;
+        padded = padded.replace(/\.?$/, '') + filler;
+        attempts++;
+      }
+      return padded;
+    });
+  };
+
   const shuffled = shuffleArray([...available]);
   const todayCards = shuffled.slice(0, 5).map(q => {
-    const opts = q.options.map((text, idx) => ({ text, isCorrect: idx === q.answerIndex }));
+    // First balance lengths, then shuffle positions
+    const balanced = balanceOptionLengths([...q.options], q.answerIndex);
+    const opts = balanced.map((text, idx) => ({ text, isCorrect: idx === q.answerIndex }));
     shuffleArray(opts);
     return {
       ...q,
