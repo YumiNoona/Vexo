@@ -68,9 +68,8 @@ function renderToday(){
         <span class="drag-handle" title="Drag to reorder">⠿</span>
         <div id="ck-${t.id}" class="checkbox${d?' checked':''}" onclick="event.stopPropagation();toggle('${t.id}')">${d?CHK:''}</div>
         <span id="lbl-${t.id}" class="task-text" ondblclick="event.stopPropagation();editTask('${t.id}')" onclick="event.stopPropagation();toggle('${t.id}')" title="Double-click to edit">${escHtml(t.label)}</span>
-        <button class="task-start-btn${startT?' has-start':''}" onclick="event.stopPropagation();setTaskStartTime('${t.id}')" title="Set time">${startT?'🕐 '+startT:'🕐'}</button>
+        <button class="task-start-btn${startT?' has-start':''}" onclick="event.stopPropagation();setTaskStartTime('${t.id}')" title="Set time">${startT&&endT?'🕐 '+formatTimeTo12(startT)+' → '+formatTimeTo12(endT):startT?'🕐 '+formatTimeTo12(startT):'🕐'}</button>
         <button class="task-note-btn${hasNote?' has-note':''}" onclick="event.stopPropagation();toggleNotesDrawer('${t.id}')" title="Notes">📝</button>
-        <button class="task-time-btn" onclick="event.stopPropagation();openTaskModal('${t.id}')" title="Timer">⏱ ${fmtTime(dispMin)}</button>
         <div class="task-actions">
           <button class="act-btn" onclick="event.stopPropagation();editTask('${t.id}')">Edit</button>
           <button class="act-btn del" onclick="event.stopPropagation();deleteTask('${t.id}')">✕</button>

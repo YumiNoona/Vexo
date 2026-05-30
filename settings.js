@@ -206,7 +206,7 @@ function clearAll(){
     <p class="modal-title">🗑️ Clear User Data</p>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px;">
       This will delete all your <strong style="color:var(--text)">tasks, journal entries, kanban cards,
-      flashcards, resources, weekly goals</strong> and daily history.<br><br>
+      questions, resources, weekly goals</strong> and daily history.<br><br>
       Your <strong style="color:var(--text)">streak, settings, and accent colour</strong> will be kept.
     </p>
     <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Want to save a backup first?</p>

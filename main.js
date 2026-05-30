@@ -207,7 +207,7 @@ function renderEOD(){
   // rotate(-90deg) on the fill circle = start from 12 o'clock
   const ringTransform='rotate(-90 50 50)';
 
-  // Flashcard report (session stats from global flashcardState)
+  // Questions report (session stats from global flashcardState)
   const fcDone=(typeof flashcardState!=='undefined')?(flashcardState.correct+flashcardState.wrong):0;
   const fcRight=(typeof flashcardState!=='undefined')?flashcardState.correct:0;
   const fcWrong=(typeof flashcardState!=='undefined')?flashcardState.wrong:0;
@@ -218,7 +218,7 @@ function renderEOD(){
 
   const fcSection=fcDone>0?`
     <div class="eod-section">
-      <p class="eod-section-label">🧠 Flashcards</p>
+      <p class="eod-section-label">🧠 Questions</p>
       <div class="eod-fc-report">
         <div class="eod-fc-meta">
           <span class="eod-fc-stat correct">${fcRight} <span class="eod-fc-icon">✓</span> correct</span>
@@ -650,7 +650,7 @@ function switchTab(name){
 function renderLearn(sub){
   learnSub=sub;
   const tabs=['journal','flashcards','library'];
-  const labels={journal:'Journal',flashcards:'Flashcards',library:'Library'};
+  const labels={journal:'Journal',flashcards:'Questions',library:'Library'};
   let h=`<div class="sub-tabs">`;
   tabs.forEach(t=>{h+=`<button class="sub-tab${sub===t?' on':''}" onclick="renderLearn('${t}')">${labels[t]}</button>`;});
   h+=`</div><div id="learn-content">`;
@@ -807,7 +807,7 @@ function initKeyboardShortcuts(){
           const firstCat=cats()[0];if(firstCat)addTaskInCat(firstCat);
         }break;
       case '?':showKbHelp();break;
-      // Flashcard shortcuts
+      // Question shortcuts
       case ' ':
         if(activeTab==='learn'&&learnSub==='flashcards'){
           e.preventDefault();
@@ -829,8 +829,8 @@ function showKbHelp(){
     <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px;margin-bottom:16px;">
       <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">1–6</kbd><span style="color:var(--muted)">Switch tabs</span>
       <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">N</kbd><span style="color:var(--muted)">New task (Today tab)</span>
-      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">Space</kbd><span style="color:var(--muted)">Flip flashcard</span>
-      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">← →</kbd><span style="color:var(--muted)">Prev / next flashcard</span>
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">Space</kbd><span style="color:var(--muted)">Reveal answer</span>
+      <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">← →</kbd><span style="color:var(--muted)">Prev / next question</span>
       <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">Ctrl+K</kbd><span style="color:var(--muted)">Open search palette</span>
       <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">Ctrl+Z</kbd><span style="color:var(--muted)">Undo last delete</span>
       <kbd style="font-family:var(--mono);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)">Esc</kbd><span style="color:var(--muted)">Close modal / palette</span>
@@ -891,10 +891,10 @@ function searchPalette(){
     }
   }
   // Tab shortcuts
-  const tabs2=[{n:'Today',t:'today',i:'📋'},{n:'Goals',t:'goals',i:'🎯'},{n:'Flashcards',t:'learn',i:'🧠'},{n:'Portfolio',t:'portfolio',i:'🗂'},{n:'Schedule',t:'plan',i:'📅'},{n:'Stats',t:'hub',i:'📊'},{n:'Settings',t:'hub',i:'⚙️'}];
+  const tabs2=[{n:'Today',t:'today',i:'📋'},{n:'Goals',t:'goals',i:'🎯'},{n:'Questions',t:'learn',i:'🧠'},{n:'Portfolio',t:'portfolio',i:'🗂'},{n:'Schedule',t:'plan',i:'📅'},{n:'Stats',t:'hub',i:'📊'},{n:'Settings',t:'hub',i:'⚙️'}];
   tabs2.forEach(tb=>{
     if(!q||tb.n.toLowerCase().includes(q)){
-      res.push({icon:tb.i,text:'Go to '+tb.n,sub:'Navigation',action:()=>{closePalette();switchTab(tb.t);if(tb.n==='Flashcards')setTimeout(()=>renderLearn('flashcards'),100);if(tb.n==='Settings')setTimeout(()=>renderHub('settings'),100);}});
+      res.push({icon:tb.i,text:'Go to '+tb.n,sub:'Navigation',action:()=>{closePalette();switchTab(tb.t);if(tb.n==='Questions')setTimeout(()=>renderLearn('flashcards'),100);if(tb.n==='Settings')setTimeout(()=>renderHub('settings'),100);}});
     }
   });
   paletteIdx=0;

@@ -281,7 +281,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .goal-row-num{font-size:11px;color:var(--subtle);font-family:var(--mono);flex-shrink:0;}
 
 /* ═══════════════════════════════════════════════
-   FLASHCARDS
+   QUESTIONS
 ═══════════════════════════════════════════════ */
 .flashcard-wrap{perspective:800px;margin-bottom:20px;}
 .flashcard{width:100%;min-height:180px;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);cursor:pointer;}
@@ -670,7 +670,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     scroll-snap-align: start;
   }
 
-  /* ── Flash card bigger on mobile ─────── */
+  /* ── Question card bigger on mobile ─────── */
   .flashcard {
     min-height: 200px;
   }
@@ -742,7 +742,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     min-height: 52px;
   }
 
-  /* ── Flash card controls ─────────────── */
+  /* ── Question card controls ─────────────── */
   .flashcard-controls {
     gap: 12px;
   }
@@ -763,7 +763,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 
 /* ═══════════════════════════════════════════════
-   EOD CARD — FIXES & FLASHCARD SECTION
+   EOD CARD — FIXES & QUESTIONS SECTION
 ═══════════════════════════════════════════════ */
 
 /* Ring track: much more visible than border2 */
@@ -875,7 +875,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   flex-wrap: wrap;
 }
 
-/* ── Flashcard report section ─────────────── */
+/* ── Questions report section ─────────────── */
 .eod-fc-report {
   background: var(--surface2);
   border: 1px solid var(--border);

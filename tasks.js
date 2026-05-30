@@ -4,9 +4,24 @@
 function toggle(id){
   const wasDone=!!done[id];done[id]=!wasDone;
   const row=document.getElementById('row-'+id);const ck=document.getElementById('ck-'+id);
-  if(done[id]){row.classList.add('done');ck.classList.add('checked');ck.innerHTML=CHK;playSoundProfile('complete');}
+  if(done[id]){
+    row.classList.add('done');ck.classList.add('checked');ck.innerHTML=CHK;playSoundProfile('complete');
+    // Auto-stamp end time if task has a start time set
+    if(typeof loadTaskStartTimes==='function') loadTaskStartTimes();
+    const raw = taskStartTimes[id] || null;
+    const hasStart = raw ? (typeof raw === 'object' ? !!raw.start : !!raw) : false;
+    if(hasStart){
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2,'0');
+      const mm = String(now.getMinutes()).padStart(2,'0');
+      const endTime = hh + ':' + mm;
+      const startVal = typeof raw === 'object' ? raw.start : raw;
+      taskStartTimes[id] = { start: startVal, end: endTime };
+      try { localStorage.setItem('sp-start-times-' + dkey(0), JSON.stringify(taskStartTimes)); } catch(e) {}
+    }
+  }
   else{row.classList.remove('done');ck.classList.remove('checked');ck.innerHTML='';}
-  updateProg();saveDay();
+  updateProg();saveDay();renderToday();
   if(navigator.vibrate)navigator.vibrate(40);
 }
 function editTask(id){

@@ -1,8 +1,0 @@
-*.tmp
-*.log
-env-config.js
-.DS_Store
-Thumbs.db
-.vscode/
-*.log
-node_modules/

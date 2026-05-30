@@ -1,10 +1,49 @@
+# ─── Secrets / Generated config ───────────────────
 # Generated at build time by build.js from Vercel env vars
 # NEVER commit this — it contains your Supabase keys
 env-config.js
 
-# OS / editor
+# ─── Dependencies ──────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ─── Build output ──────────────────────────────────
+dist/
+build/
+out/
+.vercel/
+
+# ─── Environment variables ─────────────────────────
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# ─── Logs ──────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── OS ────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+Desktop.ini
+
+# ─── Editor / IDE ──────────────────────────────────
 .vscode/
-*.log
-node_modules/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─── Misc ──────────────────────────────────────────
+*.tgz
+*.zip
+coverage/
+.cache/

@@ -24,13 +24,26 @@
 //   SUPABASE_ANON_KEY → window.SUPABASE_ANON
 
 /* ── Init client ─────────────────────────────── */
-const { createClient } = window.supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON, {
-  auth: { persistSession: true, autoRefreshToken: true }
-});
+const url = window.SUPABASE_URL || '';
+const anon = window.SUPABASE_ANON || '';
+const hasSupabase = url && anon && !url.includes('YOUR_PROJECT_ID') && !anon.includes('YOUR_ANON_PUBLIC_KEY');
 
-/* ── Global flags ────────────────────────────── */
-window.SUPABASE_ENABLED = true;
+let sb = null;
+if (hasSupabase) {
+  try {
+    const { createClient } = window.supabase;
+    sb = createClient(url, anon, {
+      auth: { persistSession: true, autoRefreshToken: true }
+    });
+    window.SUPABASE_ENABLED = true;
+  } catch (err) {
+    console.error("Failed to initialize Supabase:", err);
+    window.SUPABASE_ENABLED = false;
+  }
+} else {
+  window.SUPABASE_ENABLED = false;
+}
+
 let _syncEnabled = false; // only enabled after initial pull
 
 /* ══════════════════════════════════════════════
@@ -48,8 +61,10 @@ async function sbSignUp(email, password) {
 }
 async function sbSignOut() {
   _syncEnabled = false;
-  flushBatch(); // attempt to save any pending writes before sign out
-  await sb.auth.signOut();
+  if (sb) {
+    flushBatch(); // attempt to save any pending writes before sign out
+    try { await sb.auth.signOut(); } catch(e) {}
+  }
   localStorage.clear();
   location.href = 'login.html';
 }
@@ -288,6 +303,17 @@ async function pushAllToCloud(userId) {
 ══════════════════════════════════════════════ */
 (async function () {
   const loadingEl = document.getElementById('sb-loading');
+
+  if (!window.SUPABASE_ENABLED) {
+    console.log("Supabase disabled/unconfigured. Falling back to local-only mode.");
+    if (loadingEl) {
+      loadingEl.style.transition = 'opacity 0.4s';
+      loadingEl.style.opacity = '0';
+      setTimeout(() => loadingEl.remove(), 400);
+    }
+    if (typeof window.__startApp === 'function') window.__startApp();
+    return;
+  }
 
   const session = await sbGetSession();
 

@@ -5,6 +5,8 @@
 - **Cross-device sync** — edit on PC, open laptop at night, all data is there
 - **Hosted on Vercel** — shareable URL, works on any device / browser
 - **Supabase database** — all tab data (Today, Goals, Learn, Portfolio, Plan, Profile) synced
+- **Local-only mode** — works offline without Supabase keys (no login required)
+- **MCQ Questions tab** — interactive multiple-choice quiz with 30 questions from class PDFs
 
 ---
 
@@ -114,7 +116,7 @@ This way signing up works instantly.
 | Offline | Uses cached localStorage — syncs when back online |
 
 **All tabs are synced:**
-Today · Goals · Learn (Journal + Flashcards + Library) · Portfolio · Plan · Profile / Settings
+Today · Goals · Learn (Journal + Questions + Library) · Portfolio · Plan · Profile / Settings
 
 ---
 
@@ -146,11 +148,12 @@ Today · Goals · Learn (Journal + Flashcards + Library) · Portfolio · Plan ·
 
 | File | Change |
 |------|--------|
-| `supabase.js` | **NEW** — Supabase client, auth, localStorage proxy, sync |
-| `login.html` | **NEW** — Animated login / sign-up page |
+| `supabase.js` | **NEW** — Supabase client, auth, localStorage proxy, sync. Falls back to local-only mode if keys are missing |
+| `login.html` | **NEW** — Animated login / sign-up page. Auto-bypasses to app if Supabase not configured |
 | `index.html` | Added Supabase CDN + loading overlay |
 | `main.js` | Wrapped init in `window.__startApp()` for async startup |
 | `settings.js` | Added Sign Out button in Profile settings |
 | `vercel.json` | **NEW** — Vercel routing config |
+| `questions.js` | **UPDATED** — Replaced flip-card self-assessment with interactive MCQ quiz; 200 questions from class PDFs |
 
 All other files (styles, tabs, components) are unchanged.
