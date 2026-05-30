@@ -183,5 +183,5 @@ This project is licensed under the **MIT License** see the [LICENSE](LICENSE) fi
 ---
 
 <p align="center">
-  <sub>Built with 💙 and obsessive attention to detail (❁´◡`❁) by Veil</sub>
+  <sub>Built with 💙 by Veil</sub>
 </p>

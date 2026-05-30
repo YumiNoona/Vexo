@@ -285,7 +285,7 @@ function buildModeSelectorHTML() {
           </select>
         </div>
         
-        <button class="fc-btn reveal" style="margin:0;" onclick="fcStartMode('lesson')">Start Lesson Practice</button>
+        <button class="fc-btn reveal" style="margin-top:auto; align-self:center; padding:12px 32px; width:auto;" onclick="fcStartMode('lesson')">Start Lesson Practice</button>
       </div>
 
       <!-- Normal -->
@@ -293,7 +293,7 @@ function buildModeSelectorHTML() {
         <div style="font-size:32px;">🔀</div>
         <div style="font-size:18px;font-weight:700;">Normal</div>
         <p style="font-size:13px;color:var(--muted);flex:1;">A random shuffle of all 300+ questions from across the entire curriculum.</p>
-        <button class="fc-btn reveal" style="margin:0;margin-top:auto;" onclick="fcStartMode('normal')">Start Normal Practice</button>
+        <button class="fc-btn reveal" style="margin-top:auto; align-self:center; padding:12px 32px; width:auto;" onclick="fcStartMode('normal')">Start Normal Practice</button>
       </div>
 
       <!-- Interview Prep -->
@@ -302,7 +302,7 @@ function buildModeSelectorHTML() {
         <div style="font-size:32px;">💼</div>
         <div style="font-size:18px;font-weight:700;">Interview Prep</div>
         <p style="font-size:13px;color:var(--muted);flex:1;">Focus on general UI/UX theory, principles, and visual diagram identification to prep for job interviews.</p>
-        <button class="fc-btn reveal" style="margin:0;margin-top:auto;" onclick="fcStartMode('interview')">Start Interview Prep</button>
+        <button class="fc-btn reveal" style="margin-top:auto; align-self:center; padding:12px 32px; width:auto;" onclick="fcStartMode('interview')">Start Interview Prep</button>
       </div>
 
     </div>
@@ -469,9 +469,9 @@ function buildFCSummaryHTML() {
         <div class="fc-sum-stat w"><div class="fc-sum-num">${wrong}</div><div class="fc-sum-lbl">Wrong</div></div>
         <div class="fc-sum-stat a"><div class="fc-sum-num">${accuracy}%</div><div class="fc-sum-lbl">Accuracy</div></div>
       </div>
-      <div style="margin-top:20px; display:flex; gap:10px;">
-        <button class="fc-btn" style="flex:1;" onclick="fcStartNewSet()">Practice 5 More</button>
-        <button class="fc-btn" style="flex:1; background:var(--bg); border-color:var(--border);" onclick="fcBackToModes()">Change Mode</button>
+      <div style="margin-top:20px; display:flex; gap:16px; justify-content:center;">
+        <button class="fc-btn reveal" style="padding:12px 32px; width:auto; flex:none;" onclick="fcStartNewSet()">Practice 5 More</button>
+        <button class="fc-btn" style="padding:12px 32px; width:auto; flex:none; background:var(--bg); border-color:var(--border);" onclick="fcBackToModes()">Change Mode</button>
       </div>
     </div>
 
