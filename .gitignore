@@ -47,3 +47,7 @@ Desktop.ini
 *.zip
 coverage/
 .cache/
+
+# ─── Large Files ───────────────────────────────────
+pdf/
+Class PDF/
