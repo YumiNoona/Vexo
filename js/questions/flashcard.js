@@ -344,7 +344,7 @@ function buildModeSelectorHTML() {
       </div>
 
       <!-- Interview Prep -->
-      <div style="background:var(--surface);border:1px solid var(--accent);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;">
         <div style="position:absolute;top:0;right:0;background:var(--accent);color:#0c0c0e;font-size:10px;font-weight:700;padding:4px 12px;border-bottom-left-radius:12px;">RECOMMENDED</div>
         <div style="font-size:32px;">💼</div>
         <div style="font-size:18px;font-weight:700;">Interview Prep</div>
