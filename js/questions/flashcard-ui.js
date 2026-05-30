@@ -205,3 +205,4 @@ function buildFlashcardsHTML() {
     return FC_CSS + buildFCSummaryHTML();
   }
   return FC_CSS + buildFCCardHTML();
+}
