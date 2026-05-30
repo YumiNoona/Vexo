@@ -154,6 +154,6 @@ Today · Goals · Learn (Journal + Questions + Library) · Portfolio · Plan · 
 | `main.js` | Wrapped init in `window.__startApp()` for async startup |
 | `settings.js` | Added Sign Out button in Profile settings |
 | `vercel.json` | **NEW** — Vercel routing config |
-| `questions.js` | **UPDATED** — Replaced flip-card self-assessment with interactive MCQ quiz; 200 questions from class PDFs |
+| `questions.js` | **UPDATED** — Replaced flip-card self-assessment with interactive MCQ quiz; 300 questions from class PDFs |
 
 All other files (styles, tabs, components) are unchanged.
