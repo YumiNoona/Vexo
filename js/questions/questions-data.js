@@ -16,4 +16,31 @@ const UX_QUESTIONS = [
   ...UX_TYPOGRAPHY,
   ...UX_COLOR_THEORY,
   ...UX_GENERAL_THEORY,
+  ...VISUAL_QUESTIONS,
+];
+
+const INTERVIEW_QUESTIONS = [
+  ...UX_GENERAL_THEORY,
+  ...VISUAL_QUESTIONS,
+];
+
+const LESSON_MAP = [
+  { id: 2, title: "Understanding of UX-UI", questions: UX_UX_RESEARCH.slice(0, 15) },
+  { id: 3, title: "Emotional Design", questions: UX_EMOTIONAL_DESIGN },
+  { id: 4, title: "UX Psychology", questions: UX_PSYCHOLOGY },
+  { id: 5, title: "Project Topic Selection", questions: UX_UX_RESEARCH.slice(15, 20) },
+  { id: "5.1", title: "Requirement Gathering", questions: UX_UX_RESEARCH.slice(20, 25) },
+  { id: 6, title: "Planning and Strategy", questions: UX_UX_RESEARCH.slice(25, 30) },
+  { id: 7, title: "Interviews", questions: UX_UX_RESEARCH.slice(30, 35) },
+  { id: 9, title: "User Research Methods", questions: UX_UX_RESEARCH.slice(35, 40) },
+  { id: 10, title: "User Persona", questions: UX_UX_RESEARCH.slice(40, 45) },
+  { id: 11, title: "Empathy Map", questions: UX_UX_RESEARCH.slice(45, 50) },
+  { id: 12, title: "Customer Journey Map", questions: UX_UX_RESEARCH.slice(50, 55) },
+  { id: 13, title: "Define", questions: UX_UX_RESEARCH.slice(55, 59) },
+  { id: 14, title: "Competitive Analysis", questions: UX_VISUAL_DESIGN.slice(0, 5) },
+  { id: 15, title: "Ideation", questions: UX_VISUAL_DESIGN.slice(5, 10) },
+  { id: 16, title: "User Scenario", questions: UX_INTERACTION_DESIGN.slice(0, 8) },
+  { id: 17, title: "User Flow and Task Flow", questions: UX_INTERACTION_DESIGN.slice(8, 16) },
+  { id: 18, title: "Information Architecture", questions: UX_INFORMATION_ARCHITECTURE },
+  { id: 19, title: "Accessibility", questions: UX_ACCESSIBILITY },
 ];

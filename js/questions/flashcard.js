@@ -9,20 +9,40 @@
    STATE
    ═══════════════════════════════════════════════ */
 let flashcardState = {
+  mode: null, // "lesson", "normal", "interview", null (selector screen)
+  startLessonIndex: 0,
+  endLessonIndex: LESSON_MAP.length - 1,
   todayDate: "",
   todayCards: [],
   currentIndex: 0,
   revealed: false,
   correct: 0,
   wrong: 0,
-  wrongCards: [],          // stores full card objects that were answered wrong
-  selectedAnswerIndex: null, // index of option selected by user for current card
+  wrongCards: [],
+  selectedAnswerIndex: null,
   history: []
 };
 
-/* ═══════════════════════════════════════════════
-   DAILY CARD SETUP
-   ═══════════════════════════════════════════════ */
+function fcStartMode(mode) {
+  const sLesson = document.getElementById("fc-start-lesson");
+  const eLesson = document.getElementById("fc-end-lesson");
+  let sIndex = 0, eIndex = LESSON_MAP.length - 1;
+  
+  if (mode === 'lesson' && sLesson && eLesson) {
+    sIndex = parseInt(sLesson.value);
+    eIndex = parseInt(eLesson.value);
+    if (sIndex > eIndex) {
+      const temp = sIndex; sIndex = eIndex; eIndex = temp;
+    }
+  }
+
+  flashcardState.mode = mode;
+  flashcardState.startLessonIndex = sIndex;
+  flashcardState.endLessonIndex = eIndex;
+  
+  fcStartNewSet();
+}
+
 function setupDailyCards() {
   const today = new Date().toDateString();
   let saved = null;
@@ -35,10 +55,22 @@ function setupDailyCards() {
   }
 
   const history = (saved && saved.history) ? saved.history : [];
-  let available = UX_QUESTIONS.filter(q => !history.includes(q.id));
-  if (available.length < 5) available = [...UX_QUESTIONS]; // refresh pool if low
+  
+  let pool = [];
+  if (flashcardState.mode === 'lesson') {
+    for (let i = flashcardState.startLessonIndex; i <= flashcardState.endLessonIndex; i++) {
+      pool = pool.concat(LESSON_MAP[i].questions);
+    }
+    if (pool.length === 0) pool = UX_QUESTIONS;
+  } else if (flashcardState.mode === 'interview') {
+    pool = [...INTERVIEW_QUESTIONS];
+  } else {
+    pool = [...UX_QUESTIONS];
+  }
 
-  // Unbiased Fisher-Yates shuffle algorithm
+  let available = pool.filter(q => !history.includes(q.id));
+  if (available.length < 5) available = [...pool]; // refresh pool if low
+
   const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -60,6 +92,7 @@ function setupDailyCards() {
   const newHistory = [...history, ...todayCards.map(c => c.id)].slice(-180);
 
   flashcardState = {
+    ...flashcardState,
     todayDate: today,
     todayCards,
     currentIndex: 0,
@@ -219,9 +252,71 @@ const FC_CSS = `<style id="fc-styles">
 </style>`;
 
 /* ═══════════════════════════════════════════════
+   MODE SELECTOR HTML
+   ═══════════════════════════════════════════════ */
+function buildModeSelectorHTML() {
+  let lessonOptions = '';
+  LESSON_MAP.forEach((lesson, i) => {
+    lessonOptions += `<option value="${i}">Lesson ${lesson.id}: ${escHtml(lesson.title)}</option>`;
+  });
+
+  return `
+  <div class="fc-wrap">
+    <div style="text-align:center;margin-bottom:24px;">
+      <h2 style="font-size:24px;font-weight:700;margin-bottom:8px;">Choose Practice Mode</h2>
+      <p style="color:var(--muted);font-size:14px;">Select how you want to practice your UX/UI knowledge today.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px;">
+      
+      <!-- Lesson Focus -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:32px;">📚</div>
+        <div style="font-size:18px;font-weight:700;">Lesson Focus</div>
+        <p style="font-size:13px;color:var(--muted);flex:1;">Target specific PDF lessons to test your knowledge on a particular topic.</p>
+        
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+          <select id="fc-start-lesson" style="width:100%;padding:8px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:13px;">
+            ${lessonOptions}
+          </select>
+          <div style="text-align:center;color:var(--muted);font-size:12px;">to</div>
+          <select id="fc-end-lesson" style="width:100%;padding:8px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:13px;">
+            ${lessonOptions}
+          </select>
+        </div>
+        
+        <button class="fc-btn reveal" style="margin:0;" onclick="fcStartMode('lesson')">Start Lesson Practice</button>
+      </div>
+
+      <!-- Normal -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:32px;">🔀</div>
+        <div style="font-size:18px;font-weight:700;">Normal</div>
+        <p style="font-size:13px;color:var(--muted);flex:1;">A random shuffle of all 300+ questions from across the entire curriculum.</p>
+        <button class="fc-btn reveal" style="margin:0;margin-top:auto;" onclick="fcStartMode('normal')">Start Normal Practice</button>
+      </div>
+
+      <!-- Interview Prep -->
+      <div style="background:var(--surface);border:1px solid var(--accent);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;right:0;background:var(--accent);color:#0c0c0e;font-size:10px;font-weight:700;padding:4px 12px;border-bottom-left-radius:12px;">RECOMMENDED</div>
+        <div style="font-size:32px;">💼</div>
+        <div style="font-size:18px;font-weight:700;">Interview Prep</div>
+        <p style="font-size:13px;color:var(--muted);flex:1;">Focus on general UI/UX theory, principles, and visual diagram identification to prep for job interviews.</p>
+        <button class="fc-btn reveal" style="margin:0;margin-top:auto;" onclick="fcStartMode('interview')">Start Interview Prep</button>
+      </div>
+
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════
    buildFlashcardsHTML
    ═══════════════════════════════════════════════ */
 function buildFlashcardsHTML() {
+  if (flashcardState.mode === null) {
+    return FC_CSS + buildModeSelectorHTML();
+  }
+  
   setupDailyCards();
   if (flashcardState.currentIndex >= flashcardState.todayCards.length) {
     return FC_CSS + buildFCSummaryHTML();
@@ -239,6 +334,11 @@ function buildFCCardHTML() {
   const pct = Math.round((s.currentIndex / total) * 100);
   const catColor  = FC_CAT_COLORS[card.category]  || "#888";
   const diffColor = FC_DIFF_COLORS[card.difficulty] || "#888";
+
+  let visualHTML = '';
+  if (card.visual) {
+    visualHTML = `<div style="display:flex;justify-content:center;margin:16px 0;padding:20px;background:var(--bg);border-radius:12px;border:1px solid var(--border);color:var(--text);">${card.visual}</div>`;
+  }
 
   // Front Options HTML (Interactive selection)
   let frontOptionsHTML = '<div class="fc-mcq-options">';
@@ -289,6 +389,7 @@ function buildFCCardHTML() {
             ${fcBadge(card.difficulty, diffColor)}
           </div>
           <div class="fc-question">${escHtml(card.question)}</div>
+          ${visualHTML}
           ${frontOptionsHTML}
         </div>
 
@@ -299,6 +400,7 @@ function buildFCCardHTML() {
             ${fcBadge(card.difficulty, diffColor)}
           </div>
           <div class="fc-question">${escHtml(card.question)}</div>
+          ${visualHTML}
           ${backOptionsHTML}
           <div class="fc-explanation"><b>Explanation:</b> ${escHtml(card.explanation)}</div>
           <div class="fc-example"><b>Example:</b> ${escHtml(card.example)}</div>
@@ -367,8 +469,9 @@ function buildFCSummaryHTML() {
         <div class="fc-sum-stat w"><div class="fc-sum-num">${wrong}</div><div class="fc-sum-lbl">Wrong</div></div>
         <div class="fc-sum-stat a"><div class="fc-sum-num">${accuracy}%</div><div class="fc-sum-lbl">Accuracy</div></div>
       </div>
-      <div style="margin-top:20px">
-        <button class="fc-btn" style="margin: 0 auto; width: 100%;" onclick="fcStartNewSet()">Practice 5 More</button>
+      <div style="margin-top:20px; display:flex; gap:10px;">
+        <button class="fc-btn" style="flex:1;" onclick="fcStartNewSet()">Practice 5 More</button>
+        <button class="fc-btn" style="flex:1; background:var(--bg); border-color:var(--border);" onclick="fcBackToModes()">Change Mode</button>
       </div>
     </div>
 
@@ -427,5 +530,11 @@ function fcStartNewSet() {
   flashcardState.todayDate = ""; 
   saveFlashcards();
   setupDailyCards();
+  renderLearn('flashcards');
+}
+
+function fcBackToModes() {
+  flashcardState.mode = null;
+  saveFlashcards();
   renderLearn('flashcards');
 }
