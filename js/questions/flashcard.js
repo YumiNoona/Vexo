@@ -43,6 +43,9 @@ function fcStartMode(mode) {
   fcStartNewSet();
 }
 
+// Session-level tracking to prevent repeats within a single browser session
+let sessionSeenIds = new Set();
+
 function setupDailyCards() {
   const today = new Date().toDateString();
   let saved = null;
@@ -51,10 +54,16 @@ function setupDailyCards() {
   if (saved && saved.todayDate === today && saved.todayCards && saved.todayCards.length > 0) {
     if (!saved.wrongCards) saved.wrongCards = [];
     flashcardState = saved;
+    // Track these in the session set too
+    saved.todayCards.forEach(c => sessionSeenIds.add(c.id));
     return;
   }
 
-  const history = (saved && saved.history) ? saved.history : [];
+  // Merge history from both live state and localStorage (use whichever is longer/more complete)
+  const savedHistory = (saved && saved.history) ? saved.history : [];
+  const liveHistory = flashcardState.history || [];
+  // Combine both and deduplicate
+  const mergedHistory = [...new Set([...savedHistory, ...liveHistory])];
   
   let pool = [];
   if (flashcardState.mode === 'lesson') {
@@ -68,8 +77,13 @@ function setupDailyCards() {
     pool = [...UX_QUESTIONS];
   }
 
-  let available = pool.filter(q => !history.includes(q.id));
-  if (available.length < 5) available = [...pool]; // refresh pool if low
+  // Filter out questions seen in history AND in this session
+  let available = pool.filter(q => !mergedHistory.includes(q.id) && !sessionSeenIds.has(q.id));
+  if (available.length < 5) {
+    // Pool exhausted — reset session tracking but keep history slim
+    sessionSeenIds.clear();
+    available = pool.filter(q => !sessionSeenIds.has(q.id));
+  }
 
   const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -119,7 +133,10 @@ function setupDailyCards() {
       answerIndex: opts.findIndex(o => o.isCorrect)
     };
   });
-  const newHistory = [...history, ...todayCards.map(c => c.id)].slice(-180);
+  
+  // Track in session AND in persistent history
+  todayCards.forEach(c => sessionSeenIds.add(c.id));
+  const newHistory = [...mergedHistory, ...todayCards.map(c => c.id)].slice(-300);
 
   flashcardState = {
     ...flashcardState,
