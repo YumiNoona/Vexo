@@ -178,10 +178,10 @@ Contributions are welcome! Please open an issue first to discuss what you'd like
 
 ## 📝 License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <p align="center">
-  <sub>Built with ☕ and obsessive attention to detail</sub>
+  <sub>Built with 💙 and obsessive attention to detail by veil</sub>
 </p>
