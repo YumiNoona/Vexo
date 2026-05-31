@@ -2,7 +2,7 @@
    CARD HTML
    ═══════════════════════════════════════════════ */
 function buildFCCardHTML() {
-  const s = flashcardState;
+  const s = questionState;
   const card = s.todayCards[s.currentIndex];
   const total = s.todayCards.length;
   const pct = Math.round((s.currentIndex / total) * 100);
@@ -100,7 +100,7 @@ function buildFCCardHTML() {
    SUMMARY HTML
    ═══════════════════════════════════════════════ */
 function buildFCSummaryHTML() {
-  const { correct, wrong, wrongCards, todayCards } = flashcardState;
+  const { correct, wrong, wrongCards, todayCards } = questionState;
   const total = correct + wrong;
   const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
   const grade =
@@ -172,43 +172,44 @@ function buildFCSummaryHTML() {
    ACTIONS
    ═══════════════════════════════════════════════ */
 function fcSelectOption(optionIndex) {
-  if (flashcardState.selectedAnswerIndex !== null) return; // already answered
+  if (questionState.selectedAnswerIndex !== null) return; // already answered
 
-  const currentCard = flashcardState.todayCards[flashcardState.currentIndex];
-  flashcardState.selectedAnswerIndex = optionIndex;
+  const currentCard = questionState.todayCards[questionState.currentIndex];
+  questionState.selectedAnswerIndex = optionIndex;
 
   const isCorrect = (optionIndex === currentCard.answerIndex);
   if (isCorrect) {
-    flashcardState.correct++;
+    questionState.correct++;
+    addXP(5, 'question');
   } else {
-    flashcardState.wrong++;
-    if (!flashcardState.wrongCards) flashcardState.wrongCards = [];
-    flashcardState.wrongCards.push(currentCard);
+    questionState.wrong++;
+    if (!questionState.wrongCards) questionState.wrongCards = [];
+    questionState.wrongCards.push(currentCard);
   }
 
-  flashcardState.revealed = true; // flip the card to show back
-  saveFlashcards();
-  renderLearn('flashcards');
+  questionState.revealed = true; // flip the card to show back
+  saveQuestions();
+  renderLearn('questions');
 }
 
 function fcNextCard() {
-  flashcardState.currentIndex++;
-  flashcardState.revealed = false;
-  flashcardState.selectedAnswerIndex = null;
-  saveFlashcards();
-  renderLearn('flashcards');
+  questionState.currentIndex++;
+  questionState.revealed = false;
+  questionState.selectedAnswerIndex = null;
+  saveQuestions();
+  renderLearn('questions');
 }
 
 function fcStartNewSet() {
-  flashcardState.todayCards = []; // Force generation of new set
-  flashcardState.todayDate = ""; 
-  saveFlashcards();
+  questionState.todayCards = []; // Force generation of new set
+  questionState.todayDate = ""; 
+  saveQuestions();
   setupDailyCards();
-  renderLearn('flashcards');
+  renderLearn('questions');
 }
 
 function fcBackToModes() {
-  flashcardState.mode = null;
-  saveFlashcards();
-  renderLearn('flashcards');
+  questionState.mode = null;
+  saveQuestions();
+  renderLearn('questions');
 }

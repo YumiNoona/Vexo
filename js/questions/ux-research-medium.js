@@ -1,4 +1,4 @@
-ï»¿// UX Research (27 questions, Medium)
+// UX Research (27 questions, Medium)
 const UX_UX_RESEARCH_MEDIUM = [
 {
     id: 9,
@@ -96,7 +96,7 @@ const UX_UX_RESEARCH_MEDIUM = [
     difficulty: "Medium",
     question: "What is 'Card Sorting' used for in UX research?",
     options: [
-      "A technique to shuffle flashcards for daily study sessions",
+      "A technique to shuffle questions for daily study sessions",
       "A research method where users organize topics into groups to reveal their mental models for information architecture",
       "A data visualization technique using Kanban columns",
       "A method to rank competitor products against your own"
@@ -117,7 +117,7 @@ const UX_UX_RESEARCH_MEDIUM = [
       "A technique for developers to explain their code to testers"
     ],
     answerIndex: 1,
-    explanation: "Think Aloud testing surfaces hidden cognitive processes â€” you discover what confuses users that they would never report in a survey.",
+    explanation: "Think Aloud testing surfaces hidden cognitive processes — you discover what confuses users that they would never report in a survey.",
     example: "A user thinking aloud during a checkout: 'Hmm, I'm not sure if 'Proceed' means I'm placing the order or just going to the next step.'"
   },
 {
@@ -177,7 +177,7 @@ const UX_UX_RESEARCH_MEDIUM = [
       "A list of tasks the user completed during usability testing"
     ],
     answerIndex: 1,
-    explanation: "The 'Think & Feel' quadrant captures what matters to the user internally â€” things they wouldn't say out loud but that drive behavior.",
+    explanation: "The 'Think & Feel' quadrant captures what matters to the user internally — things they wouldn't say out loud but that drive behavior.",
     example: "A user may not say they're anxious about data privacy but their hesitation during sign-up reveals this internal concern."
   },
 {
@@ -192,7 +192,7 @@ const UX_UX_RESEARCH_MEDIUM = [
       "A UI component that responds to touch gestures"
     ],
     answerIndex: 1,
-    explanation: "Touchpoints span digital and physical â€” including ads, app screens, emails, packaging, support calls, and more.",
+    explanation: "Touchpoints span digital and physical — including ads, app screens, emails, packaging, support calls, and more.",
     example: "The moment a user clicks a search ad, lands on a product page, adds an item to cart, and calls customer support are all touchpoints."
   },
 {
@@ -207,8 +207,8 @@ const UX_UX_RESEARCH_MEDIUM = [
       "A question asked during user interviews to explore behavior"
     ],
     answerIndex: 1,
-    explanation: "HMW questions turn POV statements into springboards for brainstorming â€” they're open enough to inspire many solutions but specific enough to be focused.",
-    example: "From 'Users abandon checkout because it's too slow' â†’ 'How might we reduce checkout steps to under 60 seconds?'"
+    explanation: "HMW questions turn POV statements into springboards for brainstorming — they're open enough to inspire many solutions but specific enough to be focused.",
+    example: "From 'Users abandon checkout because it's too slow' ? 'How might we reduce checkout steps to under 60 seconds?'"
   },
 {
     id: 66,
@@ -238,7 +238,7 @@ const UX_UX_RESEARCH_MEDIUM = [
     ],
     answerIndex: 1,
     explanation: "SCAMPER is an ideation technique that prompts designers to look at an existing product from 7 different creative angles to discover innovations.",
-    example: "Applying 'Eliminate' to a sign-up form: what happens if we remove all optional fields? Users complete it faster â†’ higher conversion."
+    example: "Applying 'Eliminate' to a sign-up form: what happens if we remove all optional fields? Users complete it faster ? higher conversion."
   },
 {
     id: 90,
@@ -252,7 +252,7 @@ const UX_UX_RESEARCH_MEDIUM = [
       "A brain-mapping study used to measure user engagement biometrically"
     ],
     answerIndex: 1,
-    explanation: "Cognitive Walkthroughs focus specifically on learnability â€” can a new user figure out how to use the product without instruction?",
+    explanation: "Cognitive Walkthroughs focus specifically on learnability — can a new user figure out how to use the product without instruction?",
     example: "An evaluator asking 'Would a first-time user know to click this icon to save their work?' at every step of the flow."
   },
 {

@@ -35,16 +35,16 @@ function initKeyboardShortcuts(){
       case '?':showKbHelp();break;
       // Question shortcuts
       case ' ':
-        if(activeTab==='learn'&&learnSub==='flashcards'){
+        if(activeTab==='learn'&&learnSub==='questions'){
           e.preventDefault();
           const flipBtn=document.getElementById('fc-flip');if(flipBtn)flipBtn.click();
         }break;
       case 'arrowright':
-        if(activeTab==='learn'&&learnSub==='flashcards'){
+        if(activeTab==='learn'&&learnSub==='questions'){
           const nextBtn=document.getElementById('fc-next');if(nextBtn)nextBtn.click();
         }break;
       case 'arrowleft':
-        if(activeTab==='learn'&&learnSub==='flashcards'){
+        if(activeTab==='learn'&&learnSub==='questions'){
           const prevBtn=document.getElementById('fc-prev');if(prevBtn)prevBtn.click();
         }break;
     }

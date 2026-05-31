@@ -48,7 +48,7 @@ function showSuccess(email) {
 
 async function pushLocalToCloud(userId) {
   const rows = []; const ts = new Date().toISOString();
-  ['sp-phases','sp-sched','sp-tasks','sp-streak','sp-settings','sp-kanban','sp-resources','sp-flashcards-v2']
+  ['sp-phases','sp-sched','sp-tasks','sp-streak','sp-settings','sp-kanban','sp-resources','sp-questions-v2']
     .forEach(k => { const v = localStorage.getItem(k); if (v) try { rows.push({ user_id:userId, key:k, value:JSON.parse(v), updated_at:ts }); } catch(e){} });
   for (let i = 0; i < 90; i++) {
     const d = new Date(); d.setDate(d.getDate() - i);

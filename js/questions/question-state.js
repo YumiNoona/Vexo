@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════
    QUESTIONS — Interactive MCQ Questions from Class PDFs
-   buildFlashcardsHTML() returns HTML string
+   buildQuestionsHTML() returns HTML string
    (called by renderLearn in main.js)
    ═══════════════════════════════════════════════ */
 
@@ -8,7 +8,7 @@
 /* ═══════════════════════════════════════════════
    STATE
    ═══════════════════════════════════════════════ */
-let flashcardState = {
+let questionState = {
   mode: null, // "lesson", "normal", "interview", null (selector screen)
   startLessonIndex: 0,
   endLessonIndex: LESSON_MAP.length - 1,
@@ -36,9 +36,9 @@ function fcStartMode(mode) {
     }
   }
 
-  flashcardState.mode = mode;
-  flashcardState.startLessonIndex = sIndex;
-  flashcardState.endLessonIndex = eIndex;
+  questionState.mode = mode;
+  questionState.startLessonIndex = sIndex;
+  questionState.endLessonIndex = eIndex;
   
   fcStartNewSet();
 }
@@ -49,11 +49,11 @@ let sessionSeenIds = new Set();
 function setupDailyCards() {
   const today = new Date().toDateString();
   let saved = null;
-  try { saved = JSON.parse(localStorage.getItem("sp-flashcards-mcq-v1")); } catch(e) {}
+  try { saved = JSON.parse(localStorage.getItem("sp-questions-mcq-v1")); } catch(e) {}
 
   if (saved && saved.todayDate === today && saved.todayCards && saved.todayCards.length > 0) {
     if (!saved.wrongCards) saved.wrongCards = [];
-    flashcardState = saved;
+    questionState = saved;
     // Track these in the session set too
     saved.todayCards.forEach(c => sessionSeenIds.add(c.id));
     return;
@@ -61,17 +61,17 @@ function setupDailyCards() {
 
   // Merge history from both live state and localStorage (use whichever is longer/more complete)
   const savedHistory = (saved && saved.history) ? saved.history : [];
-  const liveHistory = flashcardState.history || [];
+  const liveHistory = questionState.history || [];
   // Combine both and deduplicate
   const mergedHistory = [...new Set([...savedHistory, ...liveHistory])];
   
   let pool = [];
-  if (flashcardState.mode === 'lesson') {
-    for (let i = flashcardState.startLessonIndex; i <= flashcardState.endLessonIndex; i++) {
+  if (questionState.mode === 'lesson') {
+    for (let i = questionState.startLessonIndex; i <= questionState.endLessonIndex; i++) {
       pool = pool.concat(LESSON_MAP[i].questions);
     }
     if (pool.length === 0) pool = UX_QUESTIONS;
-  } else if (flashcardState.mode === 'interview') {
+  } else if (questionState.mode === 'interview') {
     pool = [...INTERVIEW_QUESTIONS];
   } else {
     pool = [...UX_QUESTIONS];
@@ -138,8 +138,8 @@ function setupDailyCards() {
   todayCards.forEach(c => sessionSeenIds.add(c.id));
   const newHistory = [...mergedHistory, ...todayCards.map(c => c.id)].slice(-300);
 
-  flashcardState = {
-    ...flashcardState,
+  questionState = {
+    ...questionState,
     todayDate: today,
     todayCards,
     currentIndex: 0,
@@ -150,7 +150,7 @@ function setupDailyCards() {
     selectedAnswerIndex: null,
     history: newHistory
   };
-  saveFlashcards();
+  saveQuestions();
 }
 
 function fcHash(str) {
@@ -159,6 +159,6 @@ function fcHash(str) {
   return h;
 }
 
-function saveFlashcards() {
-  try { localStorage.setItem("sp-flashcards-mcq-v1", JSON.stringify(flashcardState)); } catch(e) {}
+function saveQuestions() {
+  try { localStorage.setItem("sp-questions-mcq-v1", JSON.stringify(questionState)); } catch(e) {}
 }

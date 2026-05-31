@@ -29,7 +29,7 @@
 <link rel="stylesheet" href="css/journal.css">
 <link rel="stylesheet" href="css/resources.css">
 <link rel="stylesheet" href="css/weekly-goals.css">
-<link rel="stylesheet" href="css/flashcards.css">
+<link rel="stylesheet" href="css/questions.css">
 <link rel="stylesheet" href="css/eod.css">
 <link rel="stylesheet" href="css/settings.css">
 <link rel="stylesheet" href="css/components.css">
@@ -102,6 +102,11 @@
         <p class="s-num time-num" id="timeEl">0h</p>
         <p class="s-sub">studied</p>
       </div>
+      <div class="stat-box" id="xpDisplayHeader" style="cursor:default">
+        <p class="s-label">Level</p>
+        <p class="s-num" id="xpDisplay">Lv 1 <span class="xp-bar-wrap"><span class="xp-bar-fill" style="width:0%"></span></span></p>
+        <p class="s-sub">0 XP</p>
+      </div>
     </div>
   </div>
 
@@ -124,6 +129,8 @@
   <div id="v-plan"      style="display:none"></div>
   <div id="v-hub"       style="display:none"></div>
 </div>
+
+<div id="xpFloat"></div>
 
 <!-- SHARED MODAL -->
 <div class="overlay" id="modalOverlay" style="display:none" onclick="overlayClick(event)">
@@ -164,6 +171,7 @@
 <script src="js/config.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/storage.js"></script>
+<script src="js/xp.js"></script>
 <script src="js/helpers.js"></script>
 <script src="js/header.js"></script>
 <script src="js/today.js"></script>
@@ -217,12 +225,12 @@
 <script src="js/questions/ux-research-medium.js"></script>
 <script src="js/questions/ux-research-hard.js"></script>
 <script src="js/questions/ux-research-combined.js"></script>
-<!-- Combiner (defines UX_QUESTIONS + LESSON_MAP - must load before flashcard) -->
+<!-- Combiner (defines UX_QUESTIONS + LESSON_MAP - must load before questions) -->
 <script src="js/questions/questions-data.js"></script>
-<!-- Flashcard (depends on LESSON_MAP from questions-data.js) -->
-<script src="js/questions/flashcard-state.js"></script>
-<script src="js/questions/flashcard-ui.js"></script>
-<script src="js/questions/flashcard-actions.js"></script>
+<!-- Questions (depends on LESSON_MAP from questions-data.js) -->
+<script src="js/questions/question-state.js"></script>
+<script src="js/questions/question-ui.js"></script>
+<script src="js/questions/question-actions.js"></script>
 <script src="js/settings.js"></script>
 
 <!-- Main app (split from main.js) -->

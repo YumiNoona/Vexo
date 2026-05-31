@@ -30,13 +30,13 @@ function switchTab(name){
 
 function renderLearn(sub){
   learnSub=sub;
-  const tabs=['journal','flashcards','library'];
-  const labels={journal:'Journal',flashcards:'Questions',library:'Library'};
+  const tabs=['journal','questions','library'];
+  const labels={journal:'Journal',questions:'Questions',library:'Library'};
   let h=`<div class="sub-tabs">`;
   tabs.forEach(t=>{h+=`<button class="sub-tab${sub===t?' on':''}" onclick="renderLearn('${t}')">${labels[t]}</button>`;});
   h+=`</div><div id="learn-content">`;
   if(sub==='journal'){h+=buildJournalHTML();}
-  else if(sub==='flashcards'){h+=buildFlashcardsHTML();}
+  else if(sub==='questions'){h+=buildquestionsHTML();}
   else if(sub==='library'){h+=buildLibraryHTML();}
   h+=`</div>`;
   document.getElementById('v-learn').innerHTML=h;

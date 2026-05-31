@@ -208,7 +208,7 @@
   }
 
   /* ── Question card bigger on mobile ─────── */
-  .flashcard {
+  .question-card {
     min-height: 200px;
   }
 
@@ -280,7 +280,7 @@
   }
 
   /* ── Question card controls ─────────────── */
-  .flashcard-controls {
+  .question-controls {
     gap: 12px;
   }
 

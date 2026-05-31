@@ -11,6 +11,7 @@ function updateHeader(){
   document.getElementById('todayBtn').style.display=off!==0?'inline-block':'none';
   document.getElementById('streakEl').textContent=streak;
   document.getElementById('timeEl').textContent=fmtTime(totalStudyMins());
+  updateXPDisplay();
   const badge=document.getElementById('countdownBadge');
   if(settings.jobGoalDate){
     const goal=new Date(settings.jobGoalDate);

@@ -6,6 +6,15 @@ function toggle(id){
   const row=document.getElementById('row-'+id);const ck=document.getElementById('ck-'+id);
   if(done[id]){
     row.classList.add('done');ck.classList.add('checked');ck.innerHTML=CHK;playSoundProfile('complete');
+    // Only award XP once per task per day
+    const xpKey = 'sp-xp-tasks-' + dkey(0);
+    let awarded = [];
+    try { const r = localStorage.getItem(xpKey); if (r) awarded = JSON.parse(r); } catch(e) {}
+    if (!awarded.includes(id)) {
+      addXP(10, 'task');
+      awarded.push(id);
+      try { localStorage.setItem(xpKey, JSON.stringify(awarded)); } catch(e) {}
+    }
     // Auto-stamp end time if task has a start time set
     if(typeof loadTaskStartTimes==='function') loadTaskStartTimes();
     const raw = taskStartTimes[id] || null;
@@ -148,7 +157,7 @@ function showTaskCtxMenu(e,id){
   menu.innerHTML=`
     <button class="ctx-item" onclick="hideCtxMenu();toggle('${id}')">${isDone?'↩ Mark incomplete':'✓ Mark complete'}</button>
     <button class="ctx-item" onclick="hideCtxMenu();editTask('${id}')">✏ Edit name</button>
-    <button class="ctx-item" onclick="hideCtxMenu();openTaskModal('${id}')">⏱ Open timer</button>
+    <button class="ctx-item" onclick="hideCtxMenu();duplicateTask('${id}')">📋 Duplicate</button>
     <button class="ctx-item" onclick="hideCtxMenu();toggleNotesDrawer('${id}')">📝 Notes</button>
     <div class="ctx-sep"></div>
     <button class="ctx-item danger" onclick="hideCtxMenu();deleteTask('${id}')">✕ Delete</button>`;
@@ -159,6 +168,16 @@ function showTaskCtxMenu(e,id){
   setTimeout(()=>document.addEventListener('click',hideCtxMenu,{once:true}),0);
 }
 function hideCtxMenu(){const m=document.getElementById('ctx-menu');if(m)m.remove();}
+
+function duplicateTask(id) {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  const newTask = { ...t, id: uid(), label: t.label + ' (copy)' };
+  const idx = tasks.findIndex(x => x.id === id);
+  tasks.splice(idx + 1, 0, newTask);
+  saveGlobal();
+  renderToday();
+}
 
 /* ═══════════════════════════════════════════════
    DRAG & DROP

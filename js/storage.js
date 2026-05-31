@@ -36,6 +36,8 @@ function loadGlobal(){
   }catch(e){streak=0;}
   // ──────────────────────────────────────────────────────────────────────
 
+  loadXP();
+
   try{const s=localStorage.getItem('sp-settings');
     settings=s?JSON.parse(s):{profile:'UI/UX Student',accentColor:'#d4960a',soundEnabled:true,soundProfile:'soft',jobGoalDate:''};}
   catch(e){settings={profile:'UI/UX Student',accentColor:'#d4960a',soundEnabled:true,soundProfile:'soft',jobGoalDate:''};}

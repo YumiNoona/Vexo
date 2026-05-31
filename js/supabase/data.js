@@ -32,7 +32,7 @@ async function pushAllToCloud(userId) {
 
   // Static keys
   ['sp-phases','sp-sched','sp-tasks','sp-streak','sp-settings',
-   'sp-kanban','sp-resources','sp-flashcards-v2'].forEach(k => {
+   'sp-kanban','sp-resources','sp-questions-v2'].forEach(k => {
     const v = localStorage.getItem(k);
     if (!v) return;
     try { rows.push({ user_id: userId, key: k, value: JSON.parse(v), updated_at: ts }); }

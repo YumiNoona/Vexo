@@ -38,11 +38,11 @@ function renderEOD(){
   // rotate(-90deg) on the fill circle = start from 12 o'clock
   const ringTransform='rotate(-90 50 50)';
 
-  // Questions report (session stats from global flashcardState)
-  const fcDone=(typeof flashcardState!=='undefined')?(flashcardState.correct+flashcardState.wrong):0;
-  const fcRight=(typeof flashcardState!=='undefined')?flashcardState.correct:0;
-  const fcWrong=(typeof flashcardState!=='undefined')?flashcardState.wrong:0;
-  const fcTotal=(typeof flashcardState!=='undefined')?flashcardState.todayCards.length:5;
+  // Questions report (session stats from global questionState)
+  const fcDone=(typeof questionState!=='undefined')?(questionState.correct+questionState.wrong):0;
+  const fcRight=(typeof questionState!=='undefined')?questionState.correct:0;
+  const fcWrong=(typeof questionState!=='undefined')?questionState.wrong:0;
+  const fcTotal=(typeof questionState!=='undefined')?questionState.todayCards.length:5;
   const fcPct=fcDone>0?Math.round(fcRight/fcDone*100):0;
   const fcBarW=fcDone>0?Math.round(fcRight/fcTotal*100):0;
   const fcBarWrong=fcDone>0?Math.round(fcWrong/fcTotal*100):0;
@@ -110,6 +110,11 @@ function renderEOD(){
       <div class="eod-stat2">
         <div class="eod-stat2-num">${streak}<span style="font-size:13px"> 🔥</span></div>
         <div class="eod-stat2-label">Day streak</div>
+      </div>
+      <div class="eod-stat2-div"></div>
+      <div class="eod-stat2">
+        <div class="eod-stat2-num">${xpLevel}<span style="font-size:13px;color:var(--accent)"> ⬆</span></div>
+        <div class="eod-stat2-label">Level · ${xpTotal} XP</div>
       </div>
     </div>
 

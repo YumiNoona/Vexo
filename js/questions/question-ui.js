@@ -193,15 +193,15 @@ function buildModeSelectorHTML() {
 }
 
 /* ═══════════════════════════════════════════════
-   buildFlashcardsHTML
+   buildQuestionsHTML
    ═══════════════════════════════════════════════ */
-function buildFlashcardsHTML() {
-  if (flashcardState.mode === null) {
+function buildQuestionsHTML() {
+  if (questionState.mode === null) {
     return FC_CSS + buildModeSelectorHTML();
   }
   
   setupDailyCards();
-  if (flashcardState.currentIndex >= flashcardState.todayCards.length) {
+  if (questionState.currentIndex >= questionState.todayCards.length) {
     return FC_CSS + buildFCSummaryHTML();
   }
   return FC_CSS + buildFCCardHTML();
