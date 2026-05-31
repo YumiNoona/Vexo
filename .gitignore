@@ -3,6 +3,9 @@
 # NEVER commit this — it contains your Supabase keys
 env-config.js
 
+# Tauri signing keys — NEVER commit the private key
+keys/
+
 # ─── Dependencies ──────────────────────────────────
 node_modules/
 .pnp
