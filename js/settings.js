@@ -106,11 +106,11 @@ function buildSettingsHTML(){
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-info"><p class="setting-label">Reset tasks</p><p class="setting-desc">Restore default task list</p></div>
+      <div class="setting-info"><p class="setting-label">Reset all data</p><p class="setting-desc">Restore defaults — keeps streak, XP & settings</p></div>
       <div class="setting-ctrl"><button class="danger-btn" onclick="resetTasks()">Reset</button></div>
     </div>
     <div class="setting-row">
-      <div class="setting-info"><p class="setting-label">Clear all data</p><p class="setting-desc">Wipes everything including history</p></div>
+      <div class="setting-info"><p class="setting-label">Clear everything</p><p class="setting-desc">Nuclear wipe — deletes streak, XP &amp; everything else</p></div>
       <div class="setting-ctrl"><button class="danger-btn" onclick="clearAll()">Clear all</button></div>
     </div>
     <div class="setting-row">
@@ -204,56 +204,57 @@ async function checkForUpdates(){
 }
 function resetTasks(){
   showModal(`
-    <p class="modal-title">⚠️ Reset Tasks</p>
+    <p class="modal-title">⚠️ Reset All Data</p>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px;">
-      This will permanently delete all your tasks and restore the defaults.<br>
-      <strong style="color:var(--text)">This cannot be undone.</strong>
+      This will reset <strong style="color:var(--text)">tasks, kanban, journal, questions, resources, roadmap, schedule, mood, and daily history</strong> back to defaults.<br><br>
+      Your <strong style="color:var(--accent)">streak, XP, and settings</strong> will be kept.
     </p>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Want to save a backup first?</p>
-    <div class="modal-btns" style="flex-wrap:wrap;gap:8px;">
+    <div class="modal-btns" style="flex-wrap:nowrap;gap:8px;">
       <button class="modal-btn" onclick="closeModal()">Cancel</button>
-      <button class="modal-btn" onclick="exportJSON();closeModal()">Export backup first</button>
-      <button class="modal-btn del" onclick="_doResetTasks()">Delete everything &amp; reset</button>
+      <button class="modal-btn" onclick="exportJSON();closeModal()">Export backup</button>
+      <button class="modal-btn del" onclick="_doResetAll()">Reset everything</button>
     </div>
   `);
 }
-function _doResetTasks(){
+function _doResetAll(){
   closeModal();
-  tasks=JSON.parse(JSON.stringify(DEFAULT_TASKS));
-  saveGlobal();
-  renderToday();
+  // Keep: streak, XP, settings, skip-login flag
+  const keep=['sp-streak','sp-xp','sp-settings','sp-skip-login'];
+  const xpTaskKeys=Object.keys(localStorage).filter(k=>k.startsWith('sp-xp-tasks-'));
+  const saved={};
+  keep.forEach(k=>{const v=localStorage.getItem(k);if(v)saved[k]=v;});
+  xpTaskKeys.forEach(k=>{saved[k]=localStorage.getItem(k);});
+  // Remove all sp-* and wg-* keys
+  Object.keys(localStorage).filter(k=>k.startsWith('sp-')||k.startsWith('wg-')).forEach(k=>localStorage.removeItem(k));
+  // Restore preserved
+  Object.entries(saved).forEach(([k,v])=>localStorage.setItem(k,v));
+  // Restore default tasks
+  localStorage.setItem('sp-tasks',JSON.stringify(DEFAULT_TASKS));
+  location.reload();
 }
 function clearAll(){
   showModal(`
-    <p class="modal-title">🗑️ Clear User Data</p>
+    <p class="modal-title">🗑️ Clear Everything</p>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px;">
-      This will delete all your <strong style="color:var(--text)">tasks, journal entries, kanban cards,
-      questions, resources, weekly goals</strong> and daily history.<br><br>
-      Your <strong style="color:var(--text)">streak, settings, and accent colour</strong> will be kept.
+      This will <strong style="color:var(--red)">permanently delete all data</strong> — tasks, kanban, journal, questions, resources, roadmap, moods, daily history, streak, XP, and settings.<br><br>
+      <strong style="color:var(--text)">There is no undo. Everything will be gone.</strong>
     </p>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Want to save a backup first?</p>
-    <div class="modal-btns" style="flex-wrap:wrap;gap:8px;">
+    <div class="modal-btns" style="flex-wrap:nowrap;gap:8px;">
       <button class="modal-btn" onclick="closeModal()">Cancel</button>
-      <button class="modal-btn" onclick="exportJSON();closeModal()">Export backup first</button>
-      <button class="modal-btn del" onclick="_doClearData()">Clear my data</button>
+      <button class="modal-btn" onclick="exportJSON();closeModal()">Export backup</button>
+      <button class="modal-btn del" onclick="_doClearAll()">Wipe everything</button>
     </div>
   `);
 }
-async function _doClearData(){
+async function _doClearAll(){
   closeModal();
-  
+
   // If connected to Supabase, clear the cloud data first
   if (typeof sbClearUserData === 'function') {
     await sbClearUserData();
   }
 
-  // Keep streak + settings — remove everything else
-  const keep=['sp-streak','sp-settings'];
-  const saved={};
-  keep.forEach(k=>{const v=localStorage.getItem(k);if(v)saved[k]=v;});
-  // Remove all sp-* and wg-* keys
+  // Wipe ALL sp-* and wg-* keys
   Object.keys(localStorage).filter(k=>k.startsWith('sp-')||k.startsWith('wg-')).forEach(k=>localStorage.removeItem(k));
-  // Restore preserved keys
-  Object.entries(saved).forEach(([k,v])=>localStorage.setItem(k,v));
   location.reload();
 }

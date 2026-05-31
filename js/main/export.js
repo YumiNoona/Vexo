@@ -131,13 +131,16 @@ function exportJSON(){
     const sr=localStorage.getItem('sp-start-times-'+k);if(sr){data['startTimes-'+k]=JSON.parse(sr);added=true;}
   }
   // Journal entries
-  for(let i=0;i<=60;i++){const k='sp-j-'+dkey(-i);const r=localStorage.getItem(k);if(r)data['journal-'+dkey(-i)]=JSON.parse(r);}
+  for(let i=0;i<=90;i++){const k='sp-j-'+dkey(-i);const r=localStorage.getItem(k);if(r)data['journal-'+dkey(-i)]=JSON.parse(r);}
   // Task notes
   tasks.forEach(t=>{const n=localStorage.getItem('sp-note-'+t.id);if(n)data['note-'+t.id]=n;});
+  // XP task records
+  Object.keys(localStorage).filter(k=>k.startsWith('sp-xp-tasks-')).forEach(k=>{data[k]=localStorage.getItem(k);});
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   const today=new Date().toISOString().split('T')[0];
-  a.download=`study-planner-${today}.json`;a.click();
+  a.download=`study-planner-${today}.json`;a.style.display='none';
+  document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),1000);
   showToast('JSON exported ✓');
 }
 
@@ -172,6 +175,7 @@ function importJSON(event){
         else if(k.startsWith('startTimes-')){localStorage.setItem('sp-start-times-'+k.slice(11),JSON.stringify(data[k]));}
         else if(k.startsWith('journal-')){localStorage.setItem('sp-j-'+k.slice(8),JSON.stringify(data[k]));}
         else if(k.startsWith('note-')){localStorage.setItem('sp-note-'+k.slice(5),data[k]);}
+        else if(k.startsWith('sp-xp-tasks-')){localStorage.setItem(k,data[k]);}
       });
       showToast('Import successful — reloading…');
       setTimeout(()=>location.reload(),800);
