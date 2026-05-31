@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════
    SHARE CARD — Canvas → PNG download
 ═══════════════════════════════════════════════ */
-function downloadDayCard(){
+async function downloadDayCard(){
   const n=doneCount(),tot=tasks.length,sm=totalStudyMins(),pct=tot?Math.round(n/tot*100):0;
   const journal=getJournalEntry(0);
   const d=new Date();
@@ -122,10 +122,27 @@ function downloadDayCard(){
   cx.fillText('Study Planner  ·  '+dateStr,W/2,Math.max(yy+24,H-20));
 
   // Download
-  const url=canvas.toDataURL('image/png');
+  const filename='study-day-'+d.toISOString().slice(0,10)+'.png';
+  const dataUrl=canvas.toDataURL('image/png');
+
+  // Try Tauri native save dialog first (shows "Save As" picker)
+  if(typeof window.__TAURI_INTERNALS__!=='undefined'){
+    try{
+      await window.__TAURI_INTERNALS__.invoke('save_png_file',{filename:filename,data:dataUrl});
+      showToast('Card saved ✓');
+      return;
+    }catch(e){}
+  }
+
+  // Fallback: browser download (append to DOM so WebView2 sees it)
   const a=document.createElement('a');
-  a.href=url;a.download='study-day-'+d.toISOString().slice(0,10)+'.png';
+  a.href=dataUrl;
+  a.download=filename;
+  a.style.display='none';
+  document.body.appendChild(a);
   a.click();
+  setTimeout(function(){a.remove();},1000);
+  showToast('Card saved ✓');
 }
 
 function roundRect(ctx,x,y,w,h,r){
