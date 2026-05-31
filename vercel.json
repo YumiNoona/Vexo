@@ -1,8 +1,8 @@
 {
   "buildCommand": "node build.js",
   "outputDirectory": ".",
-  "rewrites": [
-    { "source": "/", "destination": "/landing.html" }
+  "redirects": [
+    { "source": "/", "destination": "/landing.html", "permanent": false }
   ],
   "headers": [
     {
