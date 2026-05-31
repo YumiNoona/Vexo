@@ -9,7 +9,7 @@
 .resource-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
 .resource-body{flex:1;min-width:0;}
 .resource-title{font-size:13.5px;color:var(--text);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.resource-url{font-size:11px;color:var(--blue);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}
+.resource-url{font-size:11px;color:var(--blue);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;text-decoration:none;}
 .resource-url:hover{text-decoration:underline;}
 .resource-tag-list{display:flex;gap:4px;flex-wrap:wrap;}
 .resource-tag-badge{font-size:10px;padding:1px 7px;border-radius:10px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);}

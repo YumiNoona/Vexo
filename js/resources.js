@@ -181,7 +181,7 @@ function buildLibraryHTML(){
       <span class="resource-icon">${res.type||'🔗'}</span>
       <div class="resource-body">
         <p class="resource-title">${escHtml(res.title)}</p>
-        <p class="resource-url" onclick="window.open('${escHtml(res.url)}','_blank')">${escHtml(res.url)}</p>
+        <a class="resource-url" href="${escHtml(res.url)}" target="_blank" rel="noopener">${escHtml(res.url)}</a>
         <div class="resource-tag-list">${tagBadges}</div>
       </div>
       <div class="resource-actions">

@@ -145,7 +145,7 @@ function buildFCSummaryHTML() {
       </div>
       <div style="margin-top:20px; display:flex; gap:16px; justify-content:center;">
         <button class="fc-btn reveal" style="padding:12px 32px; width:auto; flex:none;" onclick="fcStartNewSet()">Practice 5 More</button>
-        <button class="fc-btn" style="padding:12px 32px; width:auto; flex:none; background:var(--bg); border-color:var(--border);" onclick="fcBackToModes()">Change Mode</button>
+        <button class="fc-btn" style="padding:12px 32px; width:auto; flex:none; background:var(--surface2); color:var(--text); border-color:var(--border);" onclick="fcBackToModes()">Change Mode</button>
       </div>
     </div>
 
