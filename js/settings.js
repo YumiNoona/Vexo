@@ -114,16 +114,17 @@ function buildSettingsHTML(){
       <div class="setting-ctrl"><button class="danger-btn" onclick="clearAll()">Clear all</button></div>
     </div>
     <div class="setting-row">
-      <div class="setting-info"><p class="setting-label">Account</p><p class="setting-desc">${window._sbUserEmail||'Logged in'}</p></div>
-      <div class="setting-ctrl"><button class="sign-out-btn" onclick="typeof sbSignOut==='function'&&sbSignOut()">Sign Out</button></div>
+      <div class="setting-info"><p class="setting-label">Account</p><p class="setting-desc">${window._sbUserEmail ? 'Signed in as ' + window._sbUserEmail : window.SUPABASE_ENABLED ? 'Using local storage' : 'Offline mode'}</p></div>
+      <div class="setting-ctrl">${window._sbUserEmail
+        ? '<button class="sign-out-btn" onclick="typeof sbSignOut===\'function\'&&sbSignOut()">Sign Out</button>'
+        : window.SUPABASE_ENABLED
+          ? '<button class="save-btn" onclick="signIntoSupabase()">Sign In for cloud sync</button>'
+          : ''}</div>
     </div>
   </div>`;
 }
 function bindSettingsEvents(){
   // re-attach any dynamic events if needed
-}
-function renderSettings(){
-  renderHub('settings');
 }
 function saveProfile(){const v=document.getElementById('profileInp')?.value.trim();if(v){settings.profile=v;saveSettings();}}
 function savePlannerName(){
@@ -175,6 +176,12 @@ function setFont(id){
 function setAccent(c){
   settings.accentColor=c;applyAccent(c);saveSettings();
   document.querySelectorAll('.swatch').forEach(s=>{s.classList.toggle('active',s.style.background===c||s.style.backgroundColor===c);});
+}
+function signIntoSupabase(){
+  // Remove skip flag so login page shows the sign-in form
+  localStorage.removeItem('sp-skip-login');
+  // Push local data to cloud after successful sign-in (handled by auth.js)
+  location.href = 'login.html';
 }
 function toggleSound(){settings.soundEnabled=document.getElementById('sndToggle')?.checked;saveSettings();}
 function changeSoundProfile(v){settings.soundProfile=v;saveSettings();}

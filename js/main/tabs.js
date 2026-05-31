@@ -7,7 +7,7 @@
    TABS — 6 merged tabs
 ═══════════════════════════════════════════════ */
 const MAIN_TABS=['today','goals','learn','portfolio','plan','hub'];
-let learnSub='journal', planSub='schedule', hubSub='stats';
+let learnSub='journal', hubSub='stats';
 
 const TAB_TITLES={today:'Today',goals:'Goals',learn:'Learn',portfolio:'Portfolio',plan:'Roadmap',hub:'Hub'};
 let activeTab='today';
@@ -24,7 +24,7 @@ function switchTab(name){
   if(name==='goals')renderGoals();
   if(name==='portfolio')renderPortfolio();
   if(name==='learn')renderLearn(learnSub);
-  if(name==='plan')renderPlan(planSub);
+  if(name==='plan')renderPlan();
   if(name==='hub')renderHub(hubSub);
 }
 
@@ -36,15 +36,15 @@ function renderLearn(sub){
   tabs.forEach(t=>{h+=`<button class="sub-tab${sub===t?' on':''}" onclick="renderLearn('${t}')">${labels[t]}</button>`;});
   h+=`</div><div id="learn-content">`;
   if(sub==='journal'){h+=buildJournalHTML();}
-  else if(sub==='questions'){h+=buildquestionsHTML();}
+  else if(sub==='questions'){h+=buildQuestionsHTML();}
   else if(sub==='library'){h+=buildLibraryHTML();}
   h+=`</div>`;
   document.getElementById('v-learn').innerHTML=h;
   if(sub==='journal')bindJournalEvents();
+  if(sub==='library'&&activeResSearch&&typeof onResSearch==='function')onResSearch();
 }
 
-function renderPlan(sub){
-  planSub='roadmap';
+function renderPlan(){
   document.getElementById('v-plan').innerHTML=buildRoadmapHTML();
 }
 

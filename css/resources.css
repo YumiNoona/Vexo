@@ -15,5 +15,8 @@
 .resource-tag-badge{font-size:10px;padding:1px 7px;border-radius:10px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
 .resource-actions{display:flex;gap:4px;flex-shrink:0;opacity:0;transition:opacity .15s;}
 .resource-item:hover .resource-actions{opacity:1;}
+.res-tag-chips{display:flex;gap:4px;flex-wrap:wrap;}
+.res-tag-chip{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);cursor:pointer;transition:all .15s;}
+.res-tag-chip:hover,.res-tag-chip.on{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
 
 /* ═══════════════════════════════════════════════

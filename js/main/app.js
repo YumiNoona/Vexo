@@ -16,7 +16,6 @@ window.__startApp = function () {
   updateHeader();
   renderToday();
   document.title='Vexo — Today';
-  initKeyboardShortcuts();
   initMultiTabSync();
   initTimerBar();
   // Prune localStorage keys older than 90 days (local-only users, no Supabase cleanup)

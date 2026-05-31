@@ -153,12 +153,6 @@ function setupDailyCards() {
   saveQuestions();
 }
 
-function fcHash(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h |= 0; }
-  return h;
-}
-
 function saveQuestions() {
   try { localStorage.setItem("sp-questions-mcq-v1", JSON.stringify(questionState)); } catch(e) {}
 }

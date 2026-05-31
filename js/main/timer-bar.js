@@ -14,14 +14,6 @@ function initTimerBar(){
     <button class="timer-bar-btn stop" onclick="timerBarStop()">Stop</button>`;
   app.prepend(bar);
 }
-function updateTimerBar(taskLabel,seconds){
-  const bar=document.getElementById('timer-bar');if(!bar)return;
-  const taskEl=document.getElementById('tb-task');
-  const timeEl=document.getElementById('tb-time');
-  if(taskEl)taskEl.textContent=taskLabel||'Task';
-  if(timeEl)timeEl.textContent=fmtTimer(seconds);
-  bar.classList.add('running');
-}
 function hideTimerBar(){
   const bar=document.getElementById('timer-bar');if(bar)bar.classList.remove('running');
 }

@@ -51,7 +51,7 @@ function addXP(amount, source) {
 function updateXPDisplay() {
   const el = document.getElementById('xpDisplay');
   if (el) {
-    el.innerHTML = `Lv ${xpLevel} <span class="xp-bar-wrap"><span class="xp-bar-fill" style="width:${xpProgress}%"></span></span>`;
+    el.textContent = `Lv ${xpLevel}`;
   }
   const el2 = document.querySelector('#xpDisplayHeader .s-sub');
   if (el2) {

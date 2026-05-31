@@ -1,10 +1,10 @@
 <h1 align="center">✦ Vexo</h1>
-<p align="center"><strong>The All-In-One Study Planner & Productivity Suite with Cloud Sync</strong></p>
+<p align="center"><strong>The All-In-One UX Study Planner & Productivity Suite</strong></p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Vanilla-HTML%2FJS%2FCSS-E34F26?style=flat-square&logo=html5&logoColor=white" alt="Vanilla HTML/JS/CSS" />
+  <img src="https://img.shields.io/badge/Tauri-Desktop%20App-FFC131?style=flat-square&logo=tauri&logoColor=white" alt="Tauri" />
   <img src="https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase" />
-  <img src="https://img.shields.io/badge/Hosted-Vercel-000000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
 </p>
 
@@ -18,170 +18,162 @@
 
 ## 📖 About
 
-**Vexo** is a beautifully designed, all-in-one productivity suite built for modern workflows and studying. Rather than juggling separate apps for tasks, timers, notes, and flashcards, Vexo integrates them into a seamless, unified dashboard. 
+**Vexo** is a UX study companion combining questions, resource library, daily journal, portfolio kanban, and goals/roadmap into one desktop app. Built with vanilla HTML/CSS/JS, packaged as a native Windows EXE via Tauri (~5 MB).
 
-> **☁️ Cloud Sync & Local-First** — Vexo works flawlessly entirely locally (offline) on your browser, but also offers a seamless Supabase-powered login for cross-device synchronization.
+> **☁️ Cloud Sync & Local-First** — Works fully offline with localStorage. Optional Supabase login for cross-device sync.
 
-### 🏗️ Architecture Highlights
+### 🏗️ Architecture
 
-- **Lightweight Vanilla Core** — Built natively with pure HTML, CSS, and JavaScript. No bulky frameworks.
-- **Glassmorphism Design System** — Stunning, animated, and responsive UI built completely custom without heavy CSS libraries.
-- **State & Cloud Sync** — Robust local storage strategy that intelligently syncs up with a Supabase PostgreSQL backend when authenticated.
-- **Interactive Modals & Palettes** — Keyboard-first navigation, command palettes (`Ctrl+K`), and drag-and-drop mechanics embedded at its core.
-
-### 📁 Project Structure
-
-```
-Vexo/
-├── index.html              # App shell (SPA)
-├── login.html              # Auth page
-├── favicon.ico
-├── manifest.json           # PWA manifest
-├── vercel.json             # Vercel deploy config
-├── build.js                # Injects env vars at deploy
-├── env-config.js           # Auto-generated (gitignored)
-│
-├── css/
-│   ├── base.css            # Tokens, reset, body
-│   ├── tabs.css
-│   ├── header.css
-│   ├── goals.css
-│   ├── today.css           # Progress bar, tasks, categories
-│   ├── modal.css
-│   ├── schedule.css
-│   ├── roadmap.css
-│   ├── stats.css
-│   ├── kanban.css
-│   ├── journal.css
-│   ├── resources.css
-│   ├── weekly-goals.css
-│   ├── flashcards.css
-│   ├── eod.css
-│   ├── settings.css
-│   ├── components.css      # Palette, context menu, undo toast, etc.
-│   ├── mobile.css          # Mobile nav, responsive breakpoints
-│   └── login.css           # Auth page styles
-│
-└── js/
-    ├── audio.js            # Sound system
-    ├── config.js           # Constants, state
-    ├── helpers.js          # Utility functions
-    ├── storage.js          # localStorage CRUD
-    ├── header.js           # Date nav, header updates
-    ├── today.js            # Today view rendering
-    ├── tasks.js            # Task CRUD, drag-and-drop
-    ├── timer.js            # Pomodoro timer
-    ├── schedule.js         # Schedule blocks
-    ├── stats.js            # Stats page
-    ├── kanban.js           # Portfolio kanban
-    ├── journal.js          # Reflection journal
-    ├── resources.js        # Resource library
-    ├── weekly-goals.js     # Weekly goals
-    ├── settings.js         # Settings page
-    │
-    ├── questions/
-    │   ├── ux-research.js … (15 category data files)
-    │   ├── questions-data.js  # Combines all categories
-    │   └── flashcard.js       # Flashcard state/rendering
-    │
-    ├── main/
-    │   ├── roadmap.js      # Phase/week CRUD
-    │   ├── eod-summary.js  # End-of-day summary rendering
-    │   ├── share-card.js   # Canvas PNG download
-    │   ├── export.js       # Excel/JSON export/import
-    │   ├── toasts.js       # Toast + undo-toast system
-    │   ├── tabs.js         # Tab switching, sub-tab rendering
-    │   ├── timer-bar.js    # Persistent timer bar
-    │   ├── keyboard.js     # Keyboard shortcuts
-    │   ├── palette.js      # Command palette (Ctrl+K)
-    │   └── app.js          # Init, multi-tab sync, pruning
-    │
-    ├── supabase/
-    │   ├── client.js       # Init, auth helpers
-    │   ├── sync.js         # Debounced batch sync
-    │   ├── realtime.js     # Cross-device sync
-    │   └── data.js         # Push/pull all, app init
-    │
-    └── login/
-        ├── scene.js        # Three.js 3D scene
-        └── auth.js         # Sign-in/sign-up logic
-```
+- **Vanilla Core** — Pure HTML, CSS, JavaScript. No frameworks.
+- **Tauri Desktop** — Native Windows EXE via Tauri v2, auto-update via GitHub Releases.
+- **Local-First Storage** — All progress saved to localStorage instantly. Supabase sync is additive.
+- **Gamification** — XP & level system (level = floor(sqrt(xp / 100)) + 1).
 
 ---
 
 ## ✨ Features
 
-### 📅 Daily & Task Management
-| Feature | Description |
+| Area | What it does |
 |---|---|
-| **Today Dashboard** | Drag-and-drop task tracking, integrated Pomodoro timer with auto time-stamping, and progress bars. |
-| **Schedule View** | Block out your day with color-coded activity blocks and real-time current block highlighting. |
-| **Weekly Goals** | Keep an eye on high-level objectives alongside your daily grind. |
-
-### 🧠 Learning & Questions
-| Feature | Description |
-|---|---|
-| **MCQ Question Deck** | Practice hundreds of UX and design theory questions interactively. |
-| **End of Day Summary** | Gamified daily completion ring, performance stats, and quick reflection. |
-| **Roadmap & Resources** | Track your study phases and curate a tag-filterable resource library. |
-
-### 🛠️ Developer & Project Tools
-| Feature | Description |
-|---|---|
-| **Portfolio Kanban** | Manage personal projects through a drag-and-drop Kanban board (To Do, In Progress, Done). |
-| **Reflection Journal** | Daily structured journaling prompts with a searchable history archive. |
+| **Today Dashboard** | Task tracking with drag-and-drop, study timer, streak counter, daily mood, XP |
+| **Questions** | 340+ MCQ across 19 UX topics with streak-based XP, level progression, visual questions |
+| **Resource Library** | 94 curated UX resources — Figma, typography, icons, prototyping, TED talks. Filter by tag or add your own |
+| **Daily Journal** | Three reflection prompts, search past entries |
+| **Portfolio Kanban** | To Do / In Progress / Done columns for case studies |
+| **Goals & Roadmap** | Weekly goals + 3-month study roadmap with color-coded phases |
+| **Stats & Heatmap** | 7/30-day stats, activity heatmap (365 days), day log |
+| **End-of-Day Summary** | Gamified completion ring, accuracy report, reflection recap |
+| **Export / Import** | Full JSON export/import of all data (tasks, phases, kanban, resources, XP, questions, journal, mood, notes) |
 
 ---
 
 ## 🛠 Tech Stack
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| **Frontend** | Vanilla JS, HTML5, CSS3 | Ultra-fast load times without overhead |
-| **Backend / Auth** | Supabase | UUID-based authentication and RLS protected JSON syncing |
-| **Database** | PostgreSQL (via Supabase) | Secure `planner_data` JSONB storage |
-| **Hosting** | Vercel | Seamless static deployments and global edge delivery |
+| Layer | Technology |
+|---|---|
+| **Frontend** | Vanilla JS, HTML5, CSS3 |
+| **Desktop** | Tauri v2 (Rust + WebView2) |
+| **Backend / Auth** | Supabase |
+| **Database** | PostgreSQL (via Supabase) + localStorage |
+| **CI/CD** | GitHub Actions (MSI build on tag push) |
 
 ---
 
-## 🚀 Getting Started
+## 📁 Project Structure
 
-### Prerequisites
-- Node.js (for local dev server if desired)
-- A free **Supabase** account (for cloud sync features)
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/Vexo.git
-cd Vexo
 ```
-
-2. Run a local development server (e.g., using `npx serve`, VS Code Live Server, or Vite):
-```bash
-npm run dev
+Vexo/
+├── index.html              # App shell (SPA)
+├── login.html              # Auth page (Supabase)
+├── landing.html            # Marketing / download page
+├── favicon.ico
+├── manifest.json
+├── vercel.json
+├── copy-dist.js            # Copies web files to dist/ for Tauri
+├── build.js                # Injects Supabase env vars at deploy
+├── env-config.js           # Auto-generated (gitignored)
+│
+├── css/                    # 20 CSS files (tokens, tabs, header,
+│                           #   modal, stats, kanban, journal,
+│                           #   resources, roadmap, eod, settings,
+│                           #   mobile, login, landing, ...)
+│
+├── js/
+│   ├── config.js           # Constants (phases, colors, tips, state)
+│   ├── helpers.js          # Utility functions
+│   ├── storage.js          # localStorage CRUD
+│   ├── audio.js            # Sound system
+│   ├── header.js           # Date nav, header updates
+│   ├── today.js            # Today view rendering
+│   ├── tasks.js            # Task CRUD, drag-and-drop
+│   ├── timer.js            # Task-level timer
+│   ├── xp.js               # XP/level system
+│   ├── schedule.js         # Schedule blocks
+│   ├── stats.js            # Stats page + heatmap
+│   ├── kanban.js           # Portfolio kanban
+│   ├── journal.js          # Reflection journal
+│   ├── resources.js        # 94 resources, search, tag filter
+│   ├── weekly-goals.js     # Weekly goals
+│   ├── settings.js         # Settings page
+│   │
+│   ├── questions/          # 28 category data files + state/ui/actions
+│   │   ├── visual-design.js, ux-laws.js, gestalt.js, …
+│   │   ├── accessibility-theory.js, typography-theory.js, …
+│   │   ├── visq-*.js       # Visual questions (5 files)
+│   │   ├── ux-research-*.js  # By difficulty
+│   │   ├── questions-data.js # Combines all categories + LESSON_MAP
+│   │   ├── question-state.js # Session state, save/load, dedup
+│   │   ├── question-ui.js    # Rendering, animations
+│   │   └── question-actions.js # Answer handling, XP awards
+│   │
+│   ├── main/
+│   │   ├── app.js          # Init, multi-tab sync, data pruning
+│   │   ├── tabs.js         # Tab switching (6 tabs)
+│   │   ├── roadmap.js      # Phase/week CRUD
+│   │   ├── eod-summary.js  # End-of-day summary modal
+│   │   ├── share-card.js   # Canvas PNG download
+│   │   ├── export.js       # JSON export/import (all keys)
+│   │   ├── toasts.js       # Toast + undo-toast system
+│   │   ├── timer-bar.js    # Persistent timer bar
+│   │   └── palette.js      # Command palette (Ctrl+K)
+│   │
+│   ├── supabase/
+│   │   ├── client.js       # Init, auth helpers, sign-out
+│   │   ├── sync.js         # Debounced batch upsert + retry
+│   │   ├── realtime.js     # Cross-device subscription
+│   │   └── data.js         # Pull all on login, app init
+│   │
+│   └── login/
+│       ├── scene.js        # Three.js 3D scene
+│       └── auth.js         # Sign-in/sign-up/skip-login
+│
+├── src-tauri/
+│   ├── Cargo.toml          # Rust deps (tauri, updater, fs)
+│   ├── tauri.conf.json     # Window, bundler, updater config
+│   ├── src/lib.rs          # Plugin registration
+│   ├── src/main.rs         # Entry point
+│   ├── icons/              # App icons (donut 🍩)
+│   └── capabilities/default.json
+│
+└── .github/workflows/
+    └── release.yml         # MSI build on v* tag push
 ```
-
-3. Open your browser and navigate to the provided localhost URL.
-
-### ☁️ Cloud Sync Setup (Optional)
-To enable cross-device sync, follow the instructions in `SETUP.md` to connect your own Supabase project.
 
 ---
 
-## 🤝 Contributing
+## 🚀 Desktop Build
 
-Contributions are welcome! Please open an issue first to discuss what you'd like to change.
+```bash
+npm install
+npx tauri build --bundles msi
+```
+
+The MSI installer will be in `src-tauri/target/release/bundle/msi/`.
+
+### Auto-Update
+
+Tag a commit with `v*` and push:
+```bash
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+GitHub Actions builds the MSI and uploads it to the release. The app checks for updates on launch.
+
+---
+
+## ☁️ Cloud Sync Setup (Optional)
+
+See `SETUP.md` to connect your own Supabase project.
 
 ---
 
 ## 📝 License
 
-This project is licensed under the **MIT License** see the [LICENSE](LICENSE) file for details.
+MIT — see [LICENSE](LICENSE) for details.
 
 ---
 
 <p align="center">
-  <sub>Built with 💙 by Veil</sub>
+  <strong>Built with 💙 by Veil</strong>
 </p>

@@ -42,10 +42,6 @@ function buildJournalHTML(){
   <div id="j-history"></div>`;
 }
 function bindJournalEvents(){renderJournalHistory();}
-function renderJournal(){
-  const el=document.getElementById('v-learn')||document.getElementById('v-journal');
-  if(el)renderLearn('journal');
-}
 function renderJournalHistory(){
   const q=(document.getElementById('jSearch')?.value||'').toLowerCase();
   let h='';

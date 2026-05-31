@@ -2,35 +2,10 @@
    END OF DAY SUMMARY
 ═══════════════════════════════════════════════ */
 /* ── EOD Summary Card ─────────────────────── */
-.eod-card{padding:0;overflow:hidden;max-height:88vh;overflow-y:auto;scrollbar-width:thin;margin:-26px -28px;border-radius:var(--radius-lg);}
+.eod-card{margin:-26px -28px;border-radius:var(--radius-lg);}
 .eod-header{padding:22px 24px 0;text-align:center;}
 .eod-date{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
 .eod-title{font-family:var(--display);font-size:24px;color:var(--text);font-style:italic;margin-bottom:0;}
-
-/* Hero row — ring + message */
-.eod-hero{display:flex;align-items:center;gap:20px;padding:20px 24px;border-bottom:1px solid var(--border);}
-.eod-ring-wrap{position:relative;width:90px;height:90px;flex-shrink:0;}
-.eod-ring{width:90px;height:90px;transform:rotate(0deg);}
-.eod-ring-fill{transition:stroke-dasharray 1s cubic-bezier(.4,0,.2,1);}
-.eod-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.eod-ring-pct{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--text);line-height:1;}
-.eod-ring-sub{font-size:9px;color:var(--muted);letter-spacing:.06em;margin-top:1px;}
-.eod-msg{flex:1;}
-.eod-msg-emoji{font-size:22px;margin-bottom:4px;}
-.eod-msg-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;}
-.eod-msg-sub{font-size:12px;color:var(--muted);line-height:1.5;}
-
-/* Stats row */
-.eod-stats-row{display:flex;align-items:center;padding:16px 24px;border-bottom:1px solid var(--border);gap:0;}
-.eod-stat2{flex:1;text-align:center;}
-.eod-stat2-num{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent);margin-bottom:2px;}
-.eod-stat2-num span{color:var(--muted);}
-.eod-stat2-label{font-size:10px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
-.eod-stat2-div{width:1px;height:32px;background:var(--border);flex-shrink:0;}
-
-/* Sections */
-.eod-section{padding:16px 24px;border-bottom:1px solid var(--border);}
-.eod-section-label{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:10px;}
 
 /* Completed task list */
 .eod-tasks-list{display:flex;flex-direction:column;gap:5px;max-height:130px;overflow-y:auto;scrollbar-width:thin;}
@@ -49,9 +24,6 @@
 /* No journal nudge */
 .eod-no-journal{display:flex;align-items:center;gap:8px;padding:12px;border:1px dashed var(--border2);border-radius:10px;cursor:pointer;transition:border-color .15s;color:var(--muted);font-size:12px;}
 .eod-no-journal:hover{border-color:var(--accent);color:var(--accent);}
-
-/* Actions */
-.eod-actions{display:flex;gap:10px;justify-content:flex-end;padding:16px 24px;}
 
 /* Trigger button (Today tab) */
 .eod-trigger{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .15s;}

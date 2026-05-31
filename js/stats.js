@@ -46,8 +46,6 @@ function buildStatsHTML(){
     <div class="stats-card"><h3>Avg completion</h3><div class="big">${avgPct}<span>%</span></div><p>Daily task completion rate</p></div>
     <div class="stats-card"><h3>Current streak</h3><div class="big">${streak}<span> days</span></div><p>Complete all tasks to extend</p></div>
     <div class="stats-card"><h3>XP & Level</h3><div class="big">${xpTotal}<span> XP</span></div><p>Level ${xpLevel} · ${xpToNext - Math.round((xpToNext * xpProgress) / 100)} XP to next level</p></div>
-  </div>
-  <div class="stats-grid">
     <div class="stats-card"><h3>Study time (30d)</h3><div class="big">${fmtTime(totalStudy30)}</div><p>Total in last 30 days</p></div>
     <div class="stats-card"><h3>Active days (30d)</h3><div class="big">${activeDays30}<span>/30</span></div><p>Days with activity</p></div>
   </div>
@@ -167,5 +165,3 @@ function buildHeatmapHTML(){
 
   return monthRow+gridH+legend;
 }
-
-function renderStats(){renderHub('stats');}

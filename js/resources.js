@@ -2,7 +2,7 @@
    RESOURCE LIBRARY
 ═══════════════════════════════════════════════ */
 const RES_TAGS=['All','Figma','Typography','Color','UX Research','Inspiration','Icons','Illustrations','Images','Prototyping','CSS','Career','Tools'];
-let activeResTag='All';
+let activeResTag='All', activeResSearch='';
 
 const DEFAULT_RESOURCES=[
   /* ── Figma ─────────────────────────────────── */
@@ -93,7 +93,53 @@ const DEFAULT_RESOURCES=[
   {id:'r65',title:'Read.cv — Designer Portfolio Platform',   url:'https://read.cv',                                               type:'🔗', tags:['Career']},
   {id:'r66',title:'Cofolios — Designer Portfolio Gallery',   url:'https://www.cofolios.com',                                      type:'🔗', tags:['Career','Inspiration']},
   {id:'r67',title:'Daily UI — 100-Day Design Challenge',     url:'https://www.dailyui.co',                                        type:'🔗', tags:['Career','Inspiration']},
-  {id:'r68',title:'Designer Hangout — UX Slack Community',   url:'https://www.designerhangout.co',                                type:'🔗', tags:['Career']},
+  {id:'r68',title:'Design Buddies — Design Community',         url:'https://www.designbuddies.community',                            type:'🔗', tags:['Career']},
+
+  /* ── Icons (more) ──────────────────────────── */
+  {id:'r69',title:'Pictogrammers — Free Material Design Icons',url:'https://pictogrammers.com',                                  type:'🔗', tags:['Icons']},
+  {id:'r70',title:'Bootstrap Icons — Open Source Icon Set',     url:'https://icons.getbootstrap.com',                            type:'🔗', tags:['Icons']},
+  {id:'r71',title:'Feather Icons — Simply Beautiful Icons',     url:'https://feathericons.com',                                  type:'🔗', tags:['Icons']},
+
+  /* ── Avatars / People ───────────────────────── */
+  {id:'r72',title:'Avatar Generator — DiceBear',                url:'https://www.dicebear.com',                                  type:'🔗', tags:['Icons','Illustrations']},
+  {id:'r73',title:'UI Avatars — Letter Avatars API',            url:'https://ui-avatars.com',                                    type:'🔗', tags:['Icons','Tools']},
+  {id:'r74',title:'Avatar Placeholder Service',                 url:'https://pravatar.cc',                                       type:'🔗', tags:['Icons']},
+  {id:'r75',title:'Generated Photos — AI Face Gallery',         url:'https://generated.photos',                                  type:'🖼️', tags:['Images','Illustrations']},
+  {id:'r76',title:'This Person Does Not Exist — AI Faces',      url:'https://thispersondoesnotexist.com',                        type:'🖼️', tags:['Images']},
+
+  /* ── Mockups ────────────────────────────────── */
+  {id:'r77',title:'Smart Mockups — Device Mockups',            url:'https://smartmockups.com',                                  type:'🖼️', tags:['Images','Prototyping']},
+  {id:'r78',title:'Screenzy — Browser Mockup Generator',        url:'https://screenzy.io',                                       type:'🔗', tags:['Images','Tools']},
+  {id:'r79',title:'Artboard Studio — Mockup Design Tool',       url:'https://artboard.studio',                                   type:'🔗', tags:['Images','Prototyping']},
+  {id:'r80',title:'Clean Mock — Free Device Frames',            url:'https://cleanmock.com',                                     type:'🔗', tags:['Images','Prototyping']},
+
+  /* ── UI/UX Design ───────────────────────────── */
+  {id:'r81',title:'UI Design Daily — Free UI Resources',        url:'https://www.uidesigndaily.com',                             type:'🎨', tags:['Inspiration','Figma']},
+  {id:'r82',title:'Collect UI — Design Pattern Gallery',        url:'https://collectui.com',                                     type:'🎨', tags:['Inspiration']},
+  {id:'r83',title:'Call To Inspiration — UI Gallery',           url:'https://www.calltoinspiration.com',                         type:'🎨', tags:['Inspiration']},
+  {id:'r84',title:'UI Notes — Real World App Screenshots',      url:'https://uinotes.com',                                       type:'🎨', tags:['Inspiration','UX Research']},
+  {id:'r85',title:'User Flow Patterns — UX Flow Examples',      url:'https://userflowpatterns.com',                              type:'📄', tags:['UX Research','Prototyping']},
+
+  /* ── TEDx / Talks ───────────────────────────── */
+  {id:'r86',title:'TED — The Power of UX (Margaret Gould Stewart)',   url:'https://www.ted.com/talks/margaret_gould_stewart_how_giant_websites_design_for_you', type:'📺', tags:['UX Research','Career']},
+  {id:'r87',title:'TED — Design for All Senses',                       url:'https://www.ted.com/talks/jinsop_lee_design_for_all_5_senses',                      type:'📺', tags:['UX Research','Inspiration']},
+  {id:'r88',title:'TED — Ethical Design (Tristan Harris)',             url:'https://www.ted.com/talks/tristan_harris_the_manipulative_tricks_tech_companies_use_to_capture_your_attention', type:'📺', tags:['UX Research','Career']},
+  {id:'r89',title:'Google Design — Material Design Talks',             url:'https://design.google/videos',                                                    type:'📺', tags:['UX Research','Inspiration']},
+  {id:'r90',title:'UX Salon — Conference Talks',                       url:'https://www.uxsalon.com',                                                          type:'📺', tags:['UX Research','Career']},
+
+  /* ── Material Design 3 ──────────────────────── */
+  {id:'r95',title:'Material Design 3 — Official Docs',          url:'https://m3.material.io',                                      type:'📚', tags:['UX Research','Figma','Prototyping']},
+  {id:'r96',title:'Material Theme Builder — Figma Plugin',      url:'https://material-foundation.github.io/material-theme-builder',type:'🎨', tags:['Figma','Color','Tools']},
+  {id:'r97',title:'Material Symbols — Variable Icons',          url:'https://fonts.google.com/icons',                              type:'🔗', tags:['Icons','Typography']},
+  {id:'r98',title:'Material Color — Dynamic Color Guide',       url:'https://m3.material.io/foundations/color',                    type:'📚', tags:['Color','UX Research']},
+  {id:'r99',title:'Material Design Kit — Official Figma Kit',   url:'https://www.figma.com/community/file/1035203688169396461',     type:'🎨', tags:['Figma','Prototyping']},
+  {id:'r100',title:'Material Motion — Design Motion System',    url:'https://m3.material.io/motion',                               type:'📚', tags:['UX Research','Prototyping','CSS']},
+
+  /* ── Prototyping (more) ─────────────────────── */
+  {id:'r91',title:'ProtoPie — High-Fidelity Prototyping',      url:'https://www.protopie.io',                                   type:'🔗', tags:['Prototyping']},
+  {id:'r92',title:'Axure RP — Advanced Prototyping Tool',      url:'https://www.axure.com',                                     type:'🔗', tags:['Prototyping']},
+  {id:'r93',title:'Balsamiq — Low-Fidelity Wireframing',       url:'https://balsamiq.com',                                      type:'🔗', tags:['Prototyping','Tools']},
+  {id:'r94',title:'Sketch — Vector Design Tool',               url:'https://www.sketch.com',                                    type:'🔗', tags:['Prototyping','Figma']},
 ];
 
 function getResources(){
@@ -113,11 +159,18 @@ function saveResources(r){try{localStorage.setItem('sp-resources',JSON.stringify
 
 function buildLibraryHTML(){
   const resources=getResources();
-  const filtered=activeResTag==='All'?resources:resources.filter(r=>r.tags.includes(activeResTag));
+  const filtered=resources.filter(r=>{
+    if(activeResTag!=='All'&&!r.tags.includes(activeResTag))return false;
+    if(activeResSearch&&!r.title.toLowerCase().includes(activeResSearch.toLowerCase()))return false;
+    return true;
+  });
   const tags=RES_TAGS.map(t=>`<button class="res-tag${activeResTag===t?' on':''}" onclick="setResTag('${t}')">${t}</button>`).join('');
-  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
     <p style="font-size:13px;color:var(--muted);">Curated design wiki · <span style="color:var(--accent);font-weight:600">${resources.length} resources</span></p>
-    <button class="act-btn" onclick="addResource()">+ Add resource</button>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <input type="text" id="res-search" placeholder="Search resources…" value="${escHtml(activeResSearch)}" oninput="onResSearch()" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--text);font-family:var(--font);outline:none;width:180px;">
+      <button class="act-btn" onclick="addResource()">+ Add resource</button>
+    </div>
   </div>
   <div class="resource-tags">${tags}</div>
   <div class="resource-list">`;
@@ -143,15 +196,29 @@ function buildLibraryHTML(){
 function renderResources(){
   const el=document.getElementById('v-resources');
   if(el)el.innerHTML=buildLibraryHTML();
+  if(activeResSearch&&document.getElementById('res-search'))onResSearch();
 }
 
 function setResTag(tag){
   activeResTag=tag;
   if(document.getElementById('v-learn'))renderLearn('library');
   else renderResources();
+  // Re-apply search filter on new DOM
+  if(activeResSearch)onResSearch();
+}
+
+let resSearchTimer=null;
+function onResSearch(){
+  activeResSearch=document.getElementById('res-search')?.value||'';
+  document.querySelectorAll('.resource-item').forEach(el=>{
+    const title=el.querySelector('.resource-title')?.textContent?.toLowerCase()||'';
+    el.style.display=title.includes(activeResSearch.toLowerCase())?'':'none';
+  });
 }
 
 function addResource(){
+  const knownTags=RES_TAGS.filter(t=>t!=='All').sort();
+  const tagChips=knownTags.map(t=>`<span class="res-tag-chip" data-tag="${t}" onclick="toggleResTagChip(this)">${t}</span>`).join('');
   showModal(`<p class="modal-title">Add Resource</p>
     <div class="modal-row"><span class="modal-label">Title</span><input class="modal-input" id="res-title" placeholder="e.g. Figma shortcuts"></div>
     <div class="modal-row"><span class="modal-label">URL</span><input class="modal-input" id="res-url" placeholder="https://…"></div>
@@ -166,12 +233,22 @@ function addResource(){
       </select>
     </div>
     <div class="modal-row"><span class="modal-label">Tags</span>
-      <input class="modal-input" id="res-tags" placeholder="Figma, Color (comma-separated)">
+      <input class="modal-input" id="res-tags" placeholder="Type or click tags below">
+      <div class="res-tag-chips" style="margin-top:6px;">${tagChips}</div>
     </div>
     <div class="modal-btns">
       <button class="modal-btn" onclick="closeModal()">Cancel</button>
       <button class="modal-btn primary" onclick="confirmAddResource()">Add</button>
     </div>`);
+}
+
+function toggleResTagChip(el){
+  el.classList.toggle('on');
+  const input=document.getElementById('res-tags');
+  if(!input)return;
+  const selected=[...document.querySelectorAll('.res-tag-chip.on')].map(c=>c.dataset.tag);
+  const manual=input.value.split(',').map(s=>s.trim()).filter(Boolean).filter(t=>!selected.includes(t));
+  input.value=[...selected,...manual].join(', ');
 }
 
 function confirmAddResource(){

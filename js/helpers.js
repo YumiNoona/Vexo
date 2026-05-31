@@ -57,25 +57,12 @@ function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').
 ═══════════════════════════════════════════════ */
 function showModal(html){document.getElementById('modalBox').innerHTML=html;document.getElementById('modalOverlay').style.display='flex';}
 function closeModal(){
-  clearInterval(timerInterval);clearInterval(pomoInterval);timerRunning=false;
+  clearInterval(timerInterval);timerRunning=false;
   if(typeof hideTimerBar==='function')hideTimerBar();
   if(timerTaskId){
     const t=tasks.find(t=>t.id===timerTaskId);
     if(t){
-      let elapsed=0;
-      if(pomodoroMode){
-        // Pomo: each completed work phase was already logged immediately.
-        // Only log the current in-progress WORK phase time; skip if on break.
-        if(pomoPhase==='work'){
-          elapsed=Math.round((timerTotal-timerSeconds)/60);
-        }
-        // Reset pomo state so future opens start clean
-        pomodoroMode=false;
-        if(typeof pomoLoggedMins!=='undefined')pomoLoggedMins=0;
-      }else{
-        // Normal countdown: log whatever has elapsed since start
-        elapsed=Math.round((timerTotal-timerSeconds)/60);
-      }
+      const elapsed=Math.round((timerTotal-timerSeconds)/60);
       if(elapsed>0){timeLogs[timerTaskId]=(timeLogs[timerTaskId]||0)+elapsed;saveDay();updateProg();}
     }
   }

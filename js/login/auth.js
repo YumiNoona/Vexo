@@ -2,7 +2,7 @@ const url = window.SUPABASE_URL || '';
 const anon = window.SUPABASE_ANON || '';
 const hasSupabase = url && anon && !url.includes('YOUR_PROJECT_ID') && !anon.includes('YOUR_ANON_PUBLIC_KEY');
 
-if (!hasSupabase) {
+if (!hasSupabase || localStorage.getItem('sp-skip-login') === 'true') {
   location.href = 'index.html';
 }
 
@@ -25,6 +25,11 @@ function setMode(mode) {
     ? `Don't have an account? <span class="switch-link" onclick="setMode('signup')">Create one</span>`
     : `Already have an account? <span class="switch-link" onclick="setMode('signin')">Sign in</span>`;
   clearMsg();
+}
+
+function skipLogin() {
+  localStorage.setItem('sp-skip-login', 'true');
+  location.href = 'index.html';
 }
 
 function showMsg(txt, type) {
@@ -75,13 +80,16 @@ async function handleSubmit(e) {
   setLoading(true);
   try {
     if (currentMode === 'signin') {
-      const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+      const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
       if (error) throw error;
+      localStorage.removeItem('sp-skip-login');
+      await pushLocalToCloud(data.session.user.id);
       showSuccess(email);
     } else {
       const { data, error } = await sb.auth.signUp({ email, password: pass });
       if (error) throw error;
       if (data.session) {
+        localStorage.removeItem('sp-skip-login');
         await pushLocalToCloud(data.session.user.id);
         showSuccess(email);
       } else {

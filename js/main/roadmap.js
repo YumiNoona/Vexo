@@ -45,25 +45,10 @@ function renderRoadmap(){
   renderPlan('roadmap');
 }
 
-function phaseModal(pi){
-  const phases=getPhases();
-  const isEdit=pi!==-1;
-  const p=isEdit?phases[pi]:{n:'',title:'',c:'#4a9eff',weeks:[]};
-  showModal(`<p class="modal-title">${isEdit?'Edit':'Add'} Phase</p>
-    <div class="modal-row"><span class="modal-label">Label</span><input class="modal-input" id="ph-n" value="${escHtml(p.n)}" placeholder="Month 1"></div>
-    <div class="modal-row"><span class="modal-label">Title</span><input class="modal-input" id="ph-title" value="${escHtml(p.title)}" placeholder="Foundations"></div>
-    <div class="modal-row"><span class="modal-label">Colour</span>
-      <select class="modal-input" id="ph-c">
-        ${ACCENT_COLORS.map(c=>`<option value="${c}"${p.c===c?' selected':''}>${c}</option>`).join('')}
-      </select>
-    </div>
-    <div class="modal-btns">
-      <button class="modal-btn" onclick="closeModal()">Cancel</button>
-      <button class="modal-btn primary" onclick="savePhaseModal(${pi})">Save</button>
-    </div>`);
-}
 function addPhase(){phaseModal(-1);}
 function editPhase(pi){phaseModal(pi);}
+function addWeek(pi){weekModal(pi,-1);}
+function editWeek(pi,wi){weekModal(pi,wi);}
 function savePhaseModal(pi){
   const n=document.getElementById('ph-n')?.value.trim();
   const title=document.getElementById('ph-title')?.value.trim();

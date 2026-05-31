@@ -15,18 +15,3 @@
 .tip-arrow{color:var(--accent);font-size:13px;flex-shrink:0;margin-top:1px;}
 .tip-text{font-size:13px;color:var(--muted);line-height:1.55;}
 
-/* ═══════════════════════════════════════════════
-/* ═══════════════════════════════════════════════
-   ROADMAP — hover-only actions on desktop
-═══════════════════════════════════════════════ */
-@media(min-width:769px){
-  .phase .sched-actions,
-  .week-block .roadmap-week-actions{
-    opacity:0;
-    transition:opacity .15s;
-  }
-  .phase:hover .sched-actions,
-  .week-block:hover .roadmap-week-actions{
-    opacity:1;
-  }
-}

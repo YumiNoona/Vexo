@@ -47,6 +47,5 @@ const CHK=`<svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#
 ═══════════════════════════════════════════════ */
 let viewOffset=0,tasks=[],done={},timeLogs={},streak=0,settings={};
 let timerTaskId=null,timerInterval=null,timerSeconds=0,timerRunning=false,timerTotal=0;
-let pomodoroMode=false,pomoPhase='work',pomoCount=0,pomoInterval=null;
 let audioCtx=null;
 let activeNotesId=null;

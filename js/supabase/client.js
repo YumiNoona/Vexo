@@ -53,19 +53,14 @@ async function sbGetSession() {
   const { data: { session } } = await sb.auth.getSession();
   return session;
 }
-async function sbSignIn(email, password) {
-  return await sb.auth.signInWithPassword({ email, password });
-}
-async function sbSignUp(email, password) {
-  return await sb.auth.signUp({ email, password });
-}
 async function sbSignOut() {
   _syncEnabled = false;
   if (sb) {
-    flushBatch(); // attempt to save any pending writes before sign out
+    flushBatch();
     try { await sb.auth.signOut(); } catch(e) {}
   }
-  localStorage.clear();
+  localStorage.removeItem('sp-skip-login');
+  window._sbUserEmail = null;
   location.href = 'login.html';
 }
 async function sbClearUserData() {

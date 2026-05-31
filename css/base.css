@@ -21,8 +21,6 @@ body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.01);point
 @media(min-width:1024px){.app{max-width:1180px;padding:28px 32px 40px;}}
 
 /* ═══════ XP SYSTEM ═══════ */
-.xp-bar-wrap{display:inline-flex;width:36px;height:4px;background:var(--border2);border-radius:2px;overflow:hidden;vertical-align:middle;margin:0 3px;}
-.xp-bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease;}
 #xpFloat{position:fixed;inset:0;pointer-events:none;z-index:9999;}
 .xp-float{position:absolute;bottom:50%;font-size:13px;font-weight:700;color:var(--accent);animation:xpFloatUp 1.2s ease-out forwards;font-family:var(--font);}
 @keyframes xpFloatUp{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-36px);}}

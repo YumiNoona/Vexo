@@ -322,12 +322,6 @@ body::before {
   border-bottom: 1px solid var(--border);
 }
 .mockup-row:last-child { border-bottom: none; }
-.mockup-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid var(--dark);
-}
 .mockup-btn {
   font-family: var(--pixel);
   font-size: 8px;
@@ -343,61 +337,6 @@ body::before {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--pixel);
-  font-size: 8px;
-  color: var(--dark);
-  background: var(--accent-bg);
-  border: 1.5px solid var(--accent-border);
-  padding: 6px 10px;
-  margin-top: 4px;
-}
-.mockup-xp-bar {
-  flex: 1;
-  height: 6px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-}
-.mockup-xp-fill {
-  height: 100%;
-  width: 65%;
-  background: linear-gradient(90deg, var(--accent3), var(--accent2));
-  border-radius: 2px;
-}
-
-/* ═══════════════════════════════════════════════
-   SECTION TITLES
-   ═══════════════════════════════════════════════ */
-.section-title {
-  font-family: var(--pixel);
-  font-size: 28px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-align: center;
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-.section-sub {
-  text-align: center;
-  font-size: 15px;
-  color: var(--muted);
-  max-width: 460px;
-  margin: 0 auto 48px;
-  line-height: 1.7;
-}
-
-/* ═══════════════════════════════════════════════
-   FEATURE HIGHLIGHT (split layout)
-   ═══════════════════════════════════════════════ */
-.features {
-  padding: 80px 0;
-  border-bottom: 2px solid var(--border2);
-}
-.features .container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: start;
 }
 .feat-item {
   margin-bottom: 28px;
@@ -468,8 +407,8 @@ body::before {
 
 /* Budget rows */
 .feat-budget-row {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   padding: 8px 0;
   border-bottom: 1px solid var(--border);
@@ -478,17 +417,21 @@ body::before {
 .feat-budget-row:last-child { border-bottom: none; }
 .feat-budget-label {
   color: var(--dark3);
+  text-align: left;
 }
 .feat-budget-val {
   font-family: var(--pixel);
   font-size: 9px;
   color: var(--dark);
+  text-align: center;
 }
 .feat-budget-status {
   font-family: var(--pixel);
   font-size: 8px;
   padding: 3px 8px;
   border: 1px solid;
+  text-align: center;
+  justify-self: end;
 }
 .feat-budget-status.ok {
   color: #2e7d32;
@@ -691,32 +634,6 @@ body::before {
   padding: 40px 0;
   text-align: center;
   border-top: 2px solid var(--dark);
-}
-.footer-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.footer-logo-icon {
-  width: 20px;
-  height: 20px;
-  background: var(--accent2);
-  border: 1.5px solid var(--dark);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  box-shadow: 1px 1px 0 var(--shadow);
-}
-.footer-logo-text {
-  font-family: var(--pixel);
-  font-size: 11px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--dark);
 }
 .footer-tagline {
   font-size: 14px;

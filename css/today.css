@@ -34,8 +34,6 @@
 .task-text{font-size:13.5px;color:var(--text);flex:1;min-width:0;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .task-row.done .task-text{color:var(--subtle);text-decoration:line-through;}
 .task-edit-input{background:none;border:none;outline:none;font-size:13.5px;color:var(--text);font-family:var(--font);flex:1;min-width:0;}
-.task-time-btn{font-size:11px;color:var(--muted);flex-shrink:0;cursor:pointer;background:none;border:1px solid var(--border);border-radius:5px;padding:2px 6px;font-family:var(--mono);white-space:nowrap;transition:all .15s;}
-.task-time-btn:hover{color:var(--accent);border-color:var(--accent);}
 .task-note-btn{font-size:11px;color:var(--subtle);flex-shrink:0;cursor:pointer;background:none;border:1px solid var(--border);border-radius:5px;padding:2px 6px;transition:all .15s;}
 .task-note-btn:hover{color:var(--blue);border-color:var(--blue);}
 .task-note-btn.has-note{color:var(--blue);border-color:var(--blue-dim);}
