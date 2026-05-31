@@ -128,6 +128,10 @@ function buildSettingsHTML(){
         ${typeof window.__TAURI_INTERNALS__!=='undefined' ? '<button class="save-btn" onclick="checkForUpdates()">Check for Updates</button>' : ''}
       </div>
     </div>
+    <div class="setting-row">
+      <div class="setting-info"><p class="setting-label">Donate</p><p class="setting-desc">Support Vexo — every bit helps</p></div>
+      <div class="setting-ctrl"><button class="save-btn" style="background:var(--accent-dim);color:var(--accent);border-color:var(--accent);" onclick="openDonate()">❤ Donate</button></div>
+    </div>
   </div>`;
 }
 function bindSettingsEvents(){

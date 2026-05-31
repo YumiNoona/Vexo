@@ -338,6 +338,20 @@ body::before {
   align-items: center;
   gap: 6px;
 }
+
+/* ═══════════════════════════════════════════════
+   FEATURES SECTION
+═══════════════════════════════════════════════ */
+.features {
+  padding: 100px 0 80px;
+  border-bottom: 2px solid var(--border2);
+}
+.features .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
 .feat-item {
   margin-bottom: 28px;
 }
@@ -633,7 +647,6 @@ body::before {
 .footer {
   padding: 40px 0;
   text-align: center;
-  border-top: 2px solid var(--dark);
 }
 .footer-tagline {
   font-size: 14px;
@@ -693,4 +706,21 @@ body::before {
   .forged-banner { padding: 24px 20px; }
   .forged-banner-title { font-size: 14px; }
   .features, .builds, .forged, .cta { padding: 52px 0; }
+}
+
+/* ═══════════════════════════════════════════════
+   DONATE MODAL
+═══════════════════════════════════════════════ */
+.donate-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(15,12,8,0.85); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.donate-modal {
+  background: #fdf8f0; border: 2px solid var(--dark);
+  border-radius: 20px; padding: 36px 32px;
+  max-width: 520px; width: 100%;
+  text-align: center;
+  box-shadow: 6px 6px 0 var(--shadow);
 }

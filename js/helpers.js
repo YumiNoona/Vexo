@@ -70,3 +70,25 @@ function closeModal(){
   document.getElementById('modalOverlay').style.display='none';
 }
 function overlayClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+function openDonate(){
+  showModal(`<div style="text-align:center;padding:16px 8px;background:var(--surface);border-radius:12px;">
+    <p style="font-size:24px;margin-bottom:8px;">💛</p>
+    <p style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px;">Support Vexo</p>
+    <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px;">
+      If Vexo helps you study, please consider donating to keep it free forever.
+    </p>
+    <div style="display:flex;justify-content:center;margin-bottom:16px;">
+      <img src="public/Donate.jpeg" alt="Donate QR Code" style="width:300px;height:300px;border-radius:14px;border:2px solid var(--border2);">
+    </div>
+    <p style="font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;">Direct UPI Payment</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:18px;">
+      <p id="donateUpi" style="font-family:var(--mono);font-size:16px;color:var(--accent);font-weight:600;word-break:break-all;">rushikeshingale2001@okicici</p>
+      <button class="modal-btn" style="padding:5px 12px;font-size:12px;flex-shrink:0;" onclick="navigator.clipboard.writeText('rushikeshingale2001@okicici');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)">Copy</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:20px;">Every donation, no matter how small, helps cover<br>hosting and AI API costs.</p>
+    <p style="font-size:14px;color:var(--text);font-weight:500;">Thank you for your kindness!</p>
+    <div class="modal-btns" style="justify-content:center;margin-top:20px;">
+      <button class="modal-btn primary" onclick="closeModal()">Close</button>
+    </div>
+  </div>`);
+}
