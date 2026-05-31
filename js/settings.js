@@ -121,6 +121,13 @@ function buildSettingsHTML(){
           ? '<button class="save-btn" onclick="signIntoSupabase()">Sign In for cloud sync</button>'
           : ''}</div>
     </div>
+    <div class="setting-row">
+      <div class="setting-info"><p class="setting-label">Version</p><p class="setting-desc">App build</p></div>
+      <div class="setting-ctrl" style="display:flex;align-items:center;gap:8px;">
+        <span style="font-family:var(--mono);font-size:13px;color:var(--muted)">v${APP_VERSION}</span>
+        ${typeof window.__TAURI_INTERNALS__!=='undefined' ? '<button class="save-btn" onclick="checkForUpdates()">Check for Updates</button>' : ''}
+      </div>
+    </div>
   </div>`;
 }
 function bindSettingsEvents(){
@@ -187,6 +194,14 @@ function toggleSound(){settings.soundEnabled=document.getElementById('sndToggle'
 function changeSoundProfile(v){settings.soundProfile=v;saveSettings();}
 function saveJobGoal(){settings.jobGoalDate=document.getElementById('jobGoalInp')?.value||'';saveSettings();updateHeader();}
 function savePlanStart(){settings.planStartDate=document.getElementById('planStartInp')?.value||'';saveSettings();}
+async function checkForUpdates(){
+  if(typeof window.__TAURI_INTERNALS__==='undefined'){showToast('Updates only available in desktop app');return;}
+  try{
+    await window.__TAURI_INTERNALS__.invoke('plugin:updater|check');
+  }catch(e){
+    showToast('No updates available');
+  }
+}
 function resetTasks(){
   showModal(`
     <p class="modal-title">⚠️ Reset Tasks</p>

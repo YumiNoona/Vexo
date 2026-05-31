@@ -39,6 +39,7 @@ const TIPS=[
   'Start applying from Week 9, even before portfolio feels perfect',
 ];
 const ACCENT_COLORS=['#d4960a','#4a9eff','#2ecf8c','#ff5757','#a78bfa','#f97316','#3dd6b5','#e85d99'];
+const APP_VERSION='2.0.2';
 const STUDY_CATS=['Study'];
 const CHK=`<svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#0c0c0e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
