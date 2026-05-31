@@ -26,7 +26,7 @@
           <div class="nav-logo-icon">🍩</div>
           <span class="nav-logo-text">Vexo</span>
         </a>
-        <button class="nav-cta" onclick="goToApp()">Download</button>
+        <button class="nav-cta" onclick="downloadLatest()">Download</button>
       </div>
     </nav>
 
@@ -41,14 +41,14 @@
             in one place.
           </p>
           <div class="hero-btns">
-            <button class="btn-primary" onclick="window.open('https://github.com/YumiNoona/Vexo/releases','_blank')">
+            <button class="btn-primary" onclick="downloadLatest()">
               Download the App →
             </button>
             <button class="btn-secondary" onclick="goToApp()">
-              See the Realm
+              Open Web App
             </button>
           </div>
-          <p class="hero-note">Desktop app for Windows. Web version also available.</p>
+          <p class="hero-note">Windows desktop app. Or use the web version right here.</p>
         </div>
 
         <!-- Retro App Mockups -->
@@ -295,11 +295,20 @@
 
   <!-- Scroll Reveal Script -->
   <script>
+    async function downloadLatest() {
+      try {
+        const resp = await fetch('https://api.github.com/repos/YumiNoona/Vexo/releases/latest');
+        const data = await resp.json();
+        const msi = data.assets.find(a => a.name.endsWith('.msi'));
+        if (msi) { window.location.href = msi.browser_download_url; return; }
+      } catch(e) {}
+      window.open('https://github.com/YumiNoona/Vexo/releases/latest', '_blank');
+    }
     function goToApp() {
-      // Check if user has an active Supabase session
       const hasSession = localStorage.getItem('sb-') !== null ||
         document.cookie.includes('sb-') ||
-        localStorage.getItem('sp-streak') !== null;
+        localStorage.getItem('sp-streak') !== null ||
+        localStorage.getItem('sp-skip-login') !== null;
       window.location.href = hasSession ? 'index.html' : 'login.html';
     }
     document.addEventListener('DOMContentLoaded', () => {
