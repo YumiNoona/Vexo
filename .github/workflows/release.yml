@@ -8,36 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    outputs:
-      release_id: ${{ steps.create.outputs.id }}
-      upload_url: ${{ steps.create.outputs.upload_url }}
-      tag: ${{ steps.tag.outputs.tag }}
-    steps:
-      - uses: actions/checkout@v4
-      - id: tag
-        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-      - id: create
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const tag = context.ref.replace('refs/tags/', '');
-            const resp = await github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: tag,
-              name: tag,
-              draft: false,
-              prerelease: false
-            });
-            core.setOutput('id', resp.data.id);
-            core.setOutput('upload_url', resp.data.upload_url);
-            return resp.data.upload_url;
-          result-encoding: string
-
   build-msi:
-    needs: create-release
     runs-on: windows-latest
     env:
       SUPABASE_URL: ${{ vars.SUPABASE_URL }}
@@ -49,61 +20,48 @@ jobs:
           node-version: 22
       - uses: actions-rust-lang/setup-rust-toolchain@v1
 
-      - name: Install system deps
+      - name: Install deps & build
         run: |
           rustup target add x86_64-pc-windows-msvc
-          npm install -g @tauri-apps/cli
-
-      - name: Install npm deps
-        run: npm ci
-
-      - name: Build env-config
-        run: node build.js
-
-      - name: Build Tauri app
-        run: npx tauri build --bundles msi --ci
+          npm ci
+          node build.js
+          npx tauri build --bundles msi --ci
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_SIGNING_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
 
-      - name: Upload MSI to release
-        uses: actions/github-script@v7
+      - name: Find MSI name
+        id: msi
+        shell: bash
+        run: |
+          MSI=$(ls src-tauri/target/release/bundle/msi/*.msi)
+          echo "path=$MSI" >> $GITHUB_OUTPUT
+          echo "name=$(basename "$MSI")" >> $GITHUB_OUTPUT
+          SIG="$MSI.sig"
+          if [ -f "$SIG" ]; then echo "sig=$(cat "$SIG")" >> $GITHUB_OUTPUT; fi
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
         with:
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const msiDir = 'src-tauri/target/release/bundle/msi';
-            const files = fs.readdirSync(msiDir).filter(f => f.endsWith('.msi'));
-            if (files.length === 0) throw new Error('No MSI found');
-            const msiPath = path.join(msiDir, files[0]);
-            const msiBytes = fs.readFileSync(msiPath);
-            await github.rest.repos.uploadReleaseAsset({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: ${{ needs.create-release.outputs.release_id }},
-              name: files[0],
-              data: msiBytes.toString('base64'),
-              headers: {
-                'content-type': 'application/x-msi',
-                'content-length': msiBytes.length
-              }
-            });
+          files: |
+            ${{ steps.msi.outputs.path }}
+            ${{ steps.msi.outputs.path }}.sig
 
       - name: Upload update proxy JSON
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
-            const path = require('path');
-            const msiDir = 'src-tauri/target/release/bundle/msi';
-            const files = fs.readdirSync(msiDir).filter(f => f.endsWith('.msi'));
-            const msiName = files[0];
-
-            const sigPath = path.join(msiDir, msiName + '.sig');
-            const sig = fs.existsSync(sigPath) ? fs.readFileSync(sigPath, 'utf-8').trim() : '';
-
-            const tag = '${{ needs.create-release.outputs.tag }}';
+            const tag = context.ref.replace('refs/tags/', '');
             const version = tag.replace(/^v/, '');
+            const msiName = '${{ steps.msi.outputs.name }}';
+            const sig = '${{ steps.msi.outputs.sig }}';
+
+            const { data: release } = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag
+            });
+
             const proxy = {
               version,
               notes: '',
@@ -115,15 +73,11 @@ jobs:
                 }
               }
             };
-            const json = JSON.stringify(proxy, null, 2);
+
             await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: ${{ needs.create-release.outputs.release_id }},
+              release_id: release.id,
               name: 'update-proxy.json',
-              data: Buffer.from(json).toString('base64'),
-              headers: {
-                'content-type': 'application/json',
-                'content-length': Buffer.byteLength(json)
-              }
+              data: JSON.stringify(proxy, null, 2)
             });
