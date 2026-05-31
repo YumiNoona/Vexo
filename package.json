@@ -1,12 +1,20 @@
 {
-  "name": "study-planner",
+  "name": "vexo",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "npx -y serve",
-    "build": "node build.js"
+    "tauri": "tauri",
+    "build": "node copy-dist.js && tauri build",
+    "build:web": "node build.js"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.11.0",
+    "@tauri-apps/plugin-fs": "^2.5.1",
+    "@tauri-apps/plugin-updater": "^2.10.1",
     "pdf-parse": "^2.4.5"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
   }
 }

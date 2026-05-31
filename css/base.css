@@ -16,6 +16,6 @@
   --radius:12px;--radius-sm:8px;--radius-lg:18px;
 }
 body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");opacity:.4;pointer-events:none;z-index:0;}
+body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.01);pointer-events:none;z-index:0;}
 .app{max-width:720px;margin:0 auto;padding:28px 16px 100px;position:relative;z-index:1;}
 @media(min-width:1024px){.app{max-width:1180px;padding:28px 32px 40px;}}

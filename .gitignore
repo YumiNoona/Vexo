@@ -13,6 +13,7 @@ dist/
 build/
 out/
 .vercel/
+src-tauri/target/
 
 # ─── Environment variables ─────────────────────────
 .env
