@@ -4,13 +4,20 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   create-release:
     runs-on: ubuntu-latest
     outputs:
+      release_id: ${{ steps.create.outputs.id }}
       upload_url: ${{ steps.create.outputs.upload_url }}
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
+      - id: tag
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       - id: create
         uses: actions/github-script@v7
         with:
@@ -24,6 +31,8 @@ jobs:
               draft: false,
               prerelease: false
             });
+            core.setOutput('id', resp.data.id);
+            core.setOutput('upload_url', resp.data.upload_url);
             return resp.data.upload_url;
           result-encoding: string
 
@@ -71,7 +80,7 @@ jobs:
             await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: context.payload.release.id,
+              release_id: ${{ needs.create-release.outputs.release_id }},
               name: files[0],
               data: msiBytes.toString('base64'),
               headers: {
@@ -85,27 +94,33 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const sigPath = 'src-tauri/target/release/bundle/msi/Vexo_1.0.0_x64_en-US.msi.sig';
+            const path = require('path');
+            const msiDir = 'src-tauri/target/release/bundle/msi';
+            const files = fs.readdirSync(msiDir).filter(f => f.endsWith('.msi'));
+            const msiName = files[0];
+
+            const sigPath = path.join(msiDir, msiName + '.sig');
             const sig = fs.existsSync(sigPath) ? fs.readFileSync(sigPath, 'utf-8').trim() : '';
-            const tag = context.ref.replace('refs/tags/', '');
+
+            const tag = '${{ needs.create-release.outputs.tag }}';
+            const version = tag.replace(/^v/, '');
             const proxy = {
-              version: tag.replace(/^v/, ''),
+              version,
               notes: '',
               pub_date: new Date().toISOString(),
               platforms: {
                 'windows-x86_64': {
                   signature: sig,
-                  url: `https://github.com/${context.repo.owner}/${context.repo.repo}/releases/download/${tag}/Vexo_1.0.0_x64_en-US.msi`
+                  url: `https://github.com/${context.repo.owner}/${context.repo.repo}/releases/download/${tag}/${msiName}`
                 }
               }
             };
             const json = JSON.stringify(proxy, null, 2);
-            const name = 'update-proxy.json';
             await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: context.payload.release.id,
-              name,
+              release_id: ${{ needs.create-release.outputs.release_id }},
+              name: 'update-proxy.json',
               data: Buffer.from(json).toString('base64'),
               headers: {
                 'content-type': 'application/json',
