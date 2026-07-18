@@ -22,15 +22,15 @@ function buildJournalHTML(){
   <div class="journal-prompts">
     <div class="journal-prompt">
       <p class="prompt-label"><span class="prompt-icon">💡</span> What did I learn today?</p>
-      <textarea class="prompt-textarea" id="j-learned" placeholder="Key concepts, tools, insights…">${escHtml(today.learned)}</textarea>
+      <textarea class="prompt-textarea" id="j-learned" placeholder="Key concepts, tools, insights…" onblur="autoSaveJournal()">${escHtml(today.learned)}</textarea>
     </div>
     <div class="journal-prompt">
       <p class="prompt-label"><span class="prompt-icon">🤔</span> What confused me?</p>
-      <textarea class="prompt-textarea" id="j-confused" placeholder="Concepts to revisit or ask about…">${escHtml(today.confused)}</textarea>
+      <textarea class="prompt-textarea" id="j-confused" placeholder="Concepts to revisit or ask about…" onblur="autoSaveJournal()">${escHtml(today.confused)}</textarea>
     </div>
     <div class="journal-prompt">
       <p class="prompt-label"><span class="prompt-icon">🎯</span> What will I do differently?</p>
-      <textarea class="prompt-textarea" id="j-differently" placeholder="Adjustments, experiments, intentions…">${escHtml(today.differently)}</textarea>
+      <textarea class="prompt-textarea" id="j-differently" placeholder="Adjustments, experiments, intentions…" onblur="autoSaveJournal()">${escHtml(today.differently)}</textarea>
     </div>
   </div>
   <div class="journal-save-bar">
@@ -42,6 +42,18 @@ function buildJournalHTML(){
   <div id="j-history"></div>`;
 }
 function bindJournalEvents(){renderJournalHistory();}
+let _journalSaveTimer=null;
+function autoSaveJournal(){
+  clearTimeout(_journalSaveTimer);
+  _journalSaveTimer=setTimeout(function(){
+    const entry={
+      learned:document.getElementById('j-learned')?.value||'',
+      confused:document.getElementById('j-confused')?.value||'',
+      differently:document.getElementById('j-differently')?.value||'',
+    };
+    try{localStorage.setItem(getJournalKey(0),JSON.stringify(entry));}catch(e){}
+  },400);
+}
 function renderJournalHistory(){
   const q=(document.getElementById('jSearch')?.value||'').toLowerCase();
   let h='';

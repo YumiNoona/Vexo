@@ -14,6 +14,16 @@ function startApp() {
   initMultiTabSync();
   initTimerBar();
   pruneOldLocalData();
+  // Save timer time on page unload (prevents data loss if timer running)
+  window.addEventListener('beforeunload', function() {
+    if (timerRunning && timerTaskId) {
+      const elapsed = Math.round((timerTotal - timerSeconds) / 60);
+      if (elapsed > 0) {
+        timeLogs[timerTaskId] = (timeLogs[timerTaskId] || 0) + elapsed;
+        try { localStorage.setItem('sp-d-' + viewKey(), JSON.stringify({ done, timeLogs })); } catch(e) {}
+      }
+    }
+  });
 }
 
 /* ═══════════════════════════════════════════════

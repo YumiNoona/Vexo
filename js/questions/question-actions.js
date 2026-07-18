@@ -201,9 +201,8 @@ function fcNextCard() {
 }
 
 function fcStartNewSet() {
-  questionState.todayCards = []; // Force generation of new set
-  questionState.todayDate = ""; 
-  saveQuestions();
+  questionState.todayCards = [];
+  questionState.todayDate = "";
   setupDailyCards();
   renderLearn('questions');
 }
