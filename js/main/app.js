@@ -2,14 +2,9 @@
 /* ═══════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════ */
-/* ── Supabase-compatible init wrapper ──────────────
-   supabase.js calls window.__startApp() after pulling
-   fresh cloud data. If Supabase isn't in use, the
-   script below runs immediately as a fallback.
-──────────────────────────────────────────────── */
 let _appStarted = false;
-window.__startApp = function () {
-  if(_appStarted) return; // guard: never run twice — prevents duplicate event listeners
+function startApp() {
+  if(_appStarted) return;
   _appStarted = true;
   loadGlobal();
   loadDay();
@@ -18,9 +13,8 @@ window.__startApp = function () {
   document.title='Vexo — Today';
   initMultiTabSync();
   initTimerBar();
-  // Prune localStorage keys older than 90 days (local-only users, no Supabase cleanup)
-  if(!window.SUPABASE_ENABLED) pruneOldLocalData();
-};
+  pruneOldLocalData();
+}
 
 /* ═══════════════════════════════════════════════
    MULTI-TAB SYNC
@@ -55,5 +49,5 @@ function pruneOldLocalData(){
   }catch(e){}
 }
 
-// Fallback: start immediately if Supabase isn't loaded
-if (!window.SUPABASE_ENABLED) window.__startApp();
+// Start app immediately (local-only mode)
+startApp();

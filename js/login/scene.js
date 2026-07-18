@@ -107,7 +107,8 @@
 
   /* ── Mouse ── */
   let mx = 0, my = 0, tmx = 0, tmy = 0;
-  document.addEventListener('mousemove', e => {
+  let _mouseHandler, _mouseLeaveHandler, _resizeHandler;
+  _mouseHandler = function(e) {
     tmx = (e.clientX / window.innerWidth  - 0.5) * 2;
     tmy = (e.clientY / window.innerHeight - 0.5) * 2;
 
@@ -126,16 +127,18 @@
     }
     shine.style.setProperty('--mx', ((e.clientX - r.left) / r.width  * 100).toFixed(1) + '%');
     shine.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
-  });
-  document.addEventListener('mouseleave', () => {
+  };
+  document.addEventListener('mousemove', _mouseHandler);
+  _mouseLeaveHandler = function() {
     const card = document.getElementById('loginCard');
     card.style.transform = ''; card.style.boxShadow = '';
-  });
+  };
+  document.addEventListener('mouseleave', _mouseLeaveHandler);
 
   /* ── Animate ── */
-  let t = 0;
+  let t = 0, rafId = null;
   (function loop() {
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
     t += 0.012;
 
     mx += (tmx - mx) * 0.04;
@@ -176,9 +179,27 @@
     renderer.render(scene, camera);
   })();
 
-  window.addEventListener('resize', () => {
+  _resizeHandler = function() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+  };
+  window.addEventListener('resize', _resizeHandler);
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', function() {
+    if (rafId) cancelAnimationFrame(rafId);
+    renderer.dispose();
+    scene.traverse(function(obj) {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) {
+        if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+        else obj.material.dispose();
+      }
+    });
+    document.removeEventListener('mousemove', _mouseHandler);
+    document.removeEventListener('mouseleave', _mouseLeaveHandler);
+    window.removeEventListener('resize', _resizeHandler);
+    renderer.forceContextLoss();
   });
 })();

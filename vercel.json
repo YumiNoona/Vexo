@@ -1,5 +1,4 @@
 {
-  "buildCommand": "node build.js",
   "outputDirectory": ".",
   "redirects": [
     { "source": "/", "destination": "/landing.html", "permanent": false }

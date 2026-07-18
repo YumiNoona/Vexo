@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const dist = path.join(__dirname, 'dist');
-const items = ['index.html', 'favicon.ico', 'manifest.json', 'login.html', 'env-config.js', 'css', 'js'];
+const items = ['index.html', 'favicon.ico', 'manifest.json', 'login.html', 'landing.html', 'css', 'js'];
 
 function copyRecursive(src, dest) {
   if (!fs.existsSync(src)) return;

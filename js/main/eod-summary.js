@@ -44,8 +44,8 @@ function renderEOD(){
   const fcWrong=(typeof questionState!=='undefined')?questionState.wrong:0;
   const fcTotal=(typeof questionState!=='undefined')?questionState.todayCards.length:5;
   const fcPct=fcDone>0?Math.round(fcRight/fcDone*100):0;
-  const fcBarW=fcDone>0?Math.round(fcRight/fcTotal*100):0;
-  const fcBarWrong=fcDone>0?Math.round(fcWrong/fcTotal*100):0;
+  const fcBarW=fcDone>0?Math.round(fcRight/fcDone*100):0;
+  const fcBarWrong=fcDone>0?Math.round(fcWrong/fcDone*100):0;
 
   const fcSection=fcDone>0?`
     <div class="eod-section">

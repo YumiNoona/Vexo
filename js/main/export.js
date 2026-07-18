@@ -2,9 +2,10 @@
    EXPORT — Excel (xlsx via CDN)
 ═══════════════════════════════════════════════ */
 function exportToExcel(){
-  // Load SheetJS if not loaded
   if(!window.XLSX){
+    if(document.getElementById('xlsx-script')){setTimeout(doExcelExport,500);return;}
     const script=document.createElement('script');
+    script.id='xlsx-script';
     script.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
     script.onload=()=>doExcelExport();
     document.head.appendChild(script);

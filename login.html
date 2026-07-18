@@ -3,19 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Vexo — Sign In</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Vexo</title>
 <meta name="theme-color" content="#0c0c0e">
 <link rel="icon" href="favicon.ico" type="image/x-icon">
-<link rel="shortcut icon" href="favicon.ico">
-<link rel="apple-touch-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Fraunces:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/login.css">
 <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="env-config.js"></script>
 </head>
 <body>
 
@@ -23,70 +17,25 @@
 <div class="grid-bg"></div>
 <div class="vignette"></div>
 
-<div class="success-overlay" id="successOverlay">
-  <div class="s-icon">✦</div>
-  <p id="successMsg">Welcome back</p>
-</div>
-
 <div class="page">
   <div class="card" id="loginCard">
     <div class="card-shine" id="cardShine"></div>
-
-    <!-- Logo -->
     <div class="logo-wrap">
       <div class="logo-icon"><img src="favicon.ico" style="width:36px;height:36px;object-fit:contain;image-rendering:crisp-edges;" alt="Vexo"></div>
       <p class="logo-title">Vexo</p>
       <p class="logo-sub">Your personal learning journey ✦</p>
     </div>
-
-    <!-- Pill toggle -->
-    <div class="mode-toggle">
-      <div class="toggle-pill" id="togglePill"></div>
-      <button class="mode-btn active" id="btn-signin" onclick="setMode('signin')">Sign In</button>
-      <button class="mode-btn"        id="btn-signup" onclick="setMode('signup')">Create Account</button>
-    </div>
-
-    <!-- Form -->
-    <form class="form" id="authForm" onsubmit="handleSubmit(event)">
-      <div class="field-wrap">
-        <label class="field-label" for="email">Email</label>
-        <input class="field-input" type="email" id="email"
-               placeholder="you@example.com" autocomplete="email" required>
-      </div>
-      <div class="field-wrap">
-        <label class="field-label" for="password">Password</label>
-        <input class="field-input" type="password" id="password"
-               placeholder="••••••••" autocomplete="current-password" required minlength="6">
-      </div>
-      <div class="field-wrap" id="confirmWrap" style="display:none;">
-        <label class="field-label" for="confirm">Confirm Password</label>
-        <input class="field-input" type="password" id="confirm"
-               placeholder="••••••••" autocomplete="new-password">
-      </div>
-
-      <div class="msg" id="authMsg"></div>
-
-      <button class="submit-btn" type="submit" id="submitBtn">
-        <span class="btn-text" id="btnLabel">Sign In</span>
-        <div class="btn-spinner"></div>
-      </button>
-    </form>
-
-    <div class="switch-wrap" id="switchWrap">
-      Don't have an account?
-      <span class="switch-link" onclick="setMode('signup')">Create one</span>
-    </div>
-
-    <div class="skip-wrap">
-      <span class="skip-link" onclick="skipLogin()">Continue without account →</span>
+    <div style="text-align:center;padding:40px 20px;">
+      <p style="font-size:32px;margin-bottom:12px;">🍩</p>
+      <p style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;">Welcome to Vexo</p>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:24px;">All data is stored locally on your device. No login required.</p>
+      <button onclick="window.location.href='index.html'" style="background:var(--accent);color:#0c0c0e;border:none;border-radius:12px;padding:12px 32px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;">Open App</button>
     </div>
   </div>
-
   <p class="login-footer">Made with <span class="heart">♥</span> for her</p>
 </div>
 
 <script src="js/login/scene.js"></script>
-
-<script src="js/login/auth.js"></script>
+<script>window.location.href='index.html';</script>
 </body>
 </html>

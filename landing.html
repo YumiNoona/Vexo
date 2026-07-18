@@ -332,11 +332,7 @@
       window.open('https://github.com/YumiNoona/Vexo/releases/latest', '_blank');
     }
     function goToApp() {
-      const hasSession = localStorage.getItem('sb-') !== null ||
-        document.cookie.includes('sb-') ||
-        localStorage.getItem('sp-streak') !== null ||
-        localStorage.getItem('sp-skip-login') !== null;
-      window.location.href = hasSession ? 'index.html' : 'login.html';
+      window.location.href = 'index.html';
     }
     function openDonate(){document.getElementById('donateOverlay').style.display='flex';}
     function closeDonate(){document.getElementById('donateOverlay').style.display='none';}
