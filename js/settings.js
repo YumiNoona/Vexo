@@ -188,12 +188,45 @@ function toggleSound(){settings.soundEnabled=document.getElementById('sndToggle'
 function changeSoundProfile(v){settings.soundProfile=v;saveSettings();}
 function saveJobGoal(){settings.jobGoalDate=document.getElementById('jobGoalInp')?.value||'';saveSettings();updateHeader();}
 function savePlanStart(){settings.planStartDate=document.getElementById('planStartInp')?.value||'';saveSettings();}
-async function checkForUpdates(){
-  if(typeof window.__TAURI_INTERNALS__==='undefined'){showToast('Updates only available in desktop app');return;}
+async function checkForUpdates(silent){
+  if(typeof window.__TAURI_INTERNALS__==='undefined'){
+    if(!silent) showToast('Updates only available in desktop app');
+    return;
+  }
   try{
-    await window.__TAURI_INTERNALS__.invoke('plugin:updater|check');
+    const update = await window.__TAURI_INTERNALS__.invoke('plugin:updater|check');
+    if(update && update.version){
+      const current = APP_VERSION;
+      if(update.version !== current){
+        showModal(`
+          <p class="modal-title">⬇ Update Available</p>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:4px;">Version ${update.version} is ready</p>
+          <p style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:18px;">
+            You have <strong style="color:var(--text)">v${current}</strong>. Download and install the latest version automatically?
+          </p>
+          <div class="modal-btns">
+            <button class="modal-btn" onclick="closeModal()">Later</button>
+            <button class="modal-btn primary" onclick="downloadUpdate('${update.version}')">Download & Install</button>
+          </div>`);
+      } else {
+        if(!silent) showToast('You're on the latest version ✓');
+      }
+    } else {
+      if(!silent) showToast('No updates available');
+    }
   }catch(e){
-    showToast('No updates available');
+    if(!silent) showToast('Could not check for updates');
+  }
+}
+async function downloadUpdate(version){
+  closeModal();
+  showToast('Downloading update…');
+  try{
+    await window.__TAURI_INTERNALS__.invoke('plugin:updater|download_and_install', { version });
+    showToast('Update installed! Restarting…');
+    setTimeout(() => { try { window.__TAURI_INTERNALS__.invoke('core:app|restart'); } catch(e) { location.reload(); } }, 1500);
+  }catch(e){
+    showToast('Download failed. Try again later.');
   }
 }
 function resetTasks(){

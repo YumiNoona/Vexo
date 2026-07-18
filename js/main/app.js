@@ -24,6 +24,17 @@ function startApp() {
       }
     }
   });
+  // Auto-check for updates on desktop (delayed so UI loads first)
+  if(typeof window.__TAURI_INTERNALS__!=='undefined'){
+    setTimeout(function(){
+      var lastCheck = localStorage.getItem('sp-update-check');
+      var today = new Date().toDateString();
+      if(lastCheck !== today){
+        localStorage.setItem('sp-update-check', today);
+        checkForUpdates(true);
+      }
+    }, 3000);
+  }
 }
 
 /* ═══════════════════════════════════════════════
