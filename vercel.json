@@ -1,4 +1,5 @@
 {
+  "buildCommand": "npm run build:web",
   "outputDirectory": ".",
   "redirects": [
     { "source": "/", "destination": "/landing.html", "permanent": false }

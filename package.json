@@ -6,7 +6,7 @@
     "dev": "npx -y serve",
     "tauri": "tauri",
     "build": "node copy-dist.js && tauri build",
-    "build:web": "node build.js"
+    "build:web": "echo 'Vexo is a static site — no build needed'"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.11.0",
