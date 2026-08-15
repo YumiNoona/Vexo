@@ -113,7 +113,9 @@ function doExcelExport(){
 }
 
 function exportJSON(){
-  const data={tasks,settings,schedule:getSched()};
+  const data={format:'vexo-local-backup',version:2,exportedAt:new Date().toISOString(),tasks,settings,schedule:getSched(),localData:{}};
+  // Preserve every Vexo key, including history older than 90 days and future features.
+  Object.keys(localStorage).filter(k=>k.startsWith('sp-')||k.startsWith('wg-')).forEach(k=>{data.localData[k]=localStorage.getItem(k);});
   // Phases / Roadmap
   try{const p=localStorage.getItem('sp-phases');if(p)data.phases=JSON.parse(p);}catch(e){}
   // Kanban
@@ -122,8 +124,6 @@ function exportJSON(){
   try{const r=localStorage.getItem('sp-resources');if(r)data.resources=JSON.parse(r);}catch(e){}
   // XP
   try{const x=localStorage.getItem('sp-xp');if(x)data.xp=JSON.parse(x);}catch(e){}
-  // Questions progress
-  try{const q=localStorage.getItem('sp-questions-mcq-v1');if(q)data.questions=JSON.parse(q);}catch(e){}
   // Daily logs + moods + start-times
   for(let i=0;i<90;i++){
     const k=dkey(-i);let added=false;
@@ -140,7 +140,7 @@ function exportJSON(){
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   const today=new Date().toISOString().split('T')[0];
-  a.download=`study-planner-${today}.json`;a.style.display='none';
+  a.download=`vexo-backup-${today}.json`;a.style.display='none';
   document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),1000);
   showToast('JSON exported ✓');
 }
@@ -153,6 +153,11 @@ function importJSON(event){
       const data=JSON.parse(e.target.result);
       if(!data.tasks&&!data.settings){alert('Invalid export file.');return;}
       if(!confirm('This will overwrite your current data. Continue?'))return;
+      // Version 2 backups contain the complete local namespace.
+      if(data.localData&&typeof data.localData==='object'){
+        Object.keys(localStorage).filter(k=>k.startsWith('sp-')||k.startsWith('wg-')).forEach(k=>localStorage.removeItem(k));
+        Object.entries(data.localData).forEach(([k,v])=>{if((k.startsWith('sp-')||k.startsWith('wg-'))&&typeof v==='string')localStorage.setItem(k,v);});
+      }
       // restore tasks
       if(data.tasks){localStorage.setItem('sp-tasks',JSON.stringify(data.tasks));tasks=data.tasks;}
       // restore settings
@@ -167,8 +172,6 @@ function importJSON(event){
       if(data.resources){localStorage.setItem('sp-resources',JSON.stringify(data.resources));}
       // restore XP
       if(data.xp){localStorage.setItem('sp-xp',JSON.stringify(data.xp));}
-      // restore questions
-      if(data.questions){localStorage.setItem('sp-questions-mcq-v1',JSON.stringify(data.questions));}
       // restore daily logs + moods + start-times + journals + notes
       Object.keys(data).forEach(k=>{
         if(k.startsWith('day-')){localStorage.setItem('sp-d-'+k.slice(4),JSON.stringify(data[k]));}

@@ -6,13 +6,17 @@
     "dev": "npx -y serve",
     "tauri": "tauri",
     "build": "node copy-dist.js && tauri build",
-    "build:web": "echo 'Vexo is a static site — no build needed'"
+    "build:web": "node copy-dist.js",
+    "android:init": "tauri android init",
+    "android:dev": "tauri android dev",
+    "android:build:debug": "tauri android build --debug --apk",
+    "android:build:phone": "tauri android build --target aarch64 --apk",
+    "android:package:test": "powershell -ExecutionPolicy Bypass -File scripts/build-android-test.ps1",
+    "android:build:apk": "tauri android build --apk",
+    "android:build:aab": "tauri android build --aab"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.11.0",
-    "@tauri-apps/plugin-fs": "^2.5.1",
-    "@tauri-apps/plugin-updater": "^2.10.1",
-    "pdf-parse": "^2.4.5"
+    "@tauri-apps/plugin-updater": "^2.10.1"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2"

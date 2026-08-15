@@ -2,7 +2,7 @@
   "buildCommand": "npm run build:web",
   "outputDirectory": ".",
   "redirects": [
-    { "source": "/", "destination": "/landing.html", "permanent": false }
+    { "source": "/", "destination": "/index.html", "permanent": false }
   ],
   "headers": [
     {

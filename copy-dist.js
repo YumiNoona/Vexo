@@ -2,7 +2,11 @@ const fs = require('fs');
 const path = require('path');
 
 const dist = path.join(__dirname, 'dist');
-const items = ['index.html', 'favicon.ico', 'manifest.json', 'login.html', 'landing.html', 'css', 'js'];
+const items = ['index.html', 'favicon.ico', 'manifest.json', 'public', 'css', 'js'];
+
+// Always build from a clean directory so deleted features cannot survive in
+// desktop bundles as stale files.
+fs.rmSync(dist, { recursive: true, force: true });
 
 function copyRecursive(src, dest) {
   if (!fs.existsSync(src)) return;

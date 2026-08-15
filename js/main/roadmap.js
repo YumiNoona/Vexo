@@ -4,7 +4,7 @@
 function buildRoadmapHTML(){
   const phases=getPhases();
   let h=`<div class="sched-header-bar">
-    <p class="sched-header-title">Your learning roadmap</p>
+    <p class="sched-header-title">Your longer-term plan</p>
     <div style="display:flex;gap:6px;">
       <button class="act-btn" onclick="addPhase()">+ Add phase</button>
       <button class="act-btn" onclick="resetRoadmap()" style="color:var(--muted)">Reset</button>
@@ -73,7 +73,7 @@ function phaseModal(pi){
   showModal(`
     <div class="big-modal-header">
       <p class="big-modal-label">${isEdit?'Edit':'New'} Phase</p>
-      <p class="big-modal-title">${isEdit?escHtml(p.n)+' — '+escHtml(p.title):'Add a learning phase'}</p>
+      <p class="big-modal-title">${isEdit?escHtml(p.n)+' — '+escHtml(p.title):'Add a plan phase'}</p>
     </div>
     <div class="big-modal-body">
       <div class="big-modal-field">
@@ -122,7 +122,7 @@ function weekModal(pi,wi){
       </div>
       <div class="big-modal-field">
         <label class="big-modal-field-label">What you'll cover <span class="big-modal-hint">topics, tools, skills</span></label>
-        <textarea class="big-modal-textarea" id="wk-t" placeholder="Design principles, colour theory, typography, Gestalt laws…" rows="4">${escHtml(w.t)}</textarea>
+        <textarea class="big-modal-textarea" id="wk-t" placeholder="Tasks, outcomes, checkpoints, or notes…" rows="4">${escHtml(w.t)}</textarea>
       </div>
     </div>
     <div class="big-modal-actions">

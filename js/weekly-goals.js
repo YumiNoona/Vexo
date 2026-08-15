@@ -44,9 +44,9 @@ function renderGoals(){
     const pct=Math.min(100,Math.round(elapsed/totalDays*100));
     h+=`<div class="divider"></div>
     <div class="stats-card" style="text-align:center;padding:20px;">
-      <h3>3-Month Plan Progress</h3>
+      <h3>Plan Progress</h3>
       <div class="big" style="margin:8px 0;">${pct}<span>%</span></div>
-      <p>Day ${elapsed} of ${totalDays} · ${Math.ceil((goal-today)/(1000*60*60*24))} days to job goal</p>
+      <p>Day ${elapsed} of ${totalDays} · ${Math.ceil((goal-today)/(1000*60*60*24))} days to target</p>
     </div>`;
   }
   document.getElementById('v-goals').innerHTML=h;

@@ -39,8 +39,8 @@ function loadGlobal(){
   loadXP();
 
   try{const s=localStorage.getItem('sp-settings');
-    settings=s?JSON.parse(s):{profile:'UI/UX Student',accentColor:'#d4960a',soundEnabled:true,soundProfile:'soft',jobGoalDate:''};}
-  catch(e){settings={profile:'UI/UX Student',accentColor:'#d4960a',soundEnabled:true,soundProfile:'soft',jobGoalDate:''};}
+    settings=s?JSON.parse(s):{profile:'My workspace',accentColor:'#d4960a',soundEnabled:true,soundProfile:'soft',goalDate:''};}
+  catch(e){settings={profile:'My workspace',accentColor:'#d4960a',soundEnabled:true,soundProfile:'soft',goalDate:''};}
   applyAccent(settings.accentColor||'#d4960a');
   if(settings.fontId)applyFont(settings.fontId);
   const ti=document.getElementById('appTitle');

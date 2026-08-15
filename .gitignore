@@ -16,6 +16,16 @@ out/
 .vercel/
 src-tauri/target/
 src-tauri/gen/
+.gradle/
+
+# Android packages and signing material
+*.apk
+*.aab
+*.apks
+*.jks
+*.keystore
+*.idsig
+local.properties
 
 # ─── Environment variables ─────────────────────────
 .env

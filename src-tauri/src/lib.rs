@@ -33,7 +33,6 @@ async fn save_png_file(app: tauri::AppHandle, filename: String, data: String) ->
 pub fn run() {
   tauri::Builder::default()
     .plugin(tauri_plugin_updater::Builder::new().build())
-    .plugin(tauri_plugin_fs::init())
     .plugin(tauri_plugin_dialog::init())
     .invoke_handler(tauri::generate_handler![save_png_file])
     .setup(|app| {

@@ -7,9 +7,9 @@
    TABS — 6 merged tabs
 ═══════════════════════════════════════════════ */
 const MAIN_TABS=['today','goals','learn','portfolio','plan','hub'];
-let learnSub='journal', hubSub='stats';
+let learnSub='journal', planSub='roadmap', hubSub='stats';
 
-const TAB_TITLES={today:'Today',goals:'Goals',learn:'Learn',portfolio:'Portfolio',plan:'Roadmap',hub:'Hub'};
+const TAB_TITLES={today:'Today',goals:'Goals',learn:'Reflect',portfolio:'Projects',plan:'Plan',hub:'Hub'};
 let activeTab='today';
 function switchTab(name){
   activeTab=name;
@@ -30,13 +30,12 @@ function switchTab(name){
 
 function renderLearn(sub){
   learnSub=sub;
-  const tabs=['journal','questions','library'];
-  const labels={journal:'Journal',questions:'Questions',library:'Library'};
+  const tabs=['journal','library'];
+  const labels={journal:'Journal',library:'Library'};
   let h=`<div class="sub-tabs">`;
   tabs.forEach(t=>{h+=`<button class="sub-tab${sub===t?' on':''}" onclick="renderLearn('${t}')">${labels[t]}</button>`;});
   h+=`</div><div id="learn-content">`;
   if(sub==='journal'){h+=buildJournalHTML();}
-  else if(sub==='questions'){h+=buildQuestionsHTML();}
   else if(sub==='library'){h+=buildLibraryHTML();}
   h+=`</div>`;
   document.getElementById('v-learn').innerHTML=h;
@@ -44,8 +43,15 @@ function renderLearn(sub){
   if(sub==='library'&&activeResSearch&&typeof onResSearch==='function')onResSearch();
 }
 
-function renderPlan(){
-  document.getElementById('v-plan').innerHTML=buildRoadmapHTML();
+function renderPlan(sub){
+  planSub=sub||planSub;
+  const labels={roadmap:'Milestones',schedule:'Schedule'};
+  let h='<div class="sub-tabs">';
+  ['roadmap','schedule'].forEach(t=>{h+=`<button class="sub-tab${planSub===t?' on':''}" onclick="renderPlan('${t}')">${labels[t]}</button>`;});
+  h+='</div><div id="plan-content">';
+  h+=planSub==='schedule'?buildSchedHTML():buildRoadmapHTML();
+  h+='</div>';
+  document.getElementById('v-plan').innerHTML=h;
 }
 
 function renderHub(sub){

@@ -1,179 +1,103 @@
-<h1 align="center">✦ Vexo</h1>
-<p align="center"><strong>The All-In-One UX Study Planner & Productivity Suite</strong></p>
+# Vexo
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Vanilla-HTML%2FJS%2FCSS-E34F26?style=flat-square&logo=html5&logoColor=white" alt="Vanilla HTML/JS/CSS" />
-  <img src="https://img.shields.io/badge/Tauri-Desktop%20App-FFC131?style=flat-square&logo=tauri&logoColor=white" alt="Tauri" />
-  <img src="https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase" />
-  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
-</p>
+A private, local-first planner for tasks, goals, projects, schedules, resources, and daily reflection.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Build-Passing-brightgreen?style=flat-square" alt="Build" />
-  <img src="https://img.shields.io/badge/Sync-Cross--Device-blueviolet?style=flat-square" alt="Sync" />
-  <img src="https://img.shields.io/badge/Mode-Local--Only-success?style=flat-square" alt="Local Mode" />
-</p>
+Vexo uses vanilla HTML, CSS, and JavaScript and can run as a static web app or a native desktop app through Tauri. It has no accounts, cloud database, analytics, or required network service.
 
----
+The web and mobile presentation layers are intentionally separated:
 
-## 📖 About
+- `css/web.css` contains desktop and browser layout behavior.
+- `css/mobile-app.css` contains the touch-first Android/PWA layout.
+- Shared feature logic remains under `js/`, so both variants use the same data and backup format.
+- Use `?layout=web` or `?layout=mobile` while developing to force either presentation.
 
-**Vexo** is a UX study companion combining questions, resource library, daily journal, portfolio kanban, and goals/roadmap into one desktop app. Built with vanilla HTML/CSS/JS, packaged as a native Windows EXE via Tauri (~5 MB).
+## Features
 
-> **☁️ Cloud Sync & Local-First** — Works fully offline with localStorage. Optional Supabase login for cross-device sync.
+- Daily tasks with categories, drag-and-drop ordering, notes, start/end times, and a focus timer
+- Weekly goals and an editable milestone plan
+- Project board with To Do, In Progress, and Done columns
+- Daily journal with searchable history
+- Personal resource library with tags and search
+- Mood, streak, XP, activity heatmap, statistics, and end-of-day summaries
+- Complete JSON backup and restore, plus Excel export
+- Automatic on-device IndexedDB recovery snapshots
 
-### 🏗️ Architecture
+## Storage
 
-- **Vanilla Core** — Pure HTML, CSS, JavaScript. No frameworks.
-- **Tauri Desktop** — Native Windows EXE via Tauri v2, auto-update via GitHub Releases.
-- **Local-First Storage** — All progress saved to localStorage instantly. Supabase sync is additive.
-- **Gamification** — XP & level system (level = floor(sqrt(xp / 100)) + 1).
+Planner data is written to `localStorage` immediately and mirrored to IndexedDB for local recovery. Nothing is uploaded. History is retained until the user resets or clears it from Settings.
 
----
+JSON exports include every Vexo storage key, including older history and data added by future versions.
 
-## ✨ Features
+## Project structure
 
-| Area | What it does |
-|---|---|
-| **Today Dashboard** | Task tracking with drag-and-drop, study timer, streak counter, daily mood, XP |
-| **Questions** | 340+ MCQ across 19 UX topics with streak-based XP, level progression, visual questions |
-| **Resource Library** | 94 curated UX resources — Figma, typography, icons, prototyping, TED talks. Filter by tag or add your own |
-| **Daily Journal** | Three reflection prompts, search past entries |
-| **Portfolio Kanban** | To Do / In Progress / Done columns for case studies |
-| **Goals & Roadmap** | Weekly goals + 3-month study roadmap with color-coded phases |
-| **Stats & Heatmap** | 7/30-day stats, activity heatmap (365 days), day log |
-| **End-of-Day Summary** | Gamified completion ring, accuracy report, reflection recap |
-| **Export / Import** | Full JSON export/import of all data (tasks, phases, kanban, resources, XP, questions, journal, mood, notes) |
-
----
-
-## 🛠 Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Frontend** | Vanilla JS, HTML5, CSS3 |
-| **Desktop** | Tauri v2 (Rust + WebView2) |
-| **Backend / Auth** | Supabase |
-| **Database** | PostgreSQL (via Supabase) + localStorage |
-| **CI/CD** | GitHub Actions (MSI build on tag push) |
-
----
-
-## 📁 Project Structure
-
-```
+```text
 Vexo/
-├── index.html              # App shell (SPA)
-├── login.html              # Auth page (Supabase)
-├── landing.html            # Marketing / download page
-├── favicon.ico
-├── manifest.json
-├── vercel.json
-├── copy-dist.js            # Copies web files to dist/ for Tauri
-├── build.js                # Injects Supabase env vars at deploy
-├── env-config.js           # Auto-generated (gitignored)
-│
-├── css/                    # 20 CSS files (tokens, tabs, header,
-│                           #   modal, stats, kanban, journal,
-│                           #   resources, roadmap, eod, settings,
-│                           #   mobile, login, landing, ...)
-│
-├── js/
-│   ├── config.js           # Constants (phases, colors, tips, state)
-│   ├── helpers.js          # Utility functions
-│   ├── storage.js          # localStorage CRUD
-│   ├── audio.js            # Sound system
-│   ├── header.js           # Date nav, header updates
-│   ├── today.js            # Today view rendering
-│   ├── tasks.js            # Task CRUD, drag-and-drop
-│   ├── timer.js            # Task-level timer
-│   ├── xp.js               # XP/level system
-│   ├── schedule.js         # Schedule blocks
-│   ├── stats.js            # Stats page + heatmap
-│   ├── kanban.js           # Portfolio kanban
-│   ├── journal.js          # Reflection journal
-│   ├── resources.js        # 94 resources, search, tag filter
-│   ├── weekly-goals.js     # Weekly goals
-│   ├── settings.js         # Settings page
-│   │
-│   ├── questions/          # 28 category data files + state/ui/actions
-│   │   ├── visual-design.js, ux-laws.js, gestalt.js, …
-│   │   ├── accessibility-theory.js, typography-theory.js, …
-│   │   ├── visq-*.js       # Visual questions (5 files)
-│   │   ├── ux-research-*.js  # By difficulty
-│   │   ├── questions-data.js # Combines all categories + LESSON_MAP
-│   │   ├── question-state.js # Session state, save/load, dedup
-│   │   ├── question-ui.js    # Rendering, animations
-│   │   └── question-actions.js # Answer handling, XP awards
-│   │
-│   ├── main/
-│   │   ├── app.js          # Init, multi-tab sync, data pruning
-│   │   ├── tabs.js         # Tab switching (6 tabs)
-│   │   ├── roadmap.js      # Phase/week CRUD
-│   │   ├── eod-summary.js  # End-of-day summary modal
-│   │   ├── share-card.js   # Canvas PNG download
-│   │   ├── export.js       # JSON export/import (all keys)
-│   │   ├── toasts.js       # Toast + undo-toast system
-│   │   ├── timer-bar.js    # Persistent timer bar
-│   │   └── palette.js      # Command palette (Ctrl+K)
-│   │
-│   ├── supabase/
-│   │   ├── client.js       # Init, auth helpers, sign-out
-│   │   ├── sync.js         # Debounced batch upsert + retry
-│   │   ├── realtime.js     # Cross-device subscription
-│   │   └── data.js         # Pull all on login, app init
-│   │
-│   └── login/
-│       ├── scene.js        # Three.js 3D scene
-│       └── auth.js         # Sign-in/sign-up/skip-login
-│
-├── src-tauri/
-│   ├── Cargo.toml          # Rust deps (tauri, updater, fs)
-│   ├── tauri.conf.json     # Window, bundler, updater config
-│   ├── src/lib.rs          # Plugin registration
-│   ├── src/main.rs         # Entry point
-│   ├── icons/              # App icons (donut 🍩)
-│   └── capabilities/default.json
-│
-└── .github/workflows/
-    └── release.yml         # MSI build on v* tag push
+├── index.html              App shell
+├── css/                    Component and view styles
+├── js/                     Planner features and local persistence
+│   └── main/               App initialization, tabs, export, and summaries
+├── public/                 Local static assets
+├── src-tauri/              Native desktop wrapper
+├── copy-dist.js            Creates the desktop web bundle
+├── manifest.json           PWA metadata
+└── vercel.json             Optional static hosting configuration
 ```
 
----
-
-## 🚀 Desktop Build
+## Development
 
 ```bash
 npm install
-npx tauri build --bundles msi
+npm run dev
 ```
 
-The MSI installer will be in `src-tauri/target/release/bundle/msi/`.
+## Desktop build
 
-### Auto-Update
-
-Tag a commit with `v*` and push:
 ```bash
-git tag v1.0.1
-git push origin v1.0.1
+npm install
+npm run build
 ```
 
-GitHub Actions builds the MSI and uploads it to the release. The app checks for updates on launch.
+The generated installer is placed under `src-tauri/target/release/bundle/`.
 
----
+## Android build from PowerShell
 
-## ☁️ Cloud Sync Setup (Optional)
+Android Studio's interface is not required, but its Android SDK, platform tools,
+build tools, NDK, and bundled JDK must be installed. Windows Developer Mode must
+also be enabled so Tauri can create native-library symbolic links.
 
-See `SETUP.md` to connect your own Supabase project.
+Initialize the generated Android project once:
 
----
+```powershell
+cd E:\AI\Vexo
+npm install
+npm run android:init
+```
 
-## 📝 License
+Build an optimized ARM64 test APK, regenerate the Android launcher icon from
+`favicon.ico`, align it, sign it with Android's local debug certificate, and
+verify the signature:
 
-MIT — see [LICENSE](LICENSE) for details.
+```powershell
+npm run android:package:test
+```
 
----
+The installable result is `Vexo-android-test.apk` in the project root. ARM64 is
+used because it covers modern physical Android phones and avoids the very large
+multi-architecture debug package.
 
-<p align="center">
-  <strong>Built with 💙 by Veil</strong>
-</p>
+Install or update it on a USB-debugging-enabled phone:
+
+```powershell
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" install -r "E:\AI\Vexo\Vexo-android-test.apk"
+```
+
+If installation appears stuck or reports a signature conflict, remove the old
+copy first and reinstall. This deletes that installed copy's local app data:
+
+```powershell
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" uninstall com.yuminoza.vexo
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" install "E:\AI\Vexo\Vexo-android-test.apk"
+```
+
+The debug certificate is suitable only for local testing. A Play Store AAB must
+be signed with a permanent private release key.

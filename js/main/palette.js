@@ -51,10 +51,10 @@ function searchPalette(){
     }
   }
   // Tab shortcuts
-  const tabs2=[{n:'Today',t:'today',i:'📋'},{n:'Goals',t:'goals',i:'🎯'},{n:'Questions',t:'learn',i:'🧠'},{n:'Portfolio',t:'portfolio',i:'🗂'},{n:'Schedule',t:'plan',i:'📅'},{n:'Stats',t:'hub',i:'📊'},{n:'Settings',t:'hub',i:'⚙️'}];
+  const tabs2=[{n:'Today',t:'today',i:'📋'},{n:'Goals',t:'goals',i:'🎯'},{n:'Journal',t:'learn',i:'📓'},{n:'Projects',t:'portfolio',i:'🗂'},{n:'Plan',t:'plan',i:'🛣'},{n:'Schedule',t:'plan',i:'📅'},{n:'Stats',t:'hub',i:'📊'},{n:'Settings',t:'hub',i:'⚙️'}];
   tabs2.forEach(tb=>{
     if(!q||tb.n.toLowerCase().includes(q)){
-      res.push({icon:tb.i,text:'Go to '+tb.n,sub:'Navigation',action:()=>{closePalette();switchTab(tb.t);if(tb.n==='Questions')setTimeout(()=>renderLearn('questions'),100);if(tb.n==='Settings')setTimeout(()=>renderHub('settings'),100);}});
+      res.push({icon:tb.i,text:'Go to '+tb.n,sub:'Navigation',action:()=>{closePalette();switchTab(tb.t);if(tb.n==='Journal')setTimeout(()=>renderLearn('journal'),100);if(tb.n==='Schedule')setTimeout(()=>renderPlan('schedule'),100);if(tb.n==='Settings')setTimeout(()=>renderHub('settings'),100);}});
     }
   });
   paletteIdx=0;

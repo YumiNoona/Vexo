@@ -38,35 +38,6 @@ function renderEOD(){
   // rotate(-90deg) on the fill circle = start from 12 o'clock
   const ringTransform='rotate(-90 50 50)';
 
-  // Questions report (session stats from global questionState)
-  const fcDone=(typeof questionState!=='undefined')?(questionState.correct+questionState.wrong):0;
-  const fcRight=(typeof questionState!=='undefined')?questionState.correct:0;
-  const fcWrong=(typeof questionState!=='undefined')?questionState.wrong:0;
-  const fcTotal=(typeof questionState!=='undefined')?questionState.todayCards.length:5;
-  const fcPct=fcDone>0?Math.round(fcRight/fcDone*100):0;
-  const fcBarW=fcDone>0?Math.round(fcRight/fcDone*100):0;
-  const fcBarWrong=fcDone>0?Math.round(fcWrong/fcDone*100):0;
-
-  const fcSection=fcDone>0?`
-    <div class="eod-section">
-      <p class="eod-section-label">🧠 Questions</p>
-      <div class="eod-fc-report">
-        <div class="eod-fc-meta">
-          <span class="eod-fc-stat correct">${fcRight} <span class="eod-fc-icon">✓</span> correct</span>
-          <span class="eod-fc-sep">·</span>
-          <span class="eod-fc-stat wrong">${fcWrong} <span class="eod-fc-icon">✕</span> wrong</span>
-          <span class="eod-fc-sep">·</span>
-          <span class="eod-fc-total">${fcDone}/${fcTotal} done</span>
-        </div>
-        <div class="eod-fc-bar-track">
-          <div class="eod-fc-bar-fill correct" style="width:${fcBarW}%"></div>
-          <div class="eod-fc-bar-fill wrong" style="width:${fcBarWrong}%"></div>
-        </div>
-        <p class="eod-fc-accuracy">${fcPct}% accuracy today</p>
-      </div>
-    </div>`
-  :``;
-
   showModal(`<div class="eod-card">
 
     <div class="eod-header">
@@ -104,7 +75,7 @@ function renderEOD(){
       <div class="eod-stat2-div"></div>
       <div class="eod-stat2">
         <div class="eod-stat2-num">${fmtTime(sm)}</div>
-        <div class="eod-stat2-label">Study time</div>
+        <div class="eod-stat2-label">Focus time</div>
       </div>
       <div class="eod-stat2-div"></div>
       <div class="eod-stat2">
@@ -122,8 +93,6 @@ function renderEOD(){
       <p class="eod-section-label">Completed today</p>
       <div class="eod-tasks-list">${doneHTML}</div>
     </div>`:''}
-
-    ${fcSection}
 
     ${(journal.learned||journal.confused||journal.differently)?`<div class="eod-section">
       <p class="eod-section-label">Reflection</p>

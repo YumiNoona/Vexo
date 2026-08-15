@@ -37,7 +37,7 @@ function renderToday(){
   h+=`<div class="prog-wrap">
     <div class="prog-header"><span class="prog-label">Daily Progress</span><span class="prog-count" id="progCount">${n}/${tot} · ${pct}%</span></div>
     <div class="prog-track"><div class="prog-fill" id="progFill" style="width:${pct}%"></div></div>
-    <div class="prog-stats"><span class="prog-stat">Study time: <span id="progTime">${fmtTime(sm)}</span></span></div>
+    <div class="prog-stats"><span class="prog-stat">Focus time: <span id="progTime">${fmtTime(sm)}</span></span></div>
   </div>`;
 
   cats().forEach(cat=>{
@@ -76,7 +76,7 @@ function renderToday(){
         </div>
       </div>
       <div id="notes-${t.id}" class="task-notes-drawer" style="display:none">
-        <textarea class="notes-textarea" id="note-ta-${t.id}" placeholder="Paste notes, links, what you learned…" onblur="saveTaskNote('${t.id}')">${escHtml(getTaskNote(t.id)||'')}</textarea>
+        <textarea class="notes-textarea" id="note-ta-${t.id}" placeholder="Notes, links, context, or next steps…" onblur="saveTaskNote('${t.id}')">${escHtml(getTaskNote(t.id)||'')}</textarea>
         <div class="notes-drawer-footer"><span class="notes-hint">Auto-saves on blur</span><button class="act-btn" onclick="saveTaskNote('${t.id}');toggleNotesDrawer('${t.id}')">Done</button></div>
       </div>`;
     });

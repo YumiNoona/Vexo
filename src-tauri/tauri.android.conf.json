@@ -1,0 +1,11 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "bundle": {
+    "category": "Productivity",
+    "shortDescription": "A private, local-first personal planner",
+    "android": {
+      "minSdkVersion": 24,
+      "autoIncrementVersionCode": true
+    }
+  }
+}

@@ -1,0 +1,24 @@
+/* Desktop/web presentation. Business logic is shared with the mobile shell. */
+html[data-vexo-layout="web"] body{overflow-y:auto;}
+html[data-vexo-layout="web"] .app{
+  width:min(100%,1180px);
+  max-width:1180px;
+  min-height:100vh;
+  margin:0 auto;
+  padding:clamp(24px,3vw,40px) clamp(24px,4vw,52px) 56px;
+}
+html[data-vexo-layout="web"] .mobile-nav{display:none;}
+html[data-vexo-layout="web"] .header,
+html[data-vexo-layout="web"] .tabs,
+html[data-vexo-layout="web"] [id^="v-"]{animation:web-enter .28s ease both;}
+html[data-vexo-layout="web"] .today-layout{max-width:920px;margin-inline:auto;}
+html[data-vexo-layout="web"] .task-row,
+html[data-vexo-layout="web"] .goal-row,
+html[data-vexo-layout="web"] .kanban-card{transition:transform .18s ease,border-color .18s ease,background .18s ease;}
+html[data-vexo-layout="web"] .task-row:hover,
+html[data-vexo-layout="web"] .goal-row:hover{transform:translateY(-1px);}
+@keyframes web-enter{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+@media(max-width:1023px){
+  html[data-vexo-layout="web"] .app{max-width:800px;padding:26px 24px 48px;}
+}

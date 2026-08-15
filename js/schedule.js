@@ -58,7 +58,7 @@ function buildSchedHTML(){
 }
 function renderSched(){
   const planEl=document.getElementById('v-plan');
-  if(planEl&&planEl.style.display!=='none')renderPlan('roadmap');
+  if(planEl&&planEl.style.display!=='none')renderPlan('schedule');
 }
 function schedModal(idx){
   const SCHED=getSched();
@@ -77,7 +77,7 @@ function schedModal(idx){
       </div>
       <div class="big-modal-field">
         <label class="big-modal-field-label">Label</label>
-        <input class="big-modal-input" id="sc-l" value="${escHtml(s.l)}" placeholder="Study Block…" autocomplete="off">
+        <input class="big-modal-input" id="sc-l" value="${escHtml(s.l)}" placeholder="Focus block, appointment, break…" autocomplete="off">
       </div>
       <div class="big-modal-field">
         <label class="big-modal-field-label">Duration <span class="big-modal-hint">optional, e.g. 2 hrs</span></label>

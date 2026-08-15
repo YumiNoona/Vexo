@@ -1,0 +1,147 @@
+/* Dedicated touch-first mobile presentation used by Android and narrow PWAs. */
+html[data-vexo-layout="mobile"]{
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+  --mobile-nav-h:68px;
+  height:100%;
+  background:var(--bg);
+  overscroll-behavior:none;
+}
+html[data-vexo-layout="mobile"] body{height:100%;overflow:hidden;-webkit-tap-highlight-color:transparent;}
+html[data-vexo-layout="mobile"] body::before{display:none;}
+html[data-vexo-layout="mobile"] .app{
+  width:100%;max-width:none;height:100dvh;margin:0;overflow-y:auto;overflow-x:hidden;
+  overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;
+  padding:calc(var(--safe-top) + 14px) calc(var(--safe-right) + 16px)
+    calc(var(--mobile-nav-h) + var(--safe-bottom) + 28px) calc(var(--safe-left) + 16px);
+  scrollbar-width:none;
+}
+html[data-vexo-layout="mobile"] .app::-webkit-scrollbar{display:none;}
+html[data-vexo-layout="mobile"] .tabs{display:none!important;}
+
+/* Mobile header becomes a compact two-row dashboard. */
+html[data-vexo-layout="mobile"] .header{display:block;margin:0 0 18px;}
+html[data-vexo-layout="mobile"] .header-left{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;}
+html[data-vexo-layout="mobile"] .header-left .date-nav{margin:0;gap:6px;}
+html[data-vexo-layout="mobile"] .header-left .h1-wrap{order:-1;min-width:0;}
+html[data-vexo-layout="mobile"] .header-left h1,
+html[data-vexo-layout="mobile"] .edit-h1{font-size:27px;line-height:1.05;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+html[data-vexo-layout="mobile"] .date-label{font-size:11px;white-space:nowrap;}
+html[data-vexo-layout="mobile"] .date-btn{min-width:36px;min-height:36px;padding:6px;border-radius:10px;}
+html[data-vexo-layout="mobile"] .countdown-badge{display:none!important;}
+html[data-vexo-layout="mobile"] .header-right{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;}
+html[data-vexo-layout="mobile"] .stat-box{min-width:0;padding:10px 6px;border-radius:14px;background:var(--surface);}
+html[data-vexo-layout="mobile"] .stat-box .s-num{font-size:17px;white-space:nowrap;}
+html[data-vexo-layout="mobile"] .stat-box .s-sub{font-size:8px;}
+html[data-vexo-layout="mobile"] .xp-bar-wrap{display:none;}
+
+/* Native-style fixed bottom navigation. */
+html[data-vexo-layout="mobile"] .mobile-nav{
+  display:flex;position:fixed;z-index:300;left:0;right:0;bottom:0;
+  height:calc(var(--mobile-nav-h) + var(--safe-bottom));
+  padding:6px var(--safe-right) var(--safe-bottom) var(--safe-left);
+  background:color-mix(in srgb,var(--surface) 92%,transparent);border-top:1px solid var(--border);
+  box-shadow:0 -10px 30px rgba(0,0,0,.24);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+}
+html[data-vexo-layout="mobile"] .mnav-btn{
+  flex:1;min-width:0;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--muted);background:none;border:0;border-radius:14px;font-family:var(--font);touch-action:manipulation;
+  transition:color .2s ease,background .2s ease,transform .16s ease;
+}
+html[data-vexo-layout="mobile"] .mnav-btn svg{width:21px;height:21px;transition:transform .24s cubic-bezier(.2,.8,.2,1);}
+html[data-vexo-layout="mobile"] .mnav-btn span{font-size:9px;font-weight:600;line-height:1;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
+html[data-vexo-layout="mobile"] .mnav-btn.active{color:var(--accent);background:var(--accent-dim);}
+html[data-vexo-layout="mobile"] .mnav-btn.active svg{transform:translateY(-2px) scale(1.06);}
+html[data-vexo-layout="mobile"] .mnav-btn:active{transform:scale(.94);}
+
+/* Screen and sub-screen transitions. */
+html[data-vexo-layout="mobile"] [id^="v-"]{animation:mobile-screen-in .28s cubic-bezier(.2,.8,.2,1) both;}
+html[data-vexo-layout="mobile"] .sub-tabs{position:sticky;top:calc(var(--safe-top) * -1);z-index:20;margin:0 -16px 18px;padding:0 16px;background:var(--bg);overflow-x:auto;scrollbar-width:none;}
+html[data-vexo-layout="mobile"] .sub-tab{min-height:46px;padding:10px 16px;font-size:13px;}
+@keyframes mobile-screen-in{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+
+/* Touch-sized cards and controls. */
+html[data-vexo-layout="mobile"] .mood-bar{padding:12px;border-radius:14px;gap:8px;overflow:hidden;}
+html[data-vexo-layout="mobile"] .mood-label{font-size:11px;}
+html[data-vexo-layout="mobile"] .mood-opts{gap:2px;}
+html[data-vexo-layout="mobile"] .mood-btn{width:34px;height:38px;}
+html[data-vexo-layout="mobile"] .mood-set{display:none!important;}
+html[data-vexo-layout="mobile"] .prog-wrap{padding:15px;border-radius:16px;}
+html[data-vexo-layout="mobile"] .cat-header{margin-top:22px;}
+html[data-vexo-layout="mobile"] .task-row{min-height:58px;padding:10px 8px;gap:8px;border-radius:13px;touch-action:pan-y;}
+html[data-vexo-layout="mobile"] .task-row.mobile-pressed{transform:scale(.985);background:var(--surface2);}
+html[data-vexo-layout="mobile"] .drag-handle{display:none;}
+html[data-vexo-layout="mobile"] .checkbox{width:25px;height:25px;flex:0 0 25px;position:relative;}
+html[data-vexo-layout="mobile"] .checkbox::after{content:"";position:absolute;inset:-9px;}
+html[data-vexo-layout="mobile"] .task-text{font-size:14px;line-height:1.35;}
+html[data-vexo-layout="mobile"] .task-start-btn,
+html[data-vexo-layout="mobile"] .task-note-btn{min-width:38px;min-height:38px;border-radius:10px;}
+html[data-vexo-layout="mobile"] .task-actions{display:none!important;}
+html[data-vexo-layout="mobile"] .sched-actions,
+html[data-vexo-layout="mobile"] .roadmap-week-actions{opacity:1;}
+html[data-vexo-layout="mobile"] .sched-inner{align-items:flex-start;flex-wrap:wrap;}
+html[data-vexo-layout="mobile"] .sched-actions{width:100%;justify-content:flex-end;}
+html[data-vexo-layout="mobile"] .phase-header{align-items:flex-start;flex-wrap:wrap;}
+html[data-vexo-layout="mobile"] .phase-header .sched-actions{margin-left:19px!important;width:calc(100% - 19px);justify-content:flex-start;}
+html[data-vexo-layout="mobile"] .week-block{margin-left:10px;padding:12px;}
+html[data-vexo-layout="mobile"] .cat-add,
+html[data-vexo-layout="mobile"] .act-btn,
+html[data-vexo-layout="mobile"] .modal-btn,
+html[data-vexo-layout="mobile"] .res-tag{min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+html[data-vexo-layout="mobile"] .task-notes-drawer{padding:12px;}
+html[data-vexo-layout="mobile"] input,
+html[data-vexo-layout="mobile"] textarea,
+html[data-vexo-layout="mobile"] select{font-size:16px!important;}
+
+/* Projects swipe horizontally by column; other dense layouts stack. */
+html[data-vexo-layout="mobile"] .kanban-board{display:grid;grid-template-columns:repeat(3,calc(100vw - 44px));gap:12px;margin-inline:-4px;padding:0 4px 12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+html[data-vexo-layout="mobile"] .kanban-board::-webkit-scrollbar{display:none;}
+html[data-vexo-layout="mobile"] .kanban-col{scroll-snap-align:center;min-height:320px;}
+html[data-vexo-layout="mobile"] .stats-grid{grid-template-columns:1fr 1fr;gap:10px;}
+html[data-vexo-layout="mobile"] .setting-row{align-items:flex-start;gap:14px;}
+html[data-vexo-layout="mobile"] .setting-ctrl{max-width:56%;}
+html[data-vexo-layout="mobile"] .resource-title,
+html[data-vexo-layout="mobile"] .resource-url{white-space:normal;overflow-wrap:anywhere;}
+
+/* True bottom sheets with corrected safe-area padding. */
+html[data-vexo-layout="mobile"] .overlay{align-items:flex-end;padding:0;}
+html[data-vexo-layout="mobile"] .modal{
+  width:100%;max-width:none;max-height:min(88dvh,760px);overflow-y:auto;margin:0;
+  border-radius:22px 22px 0 0;padding:12px 18px calc(20px + var(--safe-bottom));
+  animation:mobile-sheet-in .3s cubic-bezier(.2,.8,.2,1) both;
+}
+html[data-vexo-layout="mobile"] .modal::before{content:"";display:block;width:38px;height:4px;margin:0 auto 16px;border-radius:3px;background:var(--border3);}
+html[data-vexo-layout="mobile"] .modal-btns{position:sticky;bottom:calc(-20px - var(--safe-bottom));background:var(--surface);padding:12px 0 calc(4px + var(--safe-bottom));}
+html[data-vexo-layout="mobile"] .mobile-action-list{display:flex;flex-direction:column;gap:4px;}
+html[data-vexo-layout="mobile"] .mobile-action-item{width:100%;min-height:52px;display:flex;align-items:center;gap:14px;padding:10px 12px;background:none;border:0;border-radius:12px;color:var(--text);font:600 14px var(--font);text-align:left;}
+html[data-vexo-layout="mobile"] .mobile-action-item:active{background:var(--surface2);transform:scale(.99);}
+html[data-vexo-layout="mobile"] .mobile-action-item span{width:24px;color:var(--muted);text-align:center;}
+html[data-vexo-layout="mobile"] .mobile-action-item.danger{color:var(--red);}
+html[data-vexo-layout="mobile"] .timer-display{font-size:48px;}
+html[data-vexo-layout="mobile"] .eod-card{max-height:none;margin:-12px -18px calc(-20px - var(--safe-bottom));}
+@keyframes mobile-sheet-in{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
+
+@media(max-width:380px){
+  html[data-vexo-layout="mobile"] .app{padding-left:12px;padding-right:12px;}
+  html[data-vexo-layout="mobile"] .header-left{align-items:flex-start;flex-direction:column;}
+  html[data-vexo-layout="mobile"] .mnav-btn span{font-size:8px;}
+  html[data-vexo-layout="mobile"] .task-start-btn{display:none;}
+}
+
+@media(max-width:430px){
+  html[data-vexo-layout="mobile"] .setting-row{flex-direction:column;align-items:stretch;}
+  html[data-vexo-layout="mobile"] .setting-ctrl{max-width:none;width:100%;}
+  html[data-vexo-layout="mobile"] .setting-ctrl>div,
+  html[data-vexo-layout="mobile"] .profile-inp,
+  html[data-vexo-layout="mobile"] .date-picker-inp,
+  html[data-vexo-layout="mobile"] .snd-select{max-width:100%;}
+  html[data-vexo-layout="mobile"] .font-select-wrap{width:100%;}
+  html[data-vexo-layout="mobile"] .weekly-goals-header,
+  html[data-vexo-layout="mobile"] .sched-header-bar{align-items:flex-start;gap:10px;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html[data-vexo-layout="mobile"] *,html[data-vexo-layout="web"] *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
+}

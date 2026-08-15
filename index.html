@@ -12,6 +12,15 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0c0c0e">
 <link rel="manifest" href="manifest.json">
+<script>
+  // Choose one presentation layer before first paint. The query override is
+  // useful for desktop testing and for explicitly launching either shell.
+  (function(){
+    var forced=new URLSearchParams(location.search).get('layout');
+    var mobile=forced==='mobile'||(forced!=='web'&&matchMedia('(max-width: 768px), (pointer: coarse)').matches);
+    document.documentElement.dataset.vexoLayout=mobile?'mobile':'web';
+  })();
+</script>
 <!-- Apple touch icon (inline SVG fallback) -->
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='34' fill='%230c0c0e'/><text y='130' x='90' font-size='100' text-anchor='middle'>🍩</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,11 +38,11 @@
 <link rel="stylesheet" href="css/journal.css">
 <link rel="stylesheet" href="css/resources.css">
 <link rel="stylesheet" href="css/weekly-goals.css">
-<link rel="stylesheet" href="css/questions.css">
 <link rel="stylesheet" href="css/eod.css">
 <link rel="stylesheet" href="css/settings.css">
 <link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/mobile.css">
+<link rel="stylesheet" href="css/web.css">
+<link rel="stylesheet" href="css/mobile-app.css">
 <style></style>
 </head>
 <body>
@@ -62,7 +71,7 @@
       <div class="stat-box">
         <p class="s-label">Today</p>
         <p class="s-num time-num" id="timeEl">0h</p>
-        <p class="s-sub">studied</p>
+        <p class="s-sub">focused</p>
       </div>
       <div class="stat-box" id="xpDisplayHeader" style="cursor:default">
         <p class="s-label">Level</p>
@@ -76,9 +85,9 @@
   <div class="tabs" style="display:flex;align-items:center;">
     <button class="tab on" onclick="switchTab('today')"     id="t-today">Today</button>
     <button class="tab"    onclick="switchTab('goals')"     id="t-goals">Goals</button>
-    <button class="tab"    onclick="switchTab('learn')"     id="t-learn">Learn</button>
-    <button class="tab"    onclick="switchTab('portfolio')" id="t-portfolio">Portfolio</button>
-    <button class="tab"    onclick="switchTab('plan')"      id="t-plan">Roadmap</button>
+    <button class="tab"    onclick="switchTab('learn')"     id="t-learn">Reflect</button>
+    <button class="tab"    onclick="switchTab('portfolio')" id="t-portfolio">Projects</button>
+    <button class="tab"    onclick="switchTab('plan')"      id="t-plan">Plan</button>
     <button class="tab"    onclick="switchTab('hub')"       id="t-hub">Profile</button>
   </div>
 
@@ -111,15 +120,15 @@
   </button>
   <button class="mnav-btn" id="mn-learn"    onclick="switchTab('learn')"     aria-label="Learn">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-    <span>Learn</span>
+    <span>Reflect</span>
   </button>
-  <button class="mnav-btn" id="mn-portfolio" onclick="switchTab('portfolio')" aria-label="Portfolio">
+  <button class="mnav-btn" id="mn-portfolio" onclick="switchTab('portfolio')" aria-label="Projects">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-    <span>Work</span>
+    <span>Projects</span>
   </button>
-  <button class="mnav-btn" id="mn-plan"     onclick="switchTab('plan')"      aria-label="Roadmap">
+  <button class="mnav-btn" id="mn-plan"     onclick="switchTab('plan')"      aria-label="Plan">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    <span>Roadmap</span>
+    <span>Plan</span>
   </button>
   <button class="mnav-btn" id="mn-hub"      onclick="switchTab('hub')"       aria-label="Profile">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -129,6 +138,7 @@
 
 
 <script src="js/config.js"></script>
+<script src="js/local-persistence.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/xp.js"></script>
@@ -143,54 +153,6 @@
 <script src="js/journal.js"></script>
 <script src="js/resources.js"></script>
 <script src="js/weekly-goals.js"></script>
-<!-- Questions data (split by category) -->
-<script src="js/questions/visual-design.js"></script>
-<script src="js/questions/emotional-design.js"></script>
-<script src="js/questions/ux-laws.js"></script>
-<script src="js/questions/interaction-design.js"></script>
-<script src="js/questions/information-architecture.js"></script>
-<script src="js/questions/accessibility.js"></script>
-<script src="js/questions/gestalt.js"></script>
-<script src="js/questions/heuristics.js"></script>
-<script src="js/questions/prototyping.js"></script>
-<script src="js/questions/design-systems.js"></script>
-<script src="js/questions/psychology.js"></script>
-<script src="js/questions/ethics-patterns.js"></script>
-<script src="js/questions/typography.js"></script>
-<script src="js/questions/color-theory.js"></script>
-<!-- New standalone categories (from general-theory) -->
-<script src="js/questions/ux-principles.js"></script>
-<script src="js/questions/ui-components.js"></script>
-<script src="js/questions/usability-testing.js"></script>
-<script src="js/questions/ux-strategy.js"></script>
-<!-- Theory supplements for existing categories -->
-<script src="js/questions/accessibility-theory.js"></script>
-<script src="js/questions/typography-theory.js"></script>
-<script src="js/questions/gestalt-theory.js"></script>
-<script src="js/questions/interaction-design-theory.js"></script>
-<script src="js/questions/ux-laws-theory.js"></script>
-<script src="js/questions/prototyping-theory.js"></script>
-<script src="js/questions/information-architecture-theory.js"></script>
-<script src="js/questions/visual-design-theory.js"></script>
-<script src="js/questions/heuristics-theory.js"></script>
-<script src="js/questions/ux-research-theory.js"></script>
-<!-- Visual questions (from visual-questions.js) -->
-<script src="js/questions/visq-interaction-design.js"></script>
-<script src="js/questions/visq-information-architecture.js"></script>
-<script src="js/questions/visq-gestalt.js"></script>
-<script src="js/questions/visq-ui-components.js"></script>
-<script src="js/questions/visq-prototyping.js"></script>
-<!-- UX Research by difficulty (replaces ux-research.js) -->
-<script src="js/questions/ux-research-easy.js"></script>
-<script src="js/questions/ux-research-medium.js"></script>
-<script src="js/questions/ux-research-hard.js"></script>
-<script src="js/questions/ux-research-combined.js"></script>
-<!-- Combiner (defines UX_QUESTIONS + LESSON_MAP - must load before questions) -->
-<script src="js/questions/questions-data.js"></script>
-<!-- Questions (depends on LESSON_MAP from questions-data.js) -->
-<script src="js/questions/question-state.js"></script>
-<script src="js/questions/question-ui.js"></script>
-<script src="js/questions/question-actions.js"></script>
 <script src="js/settings.js"></script>
 
 <!-- Main app (split from main.js) -->
@@ -202,6 +164,7 @@
 <script src="js/main/tabs.js"></script>
 <script src="js/main/timer-bar.js"></script>
 <script src="js/main/palette.js"></script>
+<script src="js/main/mobile-interactions.js"></script>
 <script src="js/main/app.js"></script>
 
 

@@ -10,9 +10,9 @@ function buildSettingsHTML(){
   <div class="settings-section">
     <h2>Profile</h2>
     <div class="setting-row">
-      <div class="setting-info"><p class="setting-label">Your name</p><p class="setting-desc">Shown as your study profile</p></div>
+      <div class="setting-info"><p class="setting-label">Workspace label</p><p class="setting-desc">A name or short description for this planner</p></div>
       <div class="setting-ctrl" style="display:flex;gap:6px;">
-        <input class="profile-inp" id="profileInp" value="${escHtml(s.profile||'')}" placeholder="UI/UX Student">
+        <input class="profile-inp" id="profileInp" value="${escHtml(s.profile||'')}" placeholder="My workspace">
         <button class="save-btn" onclick="saveProfile()">Save</button>
       </div>
     </div>
@@ -25,15 +25,15 @@ function buildSettingsHTML(){
     </div>
   </div>
   <div class="settings-section">
-    <h2>Job Goal</h2>
+    <h2>Target</h2>
     <div class="setting-row">
-      <div class="setting-info"><p class="setting-label">Target job date</p><p class="setting-desc">Shows countdown in header</p></div>
+      <div class="setting-info"><p class="setting-label">Target date</p><p class="setting-desc">A deadline or meaningful date shown in the header</p></div>
       <div class="setting-ctrl">
         <input type="date" class="date-picker-inp" id="jobGoalInp" value="${s.jobGoalDate||''}" onchange="saveJobGoal()">
       </div>
     </div>
     <div class="setting-row">
-      <div class="setting-info"><p class="setting-label">Plan start date</p><p class="setting-desc">Used for 3-month progress ring</p></div>
+      <div class="setting-info"><p class="setting-label">Plan start date</p><p class="setting-desc">Used to show progress toward your target</p></div>
       <div class="setting-ctrl">
         <input type="date" class="date-picker-inp" id="planStartInp" value="${s.planStartDate||''}" onchange="savePlanStart()">
       </div>
@@ -114,8 +114,8 @@ function buildSettingsHTML(){
       <div class="setting-ctrl"><button class="danger-btn" onclick="clearAll()">Clear all</button></div>
     </div>
     <div class="setting-row">
-      <div class="setting-info"><p class="setting-label">Storage</p><p class="setting-desc">All data saved locally on this device</p></div>
-      <div class="setting-ctrl"><span style="font-family:var(--mono);font-size:13px;color:var(--muted)">Local-only</span></div>
+    <div class="setting-info"><p class="setting-label">Storage</p><p class="setting-desc">Local data plus an automatic on-device recovery snapshot</p></div>
+      <div class="setting-ctrl"><span style="font-family:var(--mono);font-size:13px;color:var(--muted)">Local-only · backed up</span></div>
     </div>
     <div class="setting-row">
       <div class="setting-info"><p class="setting-label">Version</p><p class="setting-desc">App build</p></div>
@@ -209,7 +209,7 @@ async function checkForUpdates(silent){
             <button class="modal-btn primary" onclick="downloadUpdate('${update.version}')">Download & Install</button>
           </div>`);
       } else {
-        if(!silent) showToast('You're on the latest version ✓');
+        if(!silent) showToast("You're on the latest version ✓");
       }
     } else {
       if(!silent) showToast('No updates available');
@@ -233,7 +233,7 @@ function resetTasks(){
   showModal(`
     <p class="modal-title">⚠️ Reset All Data</p>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px;">
-      This will reset <strong style="color:var(--text)">tasks, kanban, journal, questions, resources, roadmap, schedule, mood, and daily history</strong> back to defaults.<br><br>
+      This will reset <strong style="color:var(--text)">tasks, projects, journal, resources, plan, schedule, mood, and daily history</strong> back to defaults.<br><br>
       Your <strong style="color:var(--accent)">streak, XP, and settings</strong> will be kept.
     </p>
     <div class="modal-btns" style="flex-wrap:nowrap;gap:8px;">
@@ -263,7 +263,7 @@ function clearAll(){
   showModal(`
     <p class="modal-title">🗑️ Clear Everything</p>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px;">
-      This will <strong style="color:var(--red)">permanently delete all data</strong> — tasks, kanban, journal, questions, resources, roadmap, moods, daily history, streak, XP, and settings.<br><br>
+      This will <strong style="color:var(--red)">permanently delete all data</strong> — tasks, projects, journal, resources, plan, moods, daily history, streak, XP, and settings.<br><br>
       <strong style="color:var(--text)">There is no undo. Everything will be gone.</strong>
     </p>
     <div class="modal-btns" style="flex-wrap:nowrap;gap:8px;">

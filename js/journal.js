@@ -18,11 +18,11 @@ function saveJournal(){
 }
 function buildJournalHTML(){
   const today=getJournalEntry(0);
-  return `<p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Three quick prompts to lock in today's learning.</p>
+  return `<p style="font-size:13px;color:var(--muted);margin-bottom:16px;">A quick daily check-in to notice progress and plan what comes next.</p>
   <div class="journal-prompts">
     <div class="journal-prompt">
-      <p class="prompt-label"><span class="prompt-icon">💡</span> What did I learn today?</p>
-      <textarea class="prompt-textarea" id="j-learned" placeholder="Key concepts, tools, insights…" onblur="autoSaveJournal()">${escHtml(today.learned)}</textarea>
+      <p class="prompt-label"><span class="prompt-icon">💡</span> What moved forward today?</p>
+      <textarea class="prompt-textarea" id="j-learned" placeholder="Wins, progress, decisions, or useful insights…" onblur="autoSaveJournal()">${escHtml(today.learned)}</textarea>
     </div>
     <div class="journal-prompt">
       <p class="prompt-label"><span class="prompt-icon">🤔</span> What confused me?</p>

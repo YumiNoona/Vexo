@@ -113,7 +113,7 @@ const DEFAULT_RESOURCES=[
   {id:'r79',title:'Artboard Studio — Mockup Design Tool',       url:'https://artboard.studio',                                   type:'🔗', tags:['Images','Prototyping']},
   {id:'r80',title:'Clean Mock — Free Device Frames',            url:'https://cleanmock.com',                                     type:'🔗', tags:['Images','Prototyping']},
 
-  /* ── UI/UX Design ───────────────────────────── */
+  /* ── Design references ──────────────────────── */
   {id:'r81',title:'UI Design Daily — Free UI Resources',        url:'https://www.uidesigndaily.com',                             type:'🎨', tags:['Inspiration','Figma']},
   {id:'r82',title:'Collect UI — Design Pattern Gallery',        url:'https://collectui.com',                                     type:'🎨', tags:['Inspiration']},
   {id:'r83',title:'Call To Inspiration — UI Gallery',           url:'https://www.calltoinspiration.com',                         type:'🎨', tags:['Inspiration']},

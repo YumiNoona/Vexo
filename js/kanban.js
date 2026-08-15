@@ -13,7 +13,7 @@ function renderPortfolio(){
     {key:'inprog',label:'In Progress',cls:'kanban-inprog'},
     {key:'done',label:'Done',cls:'kanban-done'},
   ];
-  let h=`<p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Track your case study projects through to portfolio-ready.</p>
+  let h=`<p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Move any project, outcome, or larger piece of work from idea to done.</p>
   <div class="kanban-board">`;
   colDefs.forEach(col=>{
     h+=`<div class="kanban-col ${col.cls}">

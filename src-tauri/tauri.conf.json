@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Vexo — Your Personal Learning Planner",
+        "title": "Vexo — Your Personal Planner",
         "width": 1200,
         "height": 800,
         "minWidth": 900,

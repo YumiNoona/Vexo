@@ -1,12 +1,13 @@
 {
   "name": "Vexo",
   "short_name": "Planner",
-  "description": "Your personal UI/UX study planner",
+  "description": "Your private, local-first planner for tasks, projects, goals and life",
   "start_url": "./index.html",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait-primary",
   "background_color": "#0c0c0e",
   "theme_color": "#0c0c0e",
-  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='36' fill='%230c0c0e'/><text y='140' x='96' font-size='120' text-anchor='middle'>📖</text></svg>",

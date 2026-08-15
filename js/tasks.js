@@ -152,6 +152,17 @@ function showTaskCtxMenu(e,id){
   hideCtxMenu();
   const t=tasks.find(t=>t.id===id);if(!t)return;
   const isDone=!!done[id];
+  if(document.documentElement.dataset.vexoLayout==='mobile'){
+    showModal(`<p class="modal-title">${escHtml(t.label)}</p>
+      <div class="mobile-action-list">
+        <button class="mobile-action-item" onclick="closeModal();toggle('${id}')"><span>${isDone?'↩':'✓'}</span>${isDone?'Mark incomplete':'Mark complete'}</button>
+        <button class="mobile-action-item" onclick="closeModal();setTimeout(()=>editTask('${id}'),60)"><span>✏</span>Edit name</button>
+        <button class="mobile-action-item" onclick="closeModal();duplicateTask('${id}')"><span>▣</span>Duplicate</button>
+        <button class="mobile-action-item" onclick="closeModal();setTimeout(()=>toggleNotesDrawer('${id}'),60)"><span>📝</span>Open notes</button>
+        <button class="mobile-action-item danger" onclick="closeModal();deleteTask('${id}')"><span>✕</span>Delete task</button>
+      </div>`);
+    return;
+  }
   const menu=document.createElement('div');
   menu.className='ctx-menu';menu.id='ctx-menu';
   menu.innerHTML=`
